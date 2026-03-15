@@ -1,1 +1,15 @@
 /Dataset
+# Baselines/TCN: generated artifacts and runs
+Baselines/TCN/__pycache__/
+Baselines/TCN/*.pyc
+Baselines/TCN/_write_test.tmp
+
+Baselines/TCN/artifacts/
+Baselines/TCN/train_*.log
+Baselines/TCN/run_*.summary.json
+
+# Preprocessed dataset outputs (generated)
+Baselines/TCN/*.npz
+Baselines/TCN/*.meta.json
+Baselines/TCN/*.vocab.json
+```
