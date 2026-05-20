@@ -22,7 +22,7 @@ import streamlit as st
 # ═══════════════════════════════════════════════════════════
 # CONFIG  — edit these two lines
 # ═══════════════════════════════════════════════════════════
-GEMINI_API_KEY = "PASTE_YOUR_API_KEY_HERE"   # ← your key
+GEMINI_API_KEY = "AIzaSyAbxZJCXT6MqVQMFv7wlpSqAix39Av54o8"    # ← your key
 ARTIFACTS_DIR  = "."                          # folder with the saved files
 
 VOCAB_SIZE = 31
@@ -453,8 +453,8 @@ if run_btn:
         # Mini bar chart
         import pandas as pd
         prob_df = pd.DataFrame({"Class": ["Normal", "Anomaly"], "Probability": [proba[0], proba[1]]})
-        st.bar_chart(prob_df.set_index("Class"), color=["#22cc66", "#ff4444"]
-                     if not is_anomaly else ["#22cc66", "#ff4444"])
+        st.bar_chart(prob_df.set_index("Class"), color="#ff4444" if is_anomaly else "#22cc66")
+
 
     with col_right:
         st.markdown('<div class="section-label">RAG — retrieved neighbours</div>', unsafe_allow_html=True)
