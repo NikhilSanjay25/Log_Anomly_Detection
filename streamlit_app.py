@@ -417,11 +417,11 @@ if run_btn:
 
         st.markdown('<div class="section-label">Class probabilities</div>', unsafe_allow_html=True)
         prob_cols = st.columns(2)
-        prob_cols[0].metric("Normal",  f"{proba[0]:.1%}")
-        prob_cols[1].metric("Anomaly", f"{proba[1]:.1%}")
+        prob_cols[0].metric("Anomaly",  f"{proba[1]:.1%}")
+        prob_cols[1].metric("Normal", f"{proba[0]:.1%}")
 
         import pandas as pd
-        prob_df = pd.DataFrame({"Class": ["Normal", "Anomaly"], "Probability": [proba[0], proba[1]]})
+        prob_df = pd.DataFrame({"Class": ["Normal","Anomaly",], "Probability": [proba[0], proba[1]]})
         st.bar_chart(prob_df.set_index("Class"), color="#ff4444" if is_anomaly else "#22cc66")
 
     with col_right:
