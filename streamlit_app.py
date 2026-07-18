@@ -25,7 +25,7 @@ import streamlit as st
 # ═══════════════════════════════════════════════════════════
 # CONFIG  — edit these two lines
 # ═══════════════════════════════════════════════════════════
-GEMINI_API_KEY = "AIzaSyAbxZJCXT6MqVQMFv7wlpSqAix39Av54o8"    # ← your key
+GEMINI_API_KEY = ""    # ← your key
 ARTIFACTS_DIR  = "."                          # folder with the saved files
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
