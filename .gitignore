@@ -1,0 +1,8 @@
+/Dataset
+/pre-processing
+
+/Baselines/TCN/__pycache__
+/Baselines/TCN/artifacts
+/Baselines/TCN/run_hdfs_v1_20260315_193137.summary.json
+/Baselines/TCN/run_hdfs_v1_20260315_193811.summary.json
+/Baselines/TCN/train_hdfs_v1_20260315_193811.log
