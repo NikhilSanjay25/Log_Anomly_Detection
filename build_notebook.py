@@ -1,0 +1,182 @@
+import json
+
+notebook = {
+    'cells': [
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '# LogVerse AI Platform — Agentic Log Intelligence & Medallion Pipeline\n',
+                '**An Enterprise-Grade Agentic AI Platform for Log Intelligence, Anomaly Detection, Medallion Architecture, and Root Cause Analysis.**\n',
+                '\n',
+                'This notebook demonstrates the end-to-end pipeline:\n',
+                '1. **Medallion Lakehouse Architecture** (Bronze -> Silver -> Gold)\n',
+                '2. **PyTorch Transformer Backbone Anomaly Detection** (`transformer_backbone.pth`)\n',
+                '3. **Multi-Agent AI Orchestration** (Planner, Catalog, ML, RCA, SLM, Remediation Agents)\n',
+                '4. **Interactive Causal Root Cause Analysis (RCA) Graph Generation**\n',
+                '5. **Local SLM Human-Understandable Diagnostics & Operational Remediation**'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                '# 1. Imports and System Initialization\n',
+                'import os\n',
+                'import pandas as pd\n',
+                'import networkx as nx\n',
+                'import matplotlib.pyplot as plt\n',
+                'from logverse_pipeline import MedallionPipeline, generate_sample_hdfs_log\n',
+                'from logverse_ml import MLAnomalyDetector\n',
+                'from logverse_rca_graph import RCAGraphBuilder\n',
+                'from logverse_agents import MultiAgentOrchestrator\n',
+                '\n',
+                'print("✓ LogVerse AI Modules Loaded Successfully!")'
+            ]
+        },
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '## Step 1: Execute Medallion Lakehouse Data Pipeline\n',
+                'Raw log files pass through **Bronze** (Immutable Raw Store), **Silver** (Parsed, Regex Template Matching & Sessionization), and **Gold** (AI Feature Aggregation & Dataset Indexing) layers.'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                'sample_log_data = generate_sample_hdfs_log()\n',
+                'pipeline = MedallionPipeline(source_type="HDFS")\n',
+                'bronze, silver_df, gold_df, ai_catalog = pipeline.process_raw_logs(sample_log_data, source_name="sample_hdfs.log")\n',
+                '\n',
+                'print("--- AI CATALOG METADATA ---")\n',
+                'for k, v in ai_catalog.items():\n',
+                '    print(f"{k}: {v}")\n',
+                '\n',
+                'print("\\n--- GOLD LAYER SESSIONS ---")\n',
+                'display(gold_df)'
+            ]
+        },
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '## Step 2: PyTorch Transformer Backbone Anomaly Detection\n',
+                'Invoking the trained `TransformerModel` backbone to extract sequence feature embeddings and evaluate anomaly probabilities.'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                'ml_detector = MLAnomalyDetector()\n',
+                'print("ML Model Weights Loaded:", ml_detector.loaded)\n',
+                '\n',
+                'for idx, row in gold_df.iterrows():\n',
+                '    blk = row["BlockId"]\n',
+                '    res = ml_detector.predict_session(row["EventList"])\n',
+                '    print(f"\\nBlock: {blk}")\n',
+                '    print(f"  Status: {res[\'status_label\']}")\n',
+                '    print(f"  Anomaly Prob: {res[\'anomaly_probability\']:.1%}")\n',
+                '    print(f"  Suspicious Events: {res[\'suspicious_events\']}")'
+            ]
+        },
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '## Step 3: Run Multi-Agent Orchestrator\n',
+                'Watch 6 AI Agents (Planner, Catalog, ML, RCA Graph, SLM Diagnostic, Remediation) collaborate to analyze logs and produce explainable insights.'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                'orchestrator = MultiAgentOrchestrator()\n',
+                'agent_results = orchestrator.run_agentic_pipeline(sample_log_data)\n',
+                '\n',
+                'print("=== AGENT COMMUNICATION LOG ===")\n',
+                'for msg in agent_results["communication_log"]:\n',
+                '    print(f"[{msg[\'timestamp\']}] {msg[\'sender\']} ➔ {msg[\'recipient\']}: ({msg[\'action\']}) {msg[\'content\']}")'
+            ]
+        },
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '## Step 4: Causal Root Cause Analysis (RCA) Graph Output\n',
+                'Visualizing fault propagation from System components to anomalous events and pinpointing the primary Root Cause node.'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                'graph_builder = RCAGraphBuilder()\n',
+                'target_blk = agent_results["target_block"]\n',
+                'target_recs = agent_results["silver_df"][agent_results["silver_df"]["BlockId"] == target_blk].to_dict(orient="records")\n',
+                'graph, root_causes = graph_builder.build_graph_from_session(target_blk, target_recs, agent_results["ml_results"].get(target_blk, {}))\n',
+                '\n',
+                'plt.figure(figsize=(12, 6))\n',
+                'pos = nx.spring_layout(graph, seed=42)\n',
+                'colors = [data.get("color", "#3b82f6") for _, data in graph.nodes(data=True)]\n',
+                'nx.draw(graph, pos, with_labels=True, node_color=colors, font_color="white", font_weight="bold", node_size=2000, font_size=8)\n',
+                'plt.title(f"Causal Root Cause Analysis Graph for {target_blk}", fontsize=14)\n',
+                'plt.show()\n',
+                '\n',
+                'print("Identified Primary Root Causes:", root_causes)'
+            ]
+        },
+        {
+            'cell_type': 'markdown',
+            'metadata': {},
+            'source': [
+                '## Step 5: Local SLM Human-Understandable Diagnosis & Remediation\n',
+                'Local SLM generates clear explanations for operators along with step-by-step SOP remediation runbooks.'
+            ]
+        },
+        {
+            'cell_type': 'code',
+            'execution_count': None,
+            'metadata': {},
+            'outputs': [],
+            'source': [
+                'slm = agent_results["slm_explanation"]\n',
+                'rem = agent_results["remediation"]\n',
+                '\n',
+                'print("=== SLM HUMAN DIAGNOSIS ===")\n',
+                'print("Summary:", slm["summary"])\n',
+                'print("\\nMechanism:", slm["mechanism"])\n',
+                'print("\\nImpact:", slm["impact"])\n',
+                'print("\\nConfidence:", slm["confidence_note"])\n',
+                '\n',
+                'print("\\n=== OPERATIONAL REMEDIATION SOP ===")\n',
+                'print("Urgency:", rem["urgency"])\n',
+                'for step in rem["sop_steps"]:\n',
+                '    print(step)'
+            ]
+        }
+    ],
+    'metadata': {
+        'language_info': {'name': 'python'}
+    },
+    'nbformat': 4,
+    'nbformat_minor': 4
+}
+
+with open('LogVerse_Agentic_Pipeline.ipynb', 'w') as f:
+    json.dump(notebook, f, indent=2)
+
+print("Notebook created successfully!")
