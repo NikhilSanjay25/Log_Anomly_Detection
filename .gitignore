@@ -1,14 +1,36 @@
+# ── Data (public HDFS_v1 dataset - download it, don't commit it) ──────────────
 /Dataset
-/pre-processing
+/preprocessed/
+*.zip
 
+# ── Preprocessing: only the script is tracked, not its outputs ──────────────
+/pre-processing/*
+!/pre-processing/preprocess.py
+
+# ── Model training leftovers (the LoRA adapter itself IS tracked) ─────────────
+/qwen3-hdfs-ckpt/qwen3-hdfs-ckpt/
+
+# ── Agent runtime output (medallion layers, run memory, reports) ──────────────
+/data/
+
+# ── Coursework documents, captures and stray files ────────────────────────────
+*.docx
+~$*
+*.pcap
+/image*.png
+
+# ── Python / Jupyter / tooling ───────────────────────────────────────────────
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+
+# ── Baselines ────────────────────────────────────────────────────────────────
 /Baselines/TCN/__pycache__
 /Baselines/TCN/artifacts
 /Baselines/TCN/run_hdfs_v1_20260315_193137.summary.json
 /Baselines/TCN/run_hdfs_v1_20260315_193811.summary.json
 /Baselines/TCN/train_hdfs_v1_20260315_193811.log
-# agent runtime output (medallion layers, run memory)
-/data
-__pycache__/
-.pytest_cache/
-/qwen3-hdfs-ckpt/qwen3-hdfs-ckpt
-*.zip
