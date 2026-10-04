@@ -38,8 +38,11 @@ def _chat_prompt(tok, messages):
 PREFILL_CHUNK = 1024
 
 
-def _strip_think(text):
-    return re.sub(r"<think>.*?</think>", "", text, flags=re.S).replace("<think>", "").strip()
+def strip_think(text):
+    return re.sub(r"<think>.*?</think>", "", text, flags=re.S).replace("<think>", "").replace("</think>", "").strip()
+
+
+_strip_think = strip_think
 
 
 class InsightSLM:
@@ -56,18 +59,47 @@ class InsightSLM:
             self._model, self.device = _load_causal_lm(self.model_name)
         return self
 
-    @torch.no_grad()
-    def generate(self, system, user, max_new_tokens=config.INSIGHT_MAX_NEW_TOKENS):
+    def _encode(self, messages):
         self.load()
-        msgs = [{"role": "system", "content": system}, {"role": "user", "content": user}]
-        text = _chat_prompt(self._tok, msgs)
-        x = self._tok(text, return_tensors="pt", add_special_tokens=False).to(self.device)
+        text = _chat_prompt(self._tok, messages)
+        return self._tok(text, return_tensors="pt", add_special_tokens=False).to(self.device)
+
+    def _gen_kwargs(self, max_new_tokens):
+        return dict(max_new_tokens=max_new_tokens, do_sample=False, temperature=None, top_p=None, top_k=None,
+                    repetition_penalty=1.05, pad_token_id=self._tok.eos_token_id)
+
+    def generate(self, system, user, max_new_tokens=config.INSIGHT_MAX_NEW_TOKENS):
+        return self.chat([{"role": "system", "content": system}, {"role": "user", "content": user}], max_new_tokens)
+
+    @torch.no_grad()
+    def chat(self, messages, max_new_tokens=config.INSIGHT_MAX_NEW_TOKENS):
+        """messages: [{"role": "system" | "user" | "assistant", "content": str}, ...] -> the next reply."""
+        x = self._encode(messages)
         with self._lock:
             out = self._model.generate(**x, past_key_values=self._prefill(x.input_ids),
-                                       max_new_tokens=max_new_tokens, do_sample=False,
-                                       temperature=None, top_p=None, top_k=None,
-                                       repetition_penalty=1.05, pad_token_id=self._tok.eos_token_id)
-        return _strip_think(self._tok.decode(out[0, x.input_ids.shape[1]:], skip_special_tokens=True))
+                                       **self._gen_kwargs(max_new_tokens))
+        return strip_think(self._tok.decode(out[0, x.input_ids.shape[1]:], skip_special_tokens=True))
+
+    def stream_chat(self, messages, max_new_tokens=config.CHAT_MAX_NEW_TOKENS):
+        """Like chat(), but yields the reply in pieces while it is generated (for a chat UI)."""
+        from transformers import TextIteratorStreamer
+        x = self._encode(messages)
+        streamer = TextIteratorStreamer(self._tok, skip_prompt=True, skip_special_tokens=True, timeout=600)
+        failure = []
+
+        def work():
+            try:
+                with self._lock, torch.no_grad():
+                    self._model.generate(**x, past_key_values=self._prefill(x.input_ids), streamer=streamer,
+                                         **self._gen_kwargs(max_new_tokens))
+            except Exception as e:  # end the stream so the caller sees the error instead of waiting forever
+                failure.append(e)
+                streamer.end()
+
+        threading.Thread(target=work, daemon=True).start()
+        yield from streamer
+        if failure:
+            raise failure[0]
 
     def _prefill(self, ids):
         """Run all but the last prompt token through the model in chunks and return the filled KV cache.

@@ -17,6 +17,7 @@ import streamlit as st
 
 from log_agents import config
 from log_agents.agents.coordinator import CoordinatorAgent
+from log_agents.chat import RunChat
 from log_agents.context import RunMemory, RunOptions
 from log_agents.hdfs import EVENT_INFO, TEMPLATE_TEXT
 from log_agents.ingestion import KubernetesSource, TextSource, UploadSource
@@ -237,11 +238,15 @@ st.markdown('<div class="hero-title">Agentic HDFS Log Anomaly Detection</div>'
             + '<span class="arrow">→</span>'.join(f'<span class="chip {cls}">{name}</span>' for name, cls in PIPELINE)
             + "</div>", unsafe_allow_html=True)
 
-if st.button("▶️ Run analysis", type="primary", width="stretch", disabled=batch_source is None):
+run_clicked = st.button("▶️ Run analysis", type="primary", width="stretch", disabled=batch_source is None)
+# A fixed slot for the progress box: without it the result tabs below move up one position on the next rerun
+# (e.g. when a chat question is sent), Streamlit treats them as new tabs and jumps back to the first one.
+run_area = st.container()
+if run_clicked:
     batch = batch_source.read()
     opts = RunOptions(use_slm_insight=use_slm, lora_mode=lora_mode if lora_available else "off",
                       threshold=threshold, persist=persist)
-    with st.status("Coordinator Agent is running the workflow…", expanded=True) as status:
+    with run_area, st.status("Coordinator Agent is running the workflow…", expanded=True) as status:
         def on_step(step):
             st.write(f"{STATUS_ICON.get(step.status, '•')} **{step.agent}** ({step.duration_s:.1f}s) — {step.summary}")
             for issue in step.issues:
@@ -386,6 +391,41 @@ with tabs[2]:
     if insight.get("facts"):
         with st.expander("Grounding facts sent to the SLM"):
             st.code(insight["facts"], language=None)
+
+    st.divider()
+    st.subheader("💬 Ask about this analysis")
+    st.caption(f"Answered by `{config.INSIGHT_MODEL}` from the same facts as this report. Name a block such as "
+               "`blk_…` to pull in its own evidence and similar historical sessions. A small model can still reason "
+               "wrongly; anything the run cannot back up is flagged under the answer. Each answer takes ~15-35 s.")
+    chat = st.session_state.get("chat")
+    if chat is None or chat.ctx is not ctx:
+        chat = st.session_state["chat"] = RunChat(ctx, coordinator.rca)
+    # new messages go into the same box as the history, so the input always stays below the conversation
+    conversation = st.container()
+    with conversation:
+        for turn in chat.history:
+            with st.chat_message(turn["role"]):
+                st.markdown(turn["display"])
+                for issue in turn["issues"]:
+                    st.caption(f"⚠️ Not backed by the facts: {issue}")
+    question = st.chat_input("Ask a follow-up, e.g. Why is the top root cause the most likely one?",
+                             key="insight_chat")
+    if question:
+        with conversation, st.chat_message("user"):
+            st.markdown(question)
+        with conversation, st.chat_message("assistant"):
+            msgs, content = chat.messages_for(question)
+            try:
+                if not resources.status()["insight_slm_loaded"]:
+                    with st.spinner(f"Loading {config.INSIGHT_MODEL}…"):
+                        resources.insight_slm()
+                raw = st.write_stream(resources.insight_slm().stream_chat(msgs))
+            except Exception as e:
+                st.error(f"The SLM could not answer: {type(e).__name__}: {e}")
+            else:
+                _, issues = chat.finish(question, content, raw)
+                for issue in issues:
+                    st.caption(f"⚠️ Not backed by the facts: {issue}")
 
 # ── Recommendations ───────────────────────────────────────────────────
 with tabs[3]:

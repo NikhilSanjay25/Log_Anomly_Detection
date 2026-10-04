@@ -207,6 +207,30 @@ def deterministic_insight(ctx):
     }
 
 
+def grounding_issues(text, ctx, facts=None, prose=None):
+    """What `text` states that this run cannot back up: unknown block ids, event ids or node addresses, and
+    (when `facts` is given) numbers in `prose` (default: all of `text`) that never appear in the facts.
+    Used to reject report answers and to flag chat answers."""
+    det = ctx.data["detection"]["sessions"]
+    problems = []
+    known_blocks = set(det.block_id)
+    invented = [b for b in set(hdfs.BLOCK_RE.findall(text)) if b not in known_blocks]
+    if invented:
+        problems.append(f"mentions unknown block ids {invented[:3]}")
+    bad_events = {e for e in re.findall(r"\bE\d{1,3}\b", text) if e not in hdfs.EVENT_INFO}
+    if bad_events:
+        problems.append(f"mentions unknown events {sorted(bad_events)}")
+    known_nodes = {n for nodes in det.nodes for n in nodes}
+    bad_nodes = {ip for ip in hdfs.IP_RE.findall(text) if ip not in known_nodes}
+    if bad_nodes:
+        problems.append(f"mentions unknown node addresses {sorted(bad_nodes)[:3]}")
+    if facts:
+        invented_numbers = _numbers(text if prose is None else prose) - _numbers(facts)
+        if invented_numbers:
+            problems.append(f"states numbers not present in the facts {sorted(invented_numbers)[:5]}")
+    return problems
+
+
 def validate_insight(ins, ctx):
     problems = []
     if not isinstance(ins, dict):
@@ -236,27 +260,11 @@ def validate_insight(ins, ctx):
         val = ins.get(key)
         if val is not None and (not isinstance(val, list) or not all(isinstance(v, str) and v.strip() for v in val)):
             problems.append(f"'{key}' must be a list of non-empty strings")
-    text = json.dumps(ins)
-    known_blocks = set(ctx.data["detection"]["sessions"].block_id)
-    invented = [b for b in set(hdfs.BLOCK_RE.findall(text)) if b not in known_blocks]
-    if invented:
-        problems.append(f"mentions unknown block ids {invented[:3]}")
-    bad_events = {e for e in re.findall(r"\bE\d{1,3}\b", text) if e not in hdfs.EVENT_INFO}
-    if bad_events:
-        problems.append(f"mentions unknown events {sorted(bad_events)}")
-    known_nodes = {n for nodes in ctx.data["detection"]["sessions"].nodes for n in nodes}
-    bad_nodes = {ip for ip in hdfs.IP_RE.findall(text) if ip not in known_nodes}
-    if bad_nodes:
-        problems.append(f"mentions unknown node addresses {sorted(bad_nodes)[:3]}")
-    facts = ctx.data.get("insight_facts")
-    if facts:  # every number the SLM states must come from the facts it was given
-        prose = " ".join([str(ins.get("summary", "")), str(ins.get("explanation", "")),
-                          str(ins.get("normal_explanation", "")),
-                          str((imp or {}).get("description", "")) if isinstance(imp, dict) else ""])
-        invented_numbers = _numbers(prose) - _numbers(facts)
-        if invented_numbers:
-            problems.append(f"states numbers not present in the facts {sorted(invented_numbers)[:5]}")
-    return problems
+    # every block id / event / node must exist in this run, every number in the prose must come from the facts
+    prose = " ".join([str(ins.get("summary", "")), str(ins.get("explanation", "")),
+                      str(ins.get("normal_explanation", "")),
+                      str((imp or {}).get("description", "")) if isinstance(imp, dict) else ""])
+    return problems + grounding_issues(json.dumps(ins), ctx, ctx.data.get("insight_facts"), prose)
 
 
 class InsightAgent(Agent):

@@ -8,9 +8,10 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from log_agents import hdfs
+from log_agents import config, hdfs
 from log_agents.agents.coordinator import CoordinatorAgent
 from log_agents.agents.insight import build_facts, validate_insight
+from log_agents.chat import RunChat
 from log_agents.context import RunOptions
 from log_agents.ingestion import KubernetesSource, TextSource, UploadSource
 from log_agents.report import to_markdown
@@ -113,3 +114,35 @@ def test_normal_only_run_gets_normal_evidence(coord):
     assert "ROOT CAUSE GROUP" not in facts and "NORMAL EXAMPLE" in facts
     ctx.data["insight_facts"] = facts
     assert validate_insight(ctx.data["insight"], ctx) == []          # fallback numbers all come from the facts
+
+
+def test_chat_grounds_questions_on_the_run(coord):
+    ctx = run_file(coord, "hdfs_raw_sample.log")
+    chat = RunChat(ctx, coord.rca)
+    s = ctx.data["detection"]["sessions"]
+    anom, norm = s[s.is_anomaly == 1].block_id.iloc[0], s[s.is_anomaly == 0].block_id.iloc[0]
+    msgs, content = chat.messages_for(f"Why is {anom} anomalous but {norm} not? What about blk_123?")
+    assert msgs[0]["role"] == "system"
+    assert "FACTS:" in msgs[0]["content"] and "YOUR EARLIER ANALYSIS" in msgs[0]["content"]
+    # named sessions of this run get their own evidence and neighbours; unknown ids are ignored
+    assert f"BLOCK {anom}: classified Anomaly" in content and f"BLOCK {norm}: classified Normal" in content
+    assert "BLOCK blk_123" not in content and content.count("Similar historical sessions") == 2
+
+    class FakeSLM:
+        def chat(self, messages, max_new_tokens):
+            return f"<think></think>{anom} failed. Compare blk_999, which retried 4242 times."
+    answer, issues = chat.ask(FakeSLM(), "why?")
+    assert answer.startswith(anom)
+    assert any("blk_999" in i for i in issues) and any("4242" in i for i in issues)
+    for i in range(10):
+        chat.ask(FakeSLM(), f"question {i}")
+    msgs, _ = chat.messages_for("one more")
+    assert len(msgs) == 1 + 2 * config.CHAT_MAX_TURNS + 1          # history is bounded
+    assert [m["role"] for m in msgs[:3]] == ["system", "user", "assistant"]
+
+
+def test_chat_finds_sessions_without_block_ids(coord):
+    ctx = coord.run(TextSource("E22 E5\n" + "E22 E5 E5 E5 E11 E9 E11 E9 E11 E9 E26 E26 E26 E23 E23 E23 E21 E21 E21")
+                    .read(), RunOptions(**OPTS))
+    chat = RunChat(ctx, coord.rca)
+    assert chat.mentioned_blocks("compare seq_0001 with seq_0002 and seq_0099") == ["seq_0001", "seq_0002"]

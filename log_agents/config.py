@@ -30,6 +30,9 @@ RAG_K = int(os.environ.get("LAD_RAG_K", 5))  # RF was trained with k=5 neighbour
 # ── SLMs ─────────────────────────────────────────────────────────────────────
 INSIGHT_MODEL = os.environ.get("LAD_INSIGHT_MODEL", "Qwen/Qwen3-1.7B")
 INSIGHT_MAX_NEW_TOKENS = int(os.environ.get("LAD_INSIGHT_MAX_TOKENS", 700))
+# Follow-up chat about a finished run (log_agents/chat.py)
+CHAT_MAX_NEW_TOKENS = int(os.environ.get("LAD_CHAT_MAX_TOKENS", 400))
+CHAT_MAX_TURNS = int(os.environ.get("LAD_CHAT_MAX_TURNS", 4))     # earlier question/answer pairs kept in the prompt
 # Fine-tuned Qwen3-0.6B LoRA classifier from slm_Qwen3_0_6ipynb.ipynb (optional)
 LORA_ADAPTER_DIR = _path("LAD_LORA_DIR", ROOT / "qwen3-hdfs-ckpt" / "qwen3-hdfs-lora")
 LORA_BASE_MODEL = os.environ.get("LAD_LORA_BASE", "Qwen/Qwen3-0.6B")

@@ -2,6 +2,7 @@
 
     python -m log_agents.cli samples/hdfs_raw_sample.log
     python -m log_agents.cli my.log --no-slm --lora off --out report.md
+    python -m log_agents.cli my.log --chat          # then ask follow-up questions about the analysis
 """
 import argparse
 import json
@@ -23,6 +24,7 @@ def main(argv=None):
     ap.add_argument("--threshold", type=float, default=0.5)
     ap.add_argument("--out", help="write the Markdown report here (.json for JSON)")
     ap.add_argument("--no-persist", action="store_true", help="do not write medallion layers / run memory")
+    ap.add_argument("--chat", action="store_true", help="after the report, ask follow-up questions about it")
     args = ap.parse_args(argv)
 
     path = Path(args.log_file)
@@ -34,7 +36,8 @@ def main(argv=None):
         print(f"  [{step.status:>8}] {step.agent:<34} {step.duration_s:6.1f}s  {step.summary}", file=sys.stderr)
 
     print(f"Analysing {path} ...", file=sys.stderr)
-    ctx = CoordinatorAgent(Resources()).run(batch, opts, on_step=progress)
+    coordinator = CoordinatorAgent(Resources())
+    ctx = coordinator.run(batch, opts, on_step=progress)
     report = ctx.data["report"]
     text = json.dumps(report, indent=1, default=str) if args.out and args.out.endswith(".json") else to_markdown(report)
     if args.out:
@@ -43,7 +46,35 @@ def main(argv=None):
     else:
         sys.stdout.reconfigure(encoding="utf-8")
         print(text)
+    if args.chat and report["status"] == "completed":
+        chat_loop(ctx, coordinator)
     return 0 if report["status"] == "completed" else 1
+
+
+def chat_loop(ctx, coordinator):
+    from .chat import RunChat
+    sys.stdout.reconfigure(encoding="utf-8")
+    chat = RunChat(ctx, coordinator.rca)
+    slm = coordinator.res.insight_slm()
+    print("\nAsk follow-up questions about this analysis. Name a block (blk_...) for its details. "
+          "Empty line or 'exit' quits.", file=sys.stderr)
+    while True:
+        try:
+            question = input("\nyou> ").strip()
+        except EOFError:
+            break
+        if not question or question.lower() in {"exit", "quit"}:
+            break
+        msgs, content = chat.messages_for(question)
+        print("\nbot> ", end="", flush=True)
+        pieces = []
+        for piece in slm.stream_chat(msgs):
+            print(piece, end="", flush=True)
+            pieces.append(piece)
+        print()
+        _, issues = chat.finish(question, content, "".join(pieces))
+        for issue in issues:
+            print(f"  ! not backed by the facts: {issue}")
 
 
 if __name__ == "__main__":

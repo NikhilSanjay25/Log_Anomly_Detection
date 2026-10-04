@@ -37,9 +37,7 @@ class RootCauseAnalysisAgent(Agent):
     def run(self, ctx):
         sessions = ctx.data["detection"]["sessions"]
         pipe = self.res.pipeline()
-        stats = pipe.event_stats
-        self.ev_stats = stats.get("events", {})
-        self.normal_p05 = stats.get("normal_length", {}).get("p05", 13)
+        self._load_stats(pipe)
 
         anomalies = sessions[sessions.is_anomaly == 1].sort_values("anomaly_proba", ascending=False)
         per_session, nb_cache = [], {}
@@ -134,6 +132,34 @@ class RootCauseAnalysisAgent(Agent):
         hyps = sorted(({"cause": k, "title": ROOT_CAUSES[k]["title"], "share": v / total}
                        for k, v in scores.items()), key=lambda h: -h["share"])
         return hyps, evidence
+
+    def _load_stats(self, pipe):
+        stats = pipe.event_stats
+        self.ev_stats = stats.get("events", {})
+        self.normal_p05 = stats.get("normal_length", {}).get("p05", 13)
+
+    def describe_block(self, ctx, block_id):
+        """Label, evidence, root-cause hypotheses and FAISS neighbours for one session of a finished run, normal
+        or anomalous (used by the follow-up chat). None if the run has no such session."""
+        sessions = ctx.data["detection"]["sessions"]
+        match = sessions[sessions.block_id == block_id]
+        if match.empty:
+            return None
+        s = match.iloc[0]
+        pipe = self.res.pipeline()
+        self._load_stats(pipe)
+        known = next((p for p in (ctx.data.get("rca") or {}).get("sessions", []) if p["block_id"] == block_id), None)
+        if s.is_anomaly and known:
+            evidence, hyps, similar = known["evidence"], known["hypotheses"], known["similar_logs"]
+        elif s.is_anomaly:
+            (hyps, evidence), similar = self._hypotheses(s), None
+        else:
+            hyps, evidence, similar = [], self._normal_evidence(s, ctx.data["detection"]["threshold"]), None
+        if similar is None:
+            similar = pipe.neighbour_details(s.nb_ids, s.nb_dist)
+        return {"block_id": block_id, "label": "Anomaly" if s.is_anomaly else "Normal",
+                "anomaly_proba": float(s.anomaly_proba), "sequence": s.sequence,
+                "evidence": evidence, "hypotheses": hyps, "similar_logs": similar}
 
     @staticmethod
     def _lifecycle(c):

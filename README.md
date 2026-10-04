@@ -30,7 +30,8 @@ Command line:
 ```bash
 python -m log_agents.cli samples/hdfs_raw_sample.log                  # full run, Markdown report to stdout
 python -m log_agents.cli my.log --no-slm --lora off --out report.md    # fast, no SLMs
-python -m pytest tests -q                                              # 16 tests, no SLM weights needed
+python -m log_agents.cli my.log --chat                                 # then ask follow-up questions
+python -m pytest tests -q                                              # 22 tests, no SLM weights needed
 ```
 
 ## Supported inputs (HDFS only)
