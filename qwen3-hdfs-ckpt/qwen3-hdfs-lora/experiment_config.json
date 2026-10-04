@@ -1,0 +1,11 @@
+{
+  "prompt": "You are an HDFS log anomaly detection system.\nAnalyze the following HDFS block event sequence and classify it as exactly one of:\nNormal\nAnomaly\n\nEvent sequence:\n{seq}\n\nReturn ONLY:\nNormal\nor:\nAnomaly",
+  "base_model": "Qwen/Qwen3-0.6B",
+  "enable_thinking": false,
+  "labels": [
+    "Normal",
+    "Anomaly"
+  ],
+  "max_len": 192,
+  "gen_max_new_tokens": 16
+}

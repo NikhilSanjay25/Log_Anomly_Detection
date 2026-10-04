@@ -4,54 +4,19 @@ HDFS Log Processing Script
 Converts raw HDFS log file (HDFS.txt) into:
   - anomaly_label.csv
   - Event_occurrence_matrix.csv
-  - Event_traces.csv          (full sequence, no deduplication)
+  - Event_traces.csv          (BlockId, Label, Type, Features, TimeInterval, Latency)
   - HDFS.log_templates.csv
-  - HDFS.npz                  (full padded sequences, not just count matrix)
+  - HDFS.npz
 
 Usage:
     python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output"
+    python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output" --label_file "C:/path/to/anomaly_label.csv"
 
 Dependencies:
     pip install pandas numpy
 """
+
 import time
-"""
-HDFS Log Processing Script
-===========================
-Converts raw HDFS log file (HDFS.txt) into:
-  - anomaly_label.csv
-  - Event_occurrence_matrix.csv
-  - Event_traces.csv          (BlockId, Label, Type, Features, TimeInterval, Latency)
-  - HDFS.log_templates.csv
-  - HDFS.npz
-
-Usage:
-    python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output"
-    python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output" --label_file "C:/path/to/anomaly_label.csv"
-
-Dependencies:
-    pip install pandas numpy
-"""
-
-import re
-"""
-HDFS Log Processing Script
-===========================
-Converts raw HDFS log file (HDFS.txt) into:
-  - anomaly_label.csv
-  - Event_occurrence_matrix.csv
-  - Event_traces.csv          (BlockId, Label, Type, Features, TimeInterval, Latency)
-  - HDFS.log_templates.csv
-  - HDFS.npz
-
-Usage:
-    python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output"
-    python process_hdfs_logs.py --log_file "C:/path/to/HDFS.txt" --output_dir "C:/path/to/output" --label_file "C:/path/to/anomaly_label.csv"
-
-Dependencies:
-    pip install pandas numpy
-"""
-
 import re
 import os
 import csv
@@ -186,7 +151,9 @@ def build_session_traces(records):
     """
     session_data = defaultdict(list)   # blk -> [(eid, ts), ...]
     for r in records:
-        for blk in BLOCK_RE.findall(r["Content"]):
+        # a block id can appear twice in one line (E21 "Deleting block blk_x file .../blk_x");
+        # count the event once per block, as in the labelled HDFS_v1 Event_traces.csv
+        for blk in dict.fromkeys(BLOCK_RE.findall(r["Content"])):
             session_data[blk].append((r["EventId"], r["Timestamp"]))
     print(f"[INFO] Found {len(session_data):,} unique block sessions.")
     return session_data
@@ -397,4 +364,4 @@ if __name__ == "__main__":
     start = time.time()
     main()
     end = time.time()
-    print("[INFO] Total processing time: seconds"+str(end - start))
+    print(f"[INFO] Total processing time: {end - start:.1f} seconds")

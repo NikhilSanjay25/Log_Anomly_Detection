@@ -1,0 +1,185 @@
+{
+ "n_sessions": 575061,
+ "anomaly_rate": 0.029280371995318757,
+ "events": {
+  "E1": {
+   "sessions": 5,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.00029694738092410025
+  },
+  "E2": {
+   "sessions": 82705,
+   "anomaly_rate_when_present": 0.02485944017894928,
+   "presence_in_normal": 0.14447452003948244,
+   "presence_in_anomaly": 0.12210476303599002
+  },
+  "E3": {
+   "sessions": 137434,
+   "anomaly_rate_when_present": 0.026390849425906252,
+   "presence_in_normal": 0.2397016962755028,
+   "presence_in_anomaly": 0.21540563012234232
+  },
+  "E4": {
+   "sessions": 129295,
+   "anomaly_rate_when_present": 0.024579450094744576,
+   "presence_in_normal": 0.22592583967339216,
+   "presence_in_anomaly": 0.1887397553153581
+  },
+  "E5": {
+   "sessions": 575061,
+   "anomaly_rate_when_present": 0.029280371995318757,
+   "presence_in_normal": 1.0,
+   "presence_in_anomaly": 1.0
+  },
+  "E6": {
+   "sessions": 5243,
+   "anomaly_rate_when_present": 0.6608811748998665,
+   "presence_in_normal": 0.003185107027119986,
+   "presence_in_anomaly": 0.20578453498040147
+  },
+  "E7": {
+   "sessions": 3303,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.19616343983846063
+  },
+  "E8": {
+   "sessions": 46,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0027319159045017223
+  },
+  "E9": {
+   "sessions": 568854,
+   "anomaly_rate_when_present": 0.018688450815147646,
+   "presence_in_normal": 1.0,
+   "presence_in_anomaly": 0.6313695213208219
+  },
+  "E10": {
+   "sessions": 67,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.003979094904382943
+  },
+  "E11": {
+   "sessions": 568880,
+   "anomaly_rate_when_present": 0.01873330052032063,
+   "presence_in_normal": 1.0,
+   "presence_in_anomaly": 0.6329136477016273
+  },
+  "E12": {
+   "sessions": 26,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0015441263808053214
+  },
+  "E13": {
+   "sessions": 488,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.028982064378192184
+  },
+  "E14": {
+   "sessions": 63,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.003741536999643663
+  },
+  "E15": {
+   "sessions": 38,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.002256800095023162
+  },
+  "E16": {
+   "sessions": 5243,
+   "anomaly_rate_when_present": 0.6608811748998665,
+   "presence_in_normal": 0.003185107027119986,
+   "presence_in_anomaly": 0.20578453498040147
+  },
+  "E17": {
+   "sessions": 9,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0005345052856633804
+  },
+  "E18": {
+   "sessions": 5271,
+   "anomaly_rate_when_present": 0.6624928856004553,
+   "presence_in_normal": 0.003186898425897894,
+   "presence_in_anomaly": 0.20738805083739162
+  },
+  "E19": {
+   "sessions": 4,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0002375579047392802
+  },
+  "E20": {
+   "sessions": 5345,
+   "anomaly_rate_when_present": 0.9590271281571562,
+   "presence_in_normal": 0.00039231633236179805,
+   "presence_in_anomaly": 0.30443045492338755
+  },
+  "E21": {
+   "sessions": 466647,
+   "anomaly_rate_when_present": 0.02227165287679981,
+   "presence_in_normal": 0.8173328580155242,
+   "presence_in_anomaly": 0.6172348259888347
+  },
+  "E22": {
+   "sessions": 575061,
+   "anomaly_rate_when_present": 0.029280371995318757,
+   "presence_in_normal": 1.0,
+   "presence_in_anomaly": 1.0
+  },
+  "E23": {
+   "sessions": 465015,
+   "anomaly_rate_when_present": 0.022229390449770438,
+   "presence_in_normal": 0.8145096135415416,
+   "presence_in_anomaly": 0.6139090153224849
+  },
+  "E24": {
+   "sessions": 4,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0002375579047392802
+  },
+  "E25": {
+   "sessions": 5271,
+   "anomaly_rate_when_present": 0.6624928856004553,
+   "presence_in_normal": 0.003186898425897894,
+   "presence_in_anomaly": 0.20738805083739162
+  },
+  "E26": {
+   "sessions": 568854,
+   "anomaly_rate_when_present": 0.018688450815147646,
+   "presence_in_normal": 1.0,
+   "presence_in_anomaly": 0.6313695213208219
+  },
+  "E27": {
+   "sessions": 974,
+   "anomaly_rate_when_present": 0.9969199178644764,
+   "presence_in_normal": 5.374196333723261e-06,
+   "presence_in_anomaly": 0.05766718137546027
+  },
+  "E28": {
+   "sessions": 1259,
+   "anomaly_rate_when_present": 0.9904686258935663,
+   "presence_in_normal": 2.1496785334893046e-05,
+   "presence_in_anomaly": 0.07405867680247061
+  },
+  "E29": {
+   "sessions": 46,
+   "anomaly_rate_when_present": 1.0,
+   "presence_in_normal": 0.0,
+   "presence_in_anomaly": 0.0027319159045017223
+  }
+ },
+ "normal_length": {
+  "median": 19.0,
+  "p05": 13.0,
+  "p95": 28.0
+ }
+}

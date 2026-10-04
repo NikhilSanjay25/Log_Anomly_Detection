@@ -1,0 +1,14 @@
+# Core ML pipeline
+torch>=2.2            # for GPU: pip install torch --index-url https://download.pytorch.org/whl/cu124
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.5
+faiss-cpu>=1.8
+joblib>=1.3
+# SLMs (Qwen3-1.7B insight model, Qwen3-0.6B LoRA classifier)
+transformers>=4.51
+peft>=0.15
+accelerate>=0.30
+# UI + tests
+streamlit>=1.40
+pytest>=8

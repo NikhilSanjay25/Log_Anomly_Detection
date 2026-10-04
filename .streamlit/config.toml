@@ -1,0 +1,36 @@
+# Dark navy theme (Tailwind Slate neutrals + sky/indigo/purple/pink accents). Dark only.
+[theme]
+base = "dark"
+primaryColor = "#38bdf8"                 # sky-400
+backgroundColor = "#0f172a"              # slate-900 (the radial gradient is drawn in CSS)
+secondaryBackgroundColor = "#1e293b"     # slate-800 - widgets, inputs
+textColor = "#e2e8f0"                    # slate-200
+linkColor = "#38bdf8"
+codeBackgroundColor = "#020617"          # slate-950 - terminal / code blocks
+borderColor = "#1e293b"
+dataframeBorderColor = "#1e293b"
+dataframeHeaderBackgroundColor = "#0f172a"
+showWidgetBorder = true
+baseRadius = "0.75rem"
+
+# status palette: anomaly = rose, healthy = emerald, accents for blue/violet, slate for gray
+redColor = "#fb7185"
+redBackgroundColor = "#e11d4826"         # rgba(225,29,72,0.15)
+greenColor = "#34d399"
+greenBackgroundColor = "#10b98126"       # rgba(16,185,129,0.15)
+blueColor = "#38bdf8"
+violetColor = "#c084fc"
+grayColor = "#64748b"
+
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"
+headingFontWeights = [800, 700, 600, 600, 600, 600]
+
+chartCategoricalColors = ["#38bdf8", "#818cf8", "#c084fc", "#f472b6", "#34d399", "#fb7185"]
+chartSequentialColors = ["#0c4a6e", "#075985", "#0369a1", "#0284c7", "#0ea5e9",
+                         "#38bdf8", "#818cf8", "#a78bfa", "#c084fc", "#f472b6"]
+
+[theme.sidebar]
+backgroundColor = "#0b1222"
+secondaryBackgroundColor = "#1e293b"
+borderColor = "#1e293b"
