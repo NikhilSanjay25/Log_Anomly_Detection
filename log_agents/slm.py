@@ -34,6 +34,10 @@ def _chat_prompt(tok, messages):
     return tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False)
 
 
+# Prompt tokens per forward pass when pre-filling the KV cache (see InsightSLM._prefill).
+PREFILL_CHUNK = 1024
+
+
 def _strip_think(text):
     return re.sub(r"<think>.*?</think>", "", text, flags=re.S).replace("<think>", "").strip()
 
@@ -59,10 +63,27 @@ class InsightSLM:
         text = _chat_prompt(self._tok, msgs)
         x = self._tok(text, return_tensors="pt", add_special_tokens=False).to(self.device)
         with self._lock:
-            out = self._model.generate(**x, max_new_tokens=max_new_tokens, do_sample=False,
+            out = self._model.generate(**x, past_key_values=self._prefill(x.input_ids),
+                                       max_new_tokens=max_new_tokens, do_sample=False,
                                        temperature=None, top_p=None, top_k=None,
                                        repetition_penalty=1.05, pad_token_id=self._tok.eos_token_id)
         return _strip_think(self._tok.decode(out[0, x.input_ids.shape[1]:], skip_special_tokens=True))
+
+    def _prefill(self, ids):
+        """Run all but the last prompt token through the model in chunks and return the filled KV cache.
+
+        In one pass, attention over the whole prompt needs memory that grows with the square of its length
+        (PyTorch on Windows has no flash attention). With the RAG neighbours in the facts the prompt is ~5k
+        tokens, which peaked at 9.4 GiB and spilled an 8 GB GPU into slow shared memory (2 tok/s). Chunks keep
+        the peak near 4 GiB; generate() then continues from the cache.
+        """
+        from transformers import DynamicCache
+        cache = DynamicCache()
+        n = ids.shape[1] - 1
+        for start in range(0, n, PREFILL_CHUNK):
+            self._model(input_ids=ids[:, start:min(start + PREFILL_CHUNK, n)], past_key_values=cache,
+                        use_cache=True, logits_to_keep=1)
+        return cache
 
     def generate_json(self, system, user, max_new_tokens=config.INSIGHT_MAX_NEW_TOKENS):
         """Returns (parsed dict or None, raw text)."""
@@ -116,11 +137,18 @@ class LoraClassifier:
             from transformers import AutoTokenizer
             exp = json.loads((self.adapter_dir / "experiment_config.json").read_text())
             self.prompt = exp["prompt"]
-            self._tok = AutoTokenizer.from_pretrained(str(self.adapter_dir))
+            base_name = exp.get("base_model", config.LORA_BASE_MODEL)
+            try:
+                self._tok = AutoTokenizer.from_pretrained(str(self.adapter_dir))
+            except (AttributeError, TypeError, ValueError):
+                # The adapter was saved with transformers 5.x, which stores extra_special_tokens as a list that
+                # transformers 4.x cannot read. LoRA training left the tokenizer unchanged (same special tokens
+                # and chat template), so the base model's tokenizer is equivalent.
+                self._tok = AutoTokenizer.from_pretrained(base_name)
             self._tok.padding_side = "left"
             if self._tok.pad_token is None:
                 self._tok.pad_token = self._tok.eos_token
-            base, self.device = _load_causal_lm(exp.get("base_model", config.LORA_BASE_MODEL))
+            base, self.device = _load_causal_lm(base_name)
             self._model = PeftModel.from_pretrained(base, str(self.adapter_dir)).eval()
         return self
 

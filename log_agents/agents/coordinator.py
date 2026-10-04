@@ -47,7 +47,8 @@ class CoordinatorAgent:
             self._execute(ctx, self.detection, critical=True)
             self._execute(ctx, self.rca, critical=False)
             if "rca" not in ctx.data:
-                ctx.data["rca"] = {"sessions": [], "causes": [], "correlations": {"nodes": [], "time_bursts": [], "patterns": []}}
+                ctx.data["rca"] = {"sessions": [], "causes": [], "normal_examples": [],
+                                   "correlations": {"nodes": [], "time_bursts": [], "patterns": []}}
             self._execute(ctx, self.insight, critical=False,
                           fallback=lambda: ctx.data.__setitem__(
                               "insight", {**deterministic_insight(ctx), "source": "knowledge base (fallback)"}))

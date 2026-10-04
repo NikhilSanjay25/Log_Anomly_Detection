@@ -8,7 +8,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from log_agents import hdfs
 from log_agents.agents.coordinator import CoordinatorAgent
+from log_agents.agents.insight import build_facts, validate_insight
 from log_agents.context import RunOptions
 from log_agents.ingestion import KubernetesSource, TextSource, UploadSource
 from log_agents.report import to_markdown
@@ -85,3 +87,29 @@ def test_non_hdfs_rejected(coord):
 def test_kubernetes_is_stub():
     with pytest.raises(NotImplementedError):
         KubernetesSource().read()
+
+
+def test_insight_facts_include_similar_sessions(coord):
+    ctx = run_file(coord, "hdfs_raw_sample.log")
+    facts = build_facts(ctx)
+    # every root-cause group's example and every normal example comes with its retrieved neighbours
+    assert facts.count("Similar historical sessions") == (facts.count("ROOT CAUSE GROUP")
+                                                          + facts.count("NORMAL EXAMPLE"))
+    assert "NORMAL SESSIONS" in facts and ctx.data["rca"]["normal_examples"]
+    # neighbour block ids are not in this run, so they must not reach the prompt
+    assert set(hdfs.BLOCK_RE.findall(facts)) <= set(ctx.data["detection"]["sessions"].block_id)
+    assert ctx.data["insight"]["normal_explanation"]                    # the fallback covers normal sessions too
+
+
+def test_normal_only_run_gets_normal_evidence(coord):
+    text = ("blk_1: E22 E5 E5 E5 E11 E9 E11 E9 E11 E9 E26 E26 E26 E23 E23 E23 E21 E21 E21\n"
+            "blk_2: E5 E5 E5 E22 E11 E9 E11 E9 E11 E9 E26 E26 E26 E3 E3 E4 E2 E3 E3 E4 E23 E23 E23 E21 E21 E21")
+    ctx = coord.run(TextSource(text).read(), RunOptions(**OPTS))
+    assert ctx.data["detection"]["sessions"].is_anomaly.sum() == 0
+    examples = ctx.data["rca"]["normal_examples"]
+    evidence = " ".join(e for p in examples for e in p["evidence"])
+    assert "Lifecycle complete" in evidence and "E4" in evidence    # E4 is explained as routine, not hidden
+    facts = build_facts(ctx)
+    assert "ROOT CAUSE GROUP" not in facts and "NORMAL EXAMPLE" in facts
+    ctx.data["insight_facts"] = facts
+    assert validate_insight(ctx.data["insight"], ctx) == []          # fallback numbers all come from the facts

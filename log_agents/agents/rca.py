@@ -7,6 +7,9 @@ Combines four evidence sources per anomalous session:
   * contextual data   - lifecycle completeness, length vs normal sessions, timing, DataNodes
   * correlation       - DataNodes / time windows / patterns shared across anomalous sessions
 and ranks root-cause hypotheses from the knowledge base.
+
+It also collects the same kind of evidence for a few representative *normal* sessions, so the Insight
+agent can explain why those sessions were not flagged.
 """
 from collections import Counter, defaultdict
 
@@ -17,6 +20,7 @@ from ..knowledge import ROOT_CAUSES
 from .base import Agent
 
 MAX_NEIGHBOUR_DETAILS = 30
+MAX_NORMAL_EXAMPLES = 3
 # An event only counts as root-cause evidence if at least this share of training sessions containing
 # it were anomalous (e.g. E4 'exception while serving' is 2.5% - it is routine in normal traffic).
 MIN_EVENT_ANOMALY_RATE = 0.5
@@ -56,10 +60,21 @@ class RootCauseAnalysisAgent(Agent):
 
         correlations = self._correlate(sessions, per_session)
         causes = self._aggregate(per_session)
-        ctx.data["rca"] = {"sessions": per_session, "causes": causes, "correlations": correlations}
-        ctx.send(self.name, "Insight Agent", f"{len(causes)} root-cause group(s) with evidence")
+        # The Insight agent shows the SLM the retrieved neighbours of each group's example session, so make sure
+        # every example has them even when the neighbour-detail cap above was reached.
+        nb_of = anomalies.set_index("block_id")
+        for c in causes:
+            ex = next(p for p in per_session if p["primary_cause"] == c["cause"])
+            if ex["similar_logs"] is None:
+                row = nb_of.loc[ex["block_id"]]
+                ex["similar_logs"] = pipe.neighbour_details(row.nb_ids, row.nb_dist)
+        normal_examples = self._normal_examples(sessions, pipe, ctx.data["detection"]["threshold"])
+        ctx.data["rca"] = {"sessions": per_session, "causes": causes, "correlations": correlations,
+                           "normal_examples": normal_examples}
+        ctx.send(self.name, "Insight Agent", f"{len(causes)} root-cause group(s) and "
+                                             f"{len(normal_examples)} normal example(s) with evidence")
         if not per_session:
-            return "No anomalies - nothing to analyse"
+            return f"No anomalies; evidence gathered for {len(normal_examples)} normal pattern(s)"
         top = causes[0]
         return (f"{len(per_session)} anomalies → {len(causes)} root-cause group(s); "
                 f"top: {top['title']} ({top['count']} sessions)")
@@ -94,10 +109,8 @@ class RootCauseAnalysisAgent(Agent):
                 strength = max(self._rate(e) for e in hit)
                 scores[key] = cause["weight"] * (0.5 + 0.5 * strength)
 
-        # lifecycle completeness: every receiving replica should finish, terminate and be stored
-        started = c["E5"]
-        finished = c["E9"] + c["E6"]
-        if started and (finished < started or c["E11"] < c["E9"] or c["E26"] < min(finished, 3)):
+        started, finished, complete = self._lifecycle(c)
+        if started and not complete:
             scores["incomplete_write"] = ROOT_CAUSES["incomplete_write"]["weight"] * 0.8
             evidence.append(f"Lifecycle: {started} replica write(s) started (E5) but {finished} finished (E9/E6), "
                             f"{c['E11']} PacketResponder terminations (E11), {c['E26']} stored on NameNode (E26)")
@@ -121,6 +134,64 @@ class RootCauseAnalysisAgent(Agent):
         hyps = sorted(({"cause": k, "title": ROOT_CAUSES[k]["title"], "share": v / total}
                        for k, v in scores.items()), key=lambda h: -h["share"])
         return hyps, evidence
+
+    @staticmethod
+    def _lifecycle(c):
+        """Every receiving replica should finish, terminate and be stored. Returns (started, finished, complete)."""
+        started, finished = c["E5"], c["E9"] + c["E6"]
+        complete = not (finished < started or c["E11"] < c["E9"] or c["E26"] < min(finished, 3))
+        return started, finished, complete
+
+    # ── evidence for normal sessions (why they were NOT flagged) ─────────────
+    def _normal_examples(self, sessions, pipe, threshold):
+        normal = sessions[sessions.is_anomaly == 0]
+        if normal.empty:
+            return []
+        common = normal.sequence.value_counts()
+        picks = [(normal[normal.sequence == common.index[0]].iloc[0],
+                  f"most common normal pattern, {common.iloc[0]} of {len(normal)} normal sessions"
+                  if common.iloc[0] > 1 else "a typical normal session; every normal pattern in this run is unique")]
+        closest = normal.sort_values("anomaly_proba", ascending=False).iloc[0]
+        picks.append((closest, "normal session with the highest anomaly probability"))
+        risky = normal[normal.events.map(lambda e: bool(set(e) & EVIDENCE_EVENTS))]
+        if len(risky):
+            picks.append((risky.sort_values("anomaly_proba", ascending=False).iloc[0],
+                          "normal session containing events that are often linked to anomalies"))
+        out, seen = [], set()
+        for s, why in picks:
+            if s.sequence in seen:
+                continue
+            seen.add(s.sequence)
+            out.append({"block_id": s.block_id, "sequence": s.sequence, "n_events": int(s.n_events),
+                        "anomaly_proba": float(s.anomaly_proba), "why_picked": why,
+                        "evidence": self._normal_evidence(s, threshold),
+                        "similar_logs": pipe.neighbour_details(s.nb_ids, s.nb_dist)})
+        return out[:MAX_NORMAL_EXAMPLES]
+
+    def _normal_evidence(self, s, threshold):
+        c = Counter(s.events)
+        evidence = [f"Model anomaly probability {s.anomaly_proba:.1%}, below the {threshold:.0%} threshold"]
+        if not pd.isna(s.nb_anomaly_rate):
+            evidence.append(f"Retrieved similar historical sessions are {1 - s.nb_anomaly_rate:.0%} normal")
+        started, finished, complete = self._lifecycle(c)
+        if started:
+            evidence.append(("Lifecycle complete: " if complete else "Lifecycle looks incomplete: ")
+                            + f"{started} replica write(s) started (E5), {finished} finished (E9/E6), "
+                              f"{c['E11']} PacketResponder terminations (E11), {c['E26']} stored on NameNode (E26)")
+        flagged = sorted(set(s.events) & EVIDENCE_EVENTS, key=lambda x: int(x[1:]))
+        if not flagged:
+            evidence.append("No error or warning events")
+        for e in flagged:
+            st = self.ev_stats.get(e)
+            if st is None or st.get("anomaly_rate_when_present") is None:
+                evidence.append(f"{e} ×{c[e]}: {hdfs.describe(e)} (no training statistics)")
+            else:
+                evidence.append(f"{e} ×{c[e]}: {hdfs.describe(e)}; {st['anomaly_rate_when_present']:.1%} of "
+                                f"{st['sessions']:,} training sessions containing it were anomalous")
+        if s.n_events >= self.normal_p05:
+            evidence.append(f"Length {s.n_events} events, within the range of 95% of normal sessions "
+                            f"(at least {int(self.normal_p05)})")
+        return evidence
 
     def _rate(self, e):
         r = self.ev_stats.get(e, {}).get("anomaly_rate_when_present")

@@ -2,7 +2,7 @@
 import pandas as pd
 
 from log_agents.agents.coordinator import CoordinatorAgent
-from log_agents.agents.insight import deterministic_insight, validate_insight
+from log_agents.agents.insight import describe_neighbours, deterministic_insight, validate_insight
 from log_agents.agents.rca import RootCauseAnalysisAgent
 from log_agents.context import RunContext, RunOptions
 from log_agents.ingestion import TextSource
@@ -97,3 +97,26 @@ def test_validate_insight_rejects_invented_numbers():
     ctx.data["insight_facts"] = "Block sessions analysed: 175; anomalous: 25 (14.3%) blk_1 E7 10.0.0.1"
     assert validate_insight({**GOOD, "summary": "25 of 175 sessions (14.3%) on 10.0.0.1 hit E7"}, ctx) == []
     assert "numbers" in " ".join(validate_insight({**GOOD, "summary": "40 sessions failed"}, ctx))
+
+
+def test_describe_neighbours_groups_and_diffs():
+    q = NORMAL.split()
+    same = {"sequence": q, "label": "Normal", "occurrences": 10, "anomaly_rate": 0.0, "block_id": "blk_77"}
+    shuffled = {**same, "sequence": q[1:] + q[:1], "occurrences": 3}
+    extra = {**same, "sequence": q + ["E20"], "label": "Anomaly", "occurrences": 2, "anomaly_rate": 1.0}
+    lines = describe_neighbours(q, [same, same, shuffled, extra, extra])
+    text = "\n".join(lines)
+    assert "3 distinct pattern(s)" in lines[0]
+    assert "3 of 5 labelled Normal" in lines[0] and "2 of 5 labelled Anomaly" in lines[0]
+    assert "identical to this session" in text and "same events in a different order" in text
+    assert "has E20 ×1 that this session lacks" in text
+    assert "blk_77" not in text               # neighbour block ids would make the validator reject the answer
+    assert describe_neighbours(q, None) == []
+
+
+def test_validate_insight_requires_normal_explanation_in_mixed_runs():
+    ctx = _ctx(blocks=("blk_1", "blk_2"), nodes=(("10.0.0.1",), ()), anomalies=1)
+    assert "normal_explanation" in " ".join(validate_insight(GOOD, ctx))
+    assert validate_insight({**GOOD, "normal_explanation": "blk_2 completed its lifecycle"}, ctx) == []
+    assert validate_insight({**GOOD, "normal_explanation": ["not text"]}, ctx)
+    assert validate_insight(GOOD, _ctx()) == []                       # all anomalous: not required

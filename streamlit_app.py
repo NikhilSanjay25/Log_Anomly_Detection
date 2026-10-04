@@ -371,6 +371,9 @@ with tabs[2]:
     st.write(insight["summary"])
     st.subheader("Explanation")
     st.write(insight["explanation"])
+    if insight.get("normal_explanation"):
+        st.subheader("Why the other sessions look normal")
+        st.write(insight["normal_explanation"])
     st.subheader(f"Impact analysis {SEV_ICON.get(insight['impact']['severity'], '')} "
                  f"{insight['impact']['severity'].upper()}")
     st.write(insight["impact"]["description"])

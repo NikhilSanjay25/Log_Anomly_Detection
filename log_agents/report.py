@@ -72,6 +72,8 @@ def to_markdown(rep):
     if ins:
         L += ["## AI Insights", f"_Source: {ins.get('source')}_", "", f"**Summary.** {ins['summary']}", "",
               f"**Explanation.** {ins['explanation']}", ""]
+        if ins.get("normal_explanation"):
+            L += [f"**Why the other sessions look normal.** {ins['normal_explanation']}", ""]
         imp = ins.get("impact", {})
         L += [f"**Impact ({imp.get('severity', '?').upper()}).** {imp.get('description', '')}", ""]
         if imp.get("affected"):
