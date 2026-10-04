@@ -4,7 +4,7 @@ LogVerse AI Platform — Enterprise Log Intelligence Product
 An Enterprise-Grade Agentic AI Data Platform powered by Medallion Architecture,
 Multi-Agent Orchestration, PyTorch Deep Learning Transformer Backbone,
 Interactive Root Cause Analysis (RCA) Causal Network Graphs, Local SLMs,
-Human-in-the-Loop Ticket Raising, and One-Click PDF Report Exporting.
+Human-in-the-Loop Ticket Raising, One-Click PDF Exports, and Multi-Format Log Ingestion (.xlsx, .xls, .csv, .txt, .log).
 
 Run with:
     streamlit run streamlit_app.py
@@ -26,9 +26,46 @@ import streamlit.components.v1 as components
 # Import modular pipeline engines & PDF generator
 from logverse_pipeline import MedallionPipeline, generate_sample_hdfs_log
 from logverse_ml import MLAnomalyDetector
-from logverse_rca_graph import RCAGraphBuilder
+from logverse_rca_graph import RCAGraphBuilder, EVENT_CAUSALITY_MAP
 from logverse_agents import MultiAgentOrchestrator
 from logverse_pdf import generate_incident_pdf
+
+# ─────────────────────────────────────────────────────────────
+# HELPER: FILE PARSER FOR MULTI-FORMAT UPLOADS (.xlsx, .xls, .csv, .txt, .log)
+# ─────────────────────────────────────────────────────────────
+def parse_uploaded_log_file(uploaded_file):
+    """
+    Parses uploaded file bytes into a clean text string.
+    Supports .xlsx, .xls, .csv, .txt, .log formats.
+    """
+    fname = uploaded_file.name.lower()
+    
+    if fname.endswith((".xlsx", ".xls")):
+        df = pd.read_excel(uploaded_file)
+        lines = []
+        content_col = next((c for c in df.columns if "content" in c.lower() or "log" in c.lower() or "text" in c.lower()), None)
+        if content_col:
+            lines = df[content_col].dropna().astype(str).tolist()
+        else:
+            for _, row in df.iterrows():
+                row_str = " ".join([str(val) for val in row.values if pd.notna(val)])
+                lines.append(row_str)
+        return "\n".join(lines)
+        
+    elif fname.endswith(".csv"):
+        df = pd.read_csv(uploaded_file)
+        content_col = next((c for c in df.columns if "content" in c.lower() or "log" in c.lower() or "text" in c.lower()), None)
+        if content_col:
+            lines = df[content_col].dropna().astype(str).tolist()
+        else:
+            lines = []
+            for _, row in df.iterrows():
+                row_str = " ".join([str(val) for val in row.values if pd.notna(val)])
+                lines.append(row_str)
+        return "\n".join(lines)
+        
+    else:  # .txt, .log
+        return uploaded_file.getvalue().decode("utf-8", errors="ignore")
 
 # ─────────────────────────────────────────────────────────────
 # 1. STREAMLIT PAGE CONFIG & ENTERPRISE CYBERPUNK-GLASS CSS
@@ -154,32 +191,68 @@ ENTERPRISE_CSS = """
 
 .badge-completed { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
 
-/* Console Terminal for Inter-Agent Communications */
-.agent-terminal {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    background: #020617;
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid #1e293b;
-    max-height: 320px;
-    overflow-y: auto;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+/* Communication Stream Styling */
+.comm-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid #38bdf8;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.log-entry {
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+.comm-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.comm-agent {
+    font-weight: 700;
+    color: #38bdf8;
+    font-size: 0.9rem;
+}
+
+.comm-target {
+    font-weight: 700;
+    color: #c084fc;
+    font-size: 0.9rem;
+}
+
+.comm-action {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f472b6;
+    background: rgba(244, 114, 182, 0.12);
+    border: 1px solid rgba(244, 114, 182, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.comm-text {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    margin-top: 6px;
     line-height: 1.5;
 }
 
-.log-time { color: #64748b; }
-.log-sender { color: #38bdf8; font-weight: 700; }
-.log-arrow { color: #64748b; }
-.log-recipient { color: #c084fc; font-weight: 700; }
-.log-action { color: #f472b6; font-weight: 600; padding: 1px 6px; background: rgba(244, 114, 182, 0.1); border-radius: 4px; }
-.log-content { color: #e2e8f0; margin-top: 2px; }
+/* Event Tag Badges */
+.event-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 3px;
+}
+
+.tag-danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+.tag-info { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
 
 /* KPI Metrics */
 .kpi-container {
@@ -225,13 +298,13 @@ if "submitted_tickets" not in st.session_state:
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### ⚡ Control Center")
-    st.caption("LogVerse AI Platform v2.5 Enterprise Edition")
+    st.caption("LogVerse AI Platform v2.6 Enterprise Edition")
 
     st.markdown("---")
     st.markdown("#### 📥 1. Ingestion Adapter")
     ingest_mode = st.radio(
         "Source Type",
-        ["Sample HDFS Logs", "Upload Custom Log File", "Live K8s / Docker Stream"],
+        ["Sample HDFS Logs", "Upload Custom Log File (.xlsx, .txt, .log, .csv)", "Live K8s / Docker Stream"],
         index=0
     )
 
@@ -241,11 +314,16 @@ with st.sidebar:
     if ingest_mode == "Sample HDFS Logs":
         log_content_input = generate_sample_hdfs_log()
         source_name = "sample_hdfs_benchmark.log"
-    elif ingest_mode == "Upload Custom Log File":
-        up_file = st.file_uploader("Upload Raw Log (.txt, .log)", type=["txt", "log"])
+    elif ingest_mode.startswith("Upload Custom Log"):
+        up_file = st.file_uploader("Upload Log File (.xlsx, .xls, .csv, .txt, .log)", type=["xlsx", "xls", "csv", "txt", "log"])
         if up_file is not None:
-            log_content_input = up_file.getvalue().decode("utf-8", errors="ignore")
-            source_name = up_file.name
+            try:
+                log_content_input = parse_uploaded_log_file(up_file)
+                source_name = up_file.name
+                st.success(f"Successfully loaded '{up_file.name}'!")
+            except Exception as e:
+                st.error(f"Error parsing file: {e}")
+                log_content_input = generate_sample_hdfs_log()
         else:
             log_content_input = generate_sample_hdfs_log()
     else:  # Kubernetes / Docker Stream Simulation
@@ -352,27 +430,37 @@ with tab_canvas:
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("#### 💬 Real-Time Inter-Agent Communication Feed")
+    st.markdown("#### 💬 Real-Time Inter-Agent Communication Stream")
     comm_log = results["communication_log"]
 
-    log_entries_html = []
     for msg in comm_log:
-        entry = f"""
-        <div class="log-entry">
-            <div>
-                <span class="log-time">[{msg['timestamp']}]</span>
-                <span class="log-sender">{msg['sender']}</span>
-                <span class="log-arrow">➔</span>
-                <span class="log-recipient">{msg['recipient']}</span>
-                <span class="log-action">{msg['action']}</span>
-            </div>
-            <div class="log-content">{msg['content']}</div>
-        </div>
-        """
-        log_entries_html.append(entry)
+        if isinstance(msg, dict):
+            sender = msg.get("sender", "Agent")
+            recipient = msg.get("recipient", "System")
+            action = msg.get("action", "MESSAGE")
+            content = msg.get("content", "")
+            timestamp = msg.get("timestamp", "")
+        else:
+            sender = "System"
+            recipient = "Agent"
+            action = "INFO"
+            content = str(msg)
+            timestamp = ""
 
-    full_console_html = f'<div class="agent-terminal">{"".join(log_entries_html)}</div>'
-    st.markdown(full_console_html, unsafe_allow_html=True)
+        border_color = "#e11d48" if "ANOMALY" in action or "CRITICAL" in content.upper() else "#38bdf8"
+        
+        st.markdown(f"""
+        <div class="comm-card" style="border-left-color: {border_color};">
+            <div>
+                <span class="comm-time">[{timestamp}]</span>
+                <span class="comm-agent">{sender}</span>
+                <span style="color: #64748b; font-weight: bold;"> ➔ </span>
+                <span class="comm-target">{recipient}</span>
+                <span class="comm-action">{action}</span>
+            </div>
+            <div class="comm-text">{content}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # -------------------------------------------------------------
 # TAB 2: CAUSAL ROOT CAUSE ANALYSIS (RCA) GRAPH
@@ -402,7 +490,8 @@ with tab_rca:
         sus_events = target_ml.get("suspicious_events", [])
         if sus_events:
             for se in sus_events:
-                st.warning(f"• Event {se}: Socket/Write Exception")
+                meta = EVENT_CAUSALITY_MAP.get(se, {"name": "Exception Event"})
+                st.warning(f"• Event {se}: {meta['name']}")
         else:
             st.write("None")
 
@@ -413,23 +502,45 @@ with tab_medallion:
     st.markdown("### 🏅 Medallion Architecture Data Explorer")
     st.caption("Explore data transformations across Bronze (Raw Store), Silver (Parsed & Sessionized), and Gold (AI Features) tiers.")
 
-    m1, m2, m3, m4 = st.tabs(["1. Bronze Layer (Raw)", "2. Silver Layer (Parsed)", "3. Gold Layer (AI Features)", "4. Enterprise AI Catalog"])
+    m1, m2, m3, m4 = st.tabs(["1. Bronze Layer (Raw Store)", "2. Silver Layer (Parsed Events)", "3. Gold Layer (AI Feature Sets)", "4. Enterprise AI Catalog"])
 
     with m1:
-        st.markdown("##### 🥉 Bronze Layer — Immutable Raw Ingestion Data")
-        st.json(results["bronze_records"][:5])
+        st.markdown("##### 🥉 Bronze Tier — Immutable Ingested Log Records")
+        bronze_records = results["bronze_records"]
+        if isinstance(bronze_records, list):
+            df_bronze = pd.DataFrame(bronze_records)
+            st.dataframe(df_bronze, use_container_width=True)
+        else:
+            st.dataframe(bronze_records, use_container_width=True)
 
     with m2:
-        st.markdown("##### 🥈 Silver Layer — Regex Template Matched Event Records")
+        st.markdown("##### 🥈 Silver Tier — Regex Template Matched Event Records")
         st.dataframe(results["silver_df"], use_container_width=True)
 
     with m3:
-        st.markdown("##### 🥇 Gold Layer — Sessionized AI Feature Datasets")
+        st.markdown("##### 🥇 Gold Tier — Sessionized AI Feature Datasets")
         st.dataframe(results["gold_df"], use_container_width=True)
 
     with m4:
         st.markdown("##### 📚 Enterprise AI Catalog Metadata Registry")
-        st.json(results["ai_catalog"])
+        cat_data = results["ai_catalog"]
+        
+        c1, c2, c3, c4 = st.columns(4)
+        with c1: st.metric("Source File", cat_data.get("source", "N/A"))
+        with c2: st.metric("Source Type", cat_data.get("source_type", "HDFS"))
+        with c3: st.metric("Ingest Latency", f"{cat_data.get('processing_time_sec', 0.0):.4f} s")
+        with c4: st.metric("Anomalous Blocks", cat_data.get("total_anomalous_blocks", 0))
+
+        st.markdown("##### 🏷️ Discovered Log Event Templates")
+        unique_events = cat_data.get("unique_events_found", [])
+        
+        tag_htmls = []
+        for eid in unique_events:
+            meta = EVENT_CAUSALITY_MAP.get(eid, {"name": "Operation", "severity": "Info"})
+            css_class = "tag-danger" if meta["severity"] in ["High", "Critical"] else "tag-info"
+            tag_htmls.append(f'<span class="event-tag {css_class}">{eid}: {meta["name"]}</span>')
+            
+        st.markdown("".join(tag_htmls), unsafe_allow_html=True)
 
 # -------------------------------------------------------------
 # TAB 4: PYTORCH ML BACKBONE INSIGHTS
@@ -441,21 +552,35 @@ with tab_ml:
     ml1, ml2 = st.columns(2)
 
     with ml1:
-        st.markdown("##### Transformer Inference Metrics")
-        st.json({
-            "target_block": target_blk,
-            "status_label": target_ml.get("status_label"),
-            "anomaly_probability": target_ml.get("anomaly_probability"),
-            "confidence_score": target_ml.get("confidence"),
-            "suspicious_events": target_ml.get("suspicious_events"),
-            "total_events_evaluated": target_ml.get("total_events_evaluated")
-        })
+        st.markdown("##### Transformer Anomaly Inference Dashboard")
+        prob_val = target_ml.get("anomaly_probability", 0.0)
+        status_lbl = target_ml.get("status_label", "NORMAL PATTERN")
+        
+        if is_anom:
+            st.error(f"### 🚨 {status_lbl}")
+        else:
+            st.success(f"### ✅ {status_lbl}")
+
+        st.markdown("**Anomaly Probability Score:**")
+        st.progress(prob_val)
+        st.caption(f"Model Anomaly Probability: **{prob_val:.2%}** | Confidence Score: **{target_ml.get('confidence', 0.0):.2%}**")
+
+        st.markdown("##### Suspicious Event Codes Detected")
+        sus_list = target_ml.get("suspicious_events", [])
+        if sus_list:
+            tags = []
+            for s_eid in sus_list:
+                meta = EVENT_CAUSALITY_MAP.get(s_eid, {"name": "Error Code", "cause": "Exception"})
+                tags.append(f'<span class="event-tag tag-danger">⚠️ {s_eid}: {meta["name"]} ({meta["cause"]})</span>')
+            st.markdown("<br>".join(tags), unsafe_allow_html=True)
+        else:
+            st.write("Zero anomalous event codes detected in this block.")
 
     with ml2:
         st.markdown("##### 64-Dimensional Sequence Feature Embeddings")
         feat_vals = target_ml.get("feature_vector", [])
         if feat_vals:
-            df_feat = pd.DataFrame({"Dimension": range(len(feat_vals)), "Value": feat_vals})
+            df_feat = pd.DataFrame({"Dimension": range(len(feat_vals)), "Embedding Value": feat_vals})
             st.line_chart(df_feat.set_index("Dimension"))
 
 # -------------------------------------------------------------
@@ -494,10 +619,8 @@ with tab_ticket:
     st.markdown("### 🎫 Human-in-the-Loop Incident Ticket Manager")
     st.caption("The SLM automatically drafts ticket details based on log diagnostics. Review, edit, and approve before submitting to DevOps.")
 
-    # SLM Draft Generation
     default_title = f"[INCIDENT-{target_blk[-6:]}] Critical Error in HDFS Block {target_blk}"
     default_desc = f"SLM Diagnostic Summary:\n{slm_res['summary']}\n\nMechanism:\n{slm_res['mechanism']}\n\nImpact:\n{slm_res['impact']}"
-    default_priority = "P1 - Critical" if is_anom else "P3 - Normal"
 
     st.markdown("##### ✍️ SLM-Drafted Ticket (Editable by Human Operator)")
 
