@@ -2,39 +2,32 @@
 import threading
 
 from . import config
+from .datasets import PROFILES, get_profile
 
 
 class Resources:
     def __init__(self):
         self._lock = threading.Lock()
-        self._pipeline = self._insight = self._lora = None
-        self._lora_checked = False
+        self._pipelines = {}
+        self._chat = None
 
-    def pipeline(self):
+    def pipeline(self, dataset="hdfs"):
+        """The Transformer → FAISS → RF pipeline of one dataset (HDFS, BGL or OpenStack), loaded on first use."""
         with self._lock:
-            if self._pipeline is None:
+            if dataset not in self._pipelines:
                 from .ml import AnomalyPipeline
-                self._pipeline = AnomalyPipeline()
-            return self._pipeline
+                self._pipelines[dataset] = AnomalyPipeline(get_profile(dataset))
+            return self._pipelines[dataset]
 
-    def insight_slm(self):
+    def chat_slm(self):
+        """The Qwen model of the follow-up chat (the only language model in the system)."""
         with self._lock:
-            if self._insight is None:
-                from .slm import InsightSLM
-                self._insight = InsightSLM(config.INSIGHT_MODEL).load()
-            return self._insight
-
-    def lora(self):
-        """The LoRA classifier, or None when the adapter folder is missing."""
-        with self._lock:
-            if not self._lora_checked:
-                from .slm import LoraClassifier
-                clf = LoraClassifier()
-                self._lora = clf if clf.available else None
-                self._lora_checked = True
-            return self._lora
+            if self._chat is None:
+                from .slm import ChatSLM
+                self._chat = ChatSLM(config.CHAT_MODEL).load()
+            return self._chat
 
     def status(self):
-        return {"pipeline_loaded": self._pipeline is not None, "insight_slm_loaded": self._insight is not None,
-                "insight_model": config.INSIGHT_MODEL, "lora_adapter": str(config.LORA_ADAPTER_DIR),
-                "lora_available": (config.LORA_ADAPTER_DIR / "adapter_config.json").exists()}
+        return {"pipelines_loaded": sorted(self._pipelines), "chat_loaded": self._chat is not None,
+                "chat_model": config.CHAT_MODEL,
+                "available": {n: p.available for n, p in PROFILES.items()}}

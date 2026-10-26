@@ -1,0 +1,47 @@
+{
+ "dataset": "openstack",
+ "trained_at": "2026-10-26 19:39:51",
+ "instances": 2069,
+ "anomalous_instances": 4,
+ "templates": 23,
+ "epochs": 3,
+ "random_forest": {
+  "n_estimators": 100,
+  "bootstrap": false,
+  "max_features": null,
+  "class_weight": "balanced"
+ },
+ "evaluation_protocol": "leave-one-anomaly-out: 4 folds, each holds out 1 of the 4 labelled anomalies and a quarter of the normal instances; the deployed model is trained on all",
+ "evaluation": {
+  "pipeline_with_timing_features": {
+   "precision": 0.8,
+   "recall": 1.0,
+   "f1": 0.8888888888888888,
+   "tp": 4,
+   "fp": 1,
+   "fn": 0,
+   "tn": 2064,
+   "anomaly_probabilities": {
+    "544fd51c": 1.0,
+    "ae651dff": 1.0,
+    "a445709b": 1.0,
+    "1643649d": 1.0
+   }
+  },
+  "pipeline_event_sequence_only": {
+   "precision": 0.0023014959723820483,
+   "recall": 1.0,
+   "f1": 0.004592422502870264,
+   "tp": 4,
+   "fp": 1734,
+   "fn": 0,
+   "tn": 331,
+   "anomaly_probabilities": {
+    "544fd51c": 0.545,
+    "ae651dff": 0.543,
+    "a445709b": 0.543,
+    "1643649d": 0.545
+   }
+  }
+ }
+}

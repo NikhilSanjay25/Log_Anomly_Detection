@@ -9,7 +9,7 @@ def _path(env, default):
     return Path(os.environ.get(env, default))
 
 
-# ── ML pipeline artifacts (Transformer → FAISS → RAG → Random Forest) ──────────
+# ── HDFS pipeline artifacts (Transformer → FAISS → RAG → Random Forest) ─────────
 ARTIFACTS_DIR = _path("LAD_ARTIFACTS_DIR", ROOT)
 BACKBONE_PATH = ARTIFACTS_DIR / "transformer_backbone.pth"
 RF_PATH = ARTIFACTS_DIR / "rag_random_forest.joblib"
@@ -21,24 +21,28 @@ MODEL_CONFIG_PATH = ARTIFACTS_DIR / "model_config.joblib"
 RAG_METADATA_PATH = ARTIFACTS_DIR / "rag_metadata.npz"
 EVENT_STATS_PATH = ARTIFACTS_DIR / "event_stats.json"
 
-# Training dataset (only needed to rebuild rag_metadata.npz)
-DATASET_DIR = _path("LAD_DATASET_DIR", ROOT / "preprocessed" / "preprocessed")
+# ── BGL and OpenStack artifacts: artifacts/<dataset>/ (built by scripts/train_dataset.py) ───
+ARTIFACTS_ROOT = _path("LAD_ARTIFACTS_ROOT", ROOT / "artifacts")
 
-MAX_SEQ_LEN = 60          # must match training (load_real_hdfs max_len)
-RAG_K = int(os.environ.get("LAD_RAG_K", 5))  # RF was trained with k=5 neighbours
+# Training datasets (only needed to retrain / rebuild metadata)
+DATASET_DIR = _path("LAD_DATASET_DIR", ROOT / "preprocessed" / "preprocessed")          # HDFS_v1
+BGL_DATASET_DIR = _path("LAD_BGL_DIR", ROOT / "Dataset_BGL")
+OPENSTACK_DATASET_DIR = _path("LAD_OPENSTACK_DIR", ROOT / "Dataset_OpenStack")
 
-# ── SLMs ─────────────────────────────────────────────────────────────────────
-INSIGHT_MODEL = os.environ.get("LAD_INSIGHT_MODEL", "Qwen/Qwen3-1.7B")
-INSIGHT_MAX_NEW_TOKENS = int(os.environ.get("LAD_INSIGHT_MAX_TOKENS", 700))
-# Follow-up chat about a finished run (log_agents/chat.py)
+MAX_SEQ_LEN = 60          # HDFS: must match training (load_real_hdfs max_len)
+RAG_K = int(os.environ.get("LAD_RAG_K", 5))  # the Random Forests were trained with k=5 neighbours
+BGL_WINDOW = 100          # BGL has no session id: sessions are windows of this many consecutive messages
+
+# RF probabilities within threshold ± this margin are flagged "uncertain" (shown for manual review)
+UNCERTAIN_MARGIN = 0.3
+
+# ── Chat model (the only language model in the system) ───────────────────────
+# Answers follow-up questions about a finished run, fed with the run's facts and the relevant raw log lines.
+CHAT_MODEL = os.environ.get("LAD_CHAT_MODEL", os.environ.get("LAD_INSIGHT_MODEL", "Qwen/Qwen3-1.7B"))
 CHAT_MAX_NEW_TOKENS = int(os.environ.get("LAD_CHAT_MAX_TOKENS", 400))
 CHAT_MAX_TURNS = int(os.environ.get("LAD_CHAT_MAX_TURNS", 4))     # earlier question/answer pairs kept in the prompt
-# Fine-tuned Qwen3-0.6B LoRA classifier from slm_Qwen3_0_6ipynb.ipynb (optional)
-LORA_ADAPTER_DIR = _path("LAD_LORA_DIR", ROOT / "qwen3-hdfs-ckpt" / "qwen3-hdfs-lora")
-LORA_BASE_MODEL = os.environ.get("LAD_LORA_BASE", "Qwen/Qwen3-0.6B")
-# RF probabilities within threshold ± this margin are "uncertain" and get an SLM second opinion
-UNCERTAIN_MARGIN = 0.3
-LORA_MAX_SEQUENCES = int(os.environ.get("LAD_LORA_MAX", 40))
+CHAT_MAX_LOG_LINES = int(os.environ.get("LAD_CHAT_LOG_LINES", 40))   # raw log lines shown to the model per session
+CHAT_MAX_LOG_CHARS = int(os.environ.get("LAD_CHAT_LOG_CHARS", 6000))  # cap on all raw log text added to a question
 
 # ── Storage (medallion layers, run memory, reports) ──────────────────────────
 DATA_DIR = _path("LAD_DATA_DIR", ROOT / "data")

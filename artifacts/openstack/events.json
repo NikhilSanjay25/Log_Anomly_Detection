@@ -1,0 +1,163 @@
+{
+ "E1": {
+  "template": "VM Started (Lifecycle Event)",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E2": {
+  "template": "VM Paused (Lifecycle Event)",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E3": {
+  "template": "During sync_power_state the instance has a pending task <*> Skip.",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 4053
+ },
+ "E4": {
+  "template": "VM Resumed (Lifecycle Event)",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 4132
+ },
+ "E5": {
+  "template": "Instance spawned successfully.",
+  "component": "nova.virt.libvirt.driver",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E6": {
+  "template": "Took <*> seconds to spawn the instance on the hypervisor.",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E7": {
+  "template": "Took <*> seconds to build instance.",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E8": {
+  "template": "Terminating instance",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2064
+ },
+ "E9": {
+  "template": "Instance destroyed successfully.",
+  "component": "nova.virt.libvirt.driver",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2064
+ },
+ "E10": {
+  "template": "Deleting instance files <*>",
+  "component": "nova.virt.libvirt.driver",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2064
+ },
+ "E11": {
+  "template": "Deletion of <*> complete",
+  "component": "nova.virt.libvirt.driver",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2064
+ },
+ "E12": {
+  "template": "Took <*> seconds to destroy the instance on the hypervisor.",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2064
+ },
+ "E13": {
+  "template": "Took <*> seconds to deallocate network for instance.",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E14": {
+  "template": "Attempting claim: memory <*> MB, disk <*> GB, vcpus <*> CPU",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E15": {
+  "template": "Total memory: <*> MB, used: <*> MB",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E16": {
+  "template": "memory limit: <*> MB, free: <*> MB",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E17": {
+  "template": "Total disk: <*> GB, used: <*> GB",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E18": {
+  "template": "disk limit not specified, defaulting to unlimited",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E19": {
+  "template": "Total vcpu: <*> VCPU, used: <*> VCPU",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E20": {
+  "template": "vcpu limit not specified, defaulting to unlimited",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E21": {
+  "template": "Claim successful",
+  "component": "nova.compute.claims",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2065
+ },
+ "E22": {
+  "template": "Creating image",
+  "component": "nova.virt.libvirt.driver",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2066
+ },
+ "E23": {
+  "template": "VM Stopped (Lifecycle Event)",
+  "component": "nova.compute.manager",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2067
+ }
+}

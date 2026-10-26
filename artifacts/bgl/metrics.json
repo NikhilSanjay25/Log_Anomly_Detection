@@ -1,0 +1,101 @@
+{
+ "dataset": "bgl",
+ "trained_at": "2026-10-26 19:46:26",
+ "lines_used": 4713493,
+ "window_size": 100,
+ "templates": 510,
+ "word_vocabulary": 589,
+ "split": "forward chaining by window (train on the first 40/60/80%, test on the next 20%)",
+ "train_windows": 37708,
+ "test_windows": 9427,
+ "test_anomaly_rate": 0.08560517662034582,
+ "epochs": 3,
+ "random_forest": {
+  "n_estimators": 300,
+  "min_samples_leaf": 2,
+  "class_weight": "balanced_subsample"
+ },
+ "evaluation": {
+  "pipeline": {
+   "precision": 0.9738805970149254,
+   "recall": 0.9702602230483272,
+   "f1": 0.9720670391061452,
+   "tp": 783,
+   "fp": 21,
+   "fn": 24,
+   "tn": 8599
+  },
+  "forward_chaining_folds": [
+   {
+    "train_fraction": 0.4,
+    "test_range": [
+     0.4,
+     0.6
+    ],
+    "precision": 0.6470588235294118,
+    "recall": 0.8979591836734694,
+    "f1": 0.7521367521367521,
+    "tp": 88,
+    "fp": 48,
+    "fn": 10,
+    "tn": 9281
+   },
+   {
+    "train_fraction": 0.6,
+    "test_range": [
+     0.6,
+     0.8
+    ],
+    "precision": 0.9372599231754162,
+    "recall": 0.6443661971830986,
+    "f1": 0.7636932707355243,
+    "tp": 732,
+    "fp": 49,
+    "fn": 404,
+    "tn": 8242
+   },
+   {
+    "train_fraction": 0.8,
+    "test_range": [
+     0.8,
+     1.0
+    ],
+    "precision": 0.9738805970149254,
+    "recall": 0.9702602230483272,
+    "f1": 0.9720670391061452,
+    "tp": 783,
+    "fp": 21,
+    "fn": 24,
+    "tn": 8599
+   }
+  ],
+  "forward_chaining_mean_f1": 0.8292990206594739,
+  "baseline_event_count_rf": {
+   "precision": 0.968944099378882,
+   "recall": 0.38661710037174724,
+   "f1": 0.5527015057573074,
+   "tp": 312,
+   "fp": 10,
+   "fn": 495,
+   "tn": 8610
+  },
+  "baseline_event_count_logreg": {
+   "precision": 0.9740740740740741,
+   "recall": 0.32589838909541513,
+   "f1": 0.4883936861652739,
+   "tp": 263,
+   "fp": 7,
+   "fn": 544,
+   "tn": 8613
+  },
+  "baseline_word_features_only_rf": {
+   "precision": 0.9725343320848939,
+   "recall": 0.9653035935563816,
+   "f1": 0.9689054726368159,
+   "tp": 779,
+   "fp": 22,
+   "fn": 28,
+   "tn": 8598
+  }
+ }
+}

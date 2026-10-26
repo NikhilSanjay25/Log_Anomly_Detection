@@ -1,15 +1,13 @@
-"""Anomaly Detection Agent: invokes the existing ML pipeline and decides when to ask the SLM.
+"""Anomaly Detection Agent: scores every Gold session with the dataset's ML pipeline.
 
 Policy
-  1. Score every Gold session with Transformer → FAISS → RAG → Random Forest.
-  2. Flag a session as *uncertain* when the RF probability is within threshold ± UNCERTAIN_MARGIN or the RF
-     disagrees with the label majority of its retrieved neighbours.
-  3. If the fine-tuned LoRA SLM is available, ask it for a second opinion on the uncertain unique
-     sequences (lora_mode=auto) or on every unique sequence (lora_mode=all), capped for latency.
-  4. The RF decision is always the final label. The SLM vote is advisory: it is shown as evidence
-     and disagreements are flagged for review. Measured on the 62 uncertain sessions of the
-     held-out CV fold, the RF made 6 errors and the LoRA 27 (all false positives), so letting
-     the SLM override the RF made results worse.
+  1. Score every Gold session with Transformer → FAISS → RAG → Random Forest, using the models trained for the
+     dataset the Identification agent recognised (HDFS, BGL or OpenStack). Datasets with numeric session features
+     (OpenStack timings) pass them to the Random Forest as well.
+  2. The RF decision (probability >= threshold) is the label.
+  3. A session is flagged *uncertain* when the RF probability is within threshold ± UNCERTAIN_MARGIN or the RF
+     disagrees with the label majority of its retrieved neighbours. Uncertain sessions are shown for manual review;
+     the label is not changed.
 """
 import numpy as np
 
@@ -19,16 +17,21 @@ from .base import Agent, AgentError
 
 class AnomalyDetectionAgent(Agent):
     name = "Anomaly Detection Agent"
-    task = "Detect anomalous block sessions with the ML pipeline (+ SLM second opinion)"
+    task = "Detect anomalous sessions with the Transformer → FAISS → RAG → Random Forest pipeline"
 
     def __init__(self, resources):
         self.res = resources
 
     def run(self, ctx):
+        profile = ctx.profile
         gold = ctx.data["medallion"]["gold"].copy()
-        pipe = self.res.pipeline()
+        try:
+            pipe = self.res.pipeline(profile.name)
+        except FileNotFoundError as e:
+            raise AgentError(str(e)) from None
         opts = ctx.options
-        out = pipe.predict(gold.events.tolist(), k=opts.rag_k)
+        extras = profile.extra_matrix(gold)
+        out = pipe.predict(gold.events.tolist(), k=opts.rag_k, extras=extras)
         proba = out["anomaly_proba"]
         if np.isnan(proba).all():
             raise AgentError("None of the sessions contained events from the model vocabulary.")
@@ -48,46 +51,15 @@ class AnomalyDetectionAgent(Agent):
         lo = max(0.0, opts.threshold - config.UNCERTAIN_MARGIN)
         hi = min(1.0, opts.threshold + config.UNCERTAIN_MARGIN)
         gold["uncertain"] = gold.anomaly_proba.between(lo, hi) | (nb_vote != gold.rf_label)
-
-        gold["slm_label"] = None
-        gold["slm_disagrees"] = False
         gold["is_anomaly"] = gold.rf_label
         gold["decision_source"] = "Transformer+RAG+RF"
-        slm_note = self._second_opinion(ctx, gold)
 
-        ctx.data["detection"] = {"sessions": gold, "slm_note": slm_note, "threshold": opts.threshold}
+        ctx.data["detection"] = {"sessions": gold, "threshold": opts.threshold, "dataset": profile.name,
+                                 "metrics": self._metrics(gold)}
         n_anom = int(gold.is_anomaly.sum())
-        ctx.data["detection"]["metrics"] = self._metrics(gold)
-        ctx.send(self.name, "Root Cause Analysis Agent", f"{n_anom} anomalous sessions ready for RCA")
-        return (f"{n_anom:,}/{len(gold):,} sessions anomalous "
-                f"({int(gold.uncertain.sum())} uncertain; {slm_note})")
-
-    def _second_opinion(self, ctx, gold):
-        mode = ctx.options.lora_mode
-        lora = self.res.lora()
-        if mode == "off":
-            return "SLM second opinion disabled"
-        if lora is None:
-            return "LoRA adapter not found - SLM second opinion skipped"
-        cand = gold if mode == "all" else gold[gold.uncertain]
-        if cand.empty:
-            return "no uncertain sessions - SLM not needed"
-        uniq = cand.drop_duplicates("sequence")
-        if len(uniq) > config.LORA_MAX_SEQUENCES:
-            uniq = uniq.sort_values("anomaly_proba", key=lambda s: (s - 0.5).abs()).head(config.LORA_MAX_SEQUENCES)
-            ctx.warn(f"SLM second opinion limited to the {config.LORA_MAX_SEQUENCES} most uncertain patterns.")
-        try:
-            votes = dict(zip(uniq.sequence, lora.classify(uniq.events.tolist())))
-        except Exception as e:  # SLM failure must not break detection
-            ctx.warn(f"LoRA SLM failed: {e}")
-            return f"LoRA SLM failed ({type(e).__name__}); RF decision kept"
-        gold["slm_label"] = gold.sequence.map(votes)
-        asked = gold.slm_label.notna()
-        disagree = asked & ((gold.slm_label == "Anomaly").astype(int) != gold.rf_label)
-        gold["slm_disagrees"] = disagree
-        n_asked = int(asked.sum())
-        return (f"LoRA SLM (advisory) consulted on {len(votes)} pattern(s) / {n_asked} session(s); "
-                f"disagrees with RF on {int(disagree.sum())}")
+        ctx.send(self.name, "Root Cause Analysis Agent", f"{n_anom} anomalous {profile.session_noun_plural} ready for RCA")
+        return (f"{n_anom:,}/{len(gold):,} {profile.session_noun_plural} anomalous "
+                f"({int(gold.uncertain.sum())} flagged uncertain; {profile.title} models)")
 
     @staticmethod
     def _metrics(gold):

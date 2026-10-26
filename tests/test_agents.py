@@ -1,4 +1,4 @@
-"""End-to-end tests of the agent workflow (no SLMs, so they run on CPU in seconds).
+"""End-to-end tests of the HDFS agent workflow (no language model, so they run on CPU in seconds).
 
     python -m pytest tests -q
 Requires samples/ (python scripts/make_sample_logs.py) and the model artifacts.
@@ -19,7 +19,7 @@ from log_agents.resources import Resources
 
 ROOT = Path(__file__).resolve().parent.parent
 SAMPLES = ROOT / "samples"
-OPTS = dict(use_slm_insight=False, lora_mode="off", persist=False)
+OPTS = dict(persist=False)
 
 
 @pytest.fixture(scope="module")
@@ -127,6 +127,10 @@ def test_chat_grounds_questions_on_the_run(coord):
     # named sessions of this run get their own evidence and neighbours; unknown ids are ignored
     assert f"BLOCK {anom}: classified Anomaly" in content and f"BLOCK {norm}: classified Normal" in content
     assert "BLOCK blk_123" not in content and content.count("Similar historical sessions") == 2
+    # the raw log lines of each named block are fed to the model too (error / warning lines first)
+    assert f"RAW LOG LINES of block {anom}" in content and f"RAW LOG LINES of block {norm}" in content
+    anom_lines = [ln for ln in content.split(f"RAW LOG LINES of block {anom}")[1].splitlines()[1:] if ln.strip()]
+    assert anom_lines and all(anom in ln or "blk_" in ln for ln in anom_lines[:5])
 
     class FakeSLM:
         def chat(self, messages, max_new_tokens):

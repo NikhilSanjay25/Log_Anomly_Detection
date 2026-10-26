@@ -29,11 +29,10 @@ class TraceStep:
 
 @dataclass
 class RunOptions:
-    use_slm_insight: bool = True
-    lora_mode: str = "auto"         # auto (uncertain cases only) | all | off
     rag_k: int = config.RAG_K
     threshold: float = 0.5
     persist: bool = True            # write medallion layers + run memory to disk
+    dataset: str = None             # force a dataset ("hdfs" | "bgl" | "openstack"); None = detect it from the input
 
 
 class RunContext:
@@ -44,6 +43,7 @@ class RunContext:
         self.text = text
         self.options = options or RunOptions()
         self.data = {}              # blackboard: agents publish results here
+        self.profile = None         # DatasetProfile, set by the Log Identification agent
         self.messages = []
         self.trace = []
         self.warnings = []

@@ -1,8 +1,8 @@
 """Command-line entry point.
 
-    python -m log_agents.cli samples/hdfs_raw_sample.log
-    python -m log_agents.cli my.log --no-slm --lora off --out report.md
-    python -m log_agents.cli my.log --chat          # then ask follow-up questions about the analysis
+    python -m log_agents.cli samples/hdfs_raw_sample.log          # HDFS, BGL and OpenStack logs are detected
+    python -m log_agents.cli my.log --dataset bgl --out report.md
+    python -m log_agents.cli my.log --chat          # then ask follow-up questions (Qwen, fed the relevant logs)
 """
 import argparse
 import json
@@ -17,10 +17,9 @@ from .resources import Resources
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Agentic HDFS log anomaly detection")
+    ap = argparse.ArgumentParser(description="Agentic log anomaly detection (HDFS, BGL, OpenStack)")
     ap.add_argument("log_file")
-    ap.add_argument("--no-slm", action="store_true", help="skip the Qwen3 insight SLM (knowledge-base insight)")
-    ap.add_argument("--lora", choices=["auto", "all", "off"], default="auto", help="LoRA SLM second opinion")
+    ap.add_argument("--dataset", choices=["hdfs", "bgl", "openstack"], help="force a dataset (default: detect it)")
     ap.add_argument("--threshold", type=float, default=0.5)
     ap.add_argument("--out", help="write the Markdown report here (.json for JSON)")
     ap.add_argument("--no-persist", action="store_true", help="do not write medallion layers / run memory")
@@ -29,8 +28,7 @@ def main(argv=None):
 
     path = Path(args.log_file)
     batch = UploadSource(path.name, path.read_bytes()).read()
-    opts = RunOptions(use_slm_insight=not args.no_slm, lora_mode=args.lora, threshold=args.threshold,
-                      persist=not args.no_persist)
+    opts = RunOptions(threshold=args.threshold, persist=not args.no_persist, dataset=args.dataset)
 
     def progress(step):
         print(f"  [{step.status:>8}] {step.agent:<34} {step.duration_s:6.1f}s  {step.summary}", file=sys.stderr)
@@ -55,7 +53,7 @@ def chat_loop(ctx, coordinator):
     from .chat import RunChat
     sys.stdout.reconfigure(encoding="utf-8")
     chat = RunChat(ctx, coordinator.rca)
-    slm = coordinator.res.insight_slm()
+    slm = coordinator.res.chat_slm()
     print("\nAsk follow-up questions about this analysis. Name a block (blk_...) for its details. "
           "Empty line or 'exit' quits.", file=sys.stderr)
     while True:

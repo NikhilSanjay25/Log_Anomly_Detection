@@ -71,11 +71,11 @@ class CoordinatorAgent:
 
     def _plan(self, ctx):
         ident = ctx.data["identification"]
+        profile = ctx.profile
         plan = ["Preprocessing & Cleaning Agent", "Medallion Data Processing (Bronze → Silver → Gold)",
-                "Anomaly Detection Agent (Transformer → FAISS → RAG → Random Forest"
-                + ("" if ctx.options.lora_mode == "off" else " + advisory LoRA SLM second opinion") + ")",
+                f"Anomaly Detection Agent ({profile.title} Transformer → FAISS → RAG → Random Forest)",
                 "Root Cause Analysis Agent",
-                "Insight Agent (" + ("SLM" if ctx.options.use_slm_insight else "knowledge base") + ")"]
+                "Insight Agent (knowledge base)"]
         ctx.send(NAME, "Log Identification Agent",
                  f"Identified {ident['family']} / {ident['format']} → workflow: {ident['workflow']}")
         return plan

@@ -1,89 +1,43 @@
-"""Medallion-architecture data processing.
+"""Medallion-architecture data processing (the same layers for every supported dataset).
 
 Bronze: raw cleaned logs (output of the Preprocessing agent, persisted as-is)
-Silver: structured + enriched rows - one row per (block, event) with template, lifecycle stage,
-        severity, IPs/DataNodes, timestamps
-Gold:   aggregated per-block sessions (event sequence, counts, durations, error events, nodes)
-        plus correlation tables (DataNode → blocks, time-window activity)
+Silver: structured + enriched rows - one row per (session, event) with template, lifecycle stage,
+        severity, nodes, timestamps. What a "session" is comes from the dataset profile: an HDFS block,
+        a window of BGL messages, or an OpenStack instance.
+Gold:   aggregated per-session rows (event sequence, counts, durations, error events, nodes, numeric features)
+        plus correlation tables (node -> sessions, time-window activity)
 """
-import re
-
 import pandas as pd
 
-from . import config, hdfs
+from . import config
 from .agents.base import Agent, AgentError
 
-DIGITS_RE = re.compile(r"\d+")
+WARN_LEVELS = ["WARN", "WARNING", "ERROR", "FATAL", "SEVERE", "FAILURE", "CRITICAL"]
 
 
-def _match_cached(contents):
-    """Template-match with a cache keyed on the line 'shape' (ids/IPs/numbers masked)."""
-    cache = {}
-    eids = []
-    for c in contents:
-        key = DIGITS_RE.sub("0", hdfs.IP_RE.sub("<ip>", hdfs.BLOCK_RE.sub("<blk>", c)))
-        if key not in cache:
-            cache[key] = hdfs.match_template(c)[0]
-        eids.append(cache[key])
-    return eids
-
-
-def build_silver(clean, fmt):
-    if fmt == "hdfs_raw":
-        df = clean.copy()
-        df["event_id"] = _match_cached(df.content.tolist())
-        unmatched = int(df.event_id.isna().sum())
-        df = df.dropna(subset=["event_id"])
-        # one event per block per line (E21 lines repeat the block id in the file path)
-        df["block_id"] = df.content.map(lambda c: list(dict.fromkeys(hdfs.BLOCK_RE.findall(c))))
-        df["ips"] = df.content.map(lambda c: sorted(set(hdfs.IP_RE.findall(c))))
-        df = df.explode("block_id").reset_index(drop=True)
-        df["position"] = df.groupby("block_id").cumcount()
-        silver = df[["block_id", "position", "line_no", "timestamp", "level", "component", "event_id", "ips"]]
-    else:
-        unmatched = 0
-        df = clean[["session_id", "events"]].explode("events").rename(
-            columns={"session_id": "block_id", "events": "event_id"})
-        df["position"] = df.groupby("block_id").cumcount()
-        df["timestamp"] = pd.NaT
-        df["level"] = "UNKNOWN"
-        df["ips"] = [[] for _ in range(len(df))]
-        silver = df[["block_id", "position", "timestamp", "level", "event_id", "ips"]].reset_index(drop=True)
-
-    info = silver.event_id.map(hdfs.EVENT_INFO)
-    silver = silver.assign(template=silver.event_id.map(hdfs.TEMPLATE_TEXT),
-                           stage=info.str[0], severity=info.str[1])
-    return silver, unmatched
-
-
-def build_gold(silver, clean, fmt):
+def build_gold(silver, clean, fmt, profile):
     g = silver.groupby("block_id", sort=False)
     gold = pd.DataFrame({
         "events": g["event_id"].agg(list),
         "start": g["timestamp"].min(),
         "end": g["timestamp"].max(),
-        "warn_lines": g["level"].agg(lambda s: int(s.isin(["WARN", "WARNING", "ERROR", "FATAL"]).sum())),
+        "warn_lines": g["level"].agg(lambda s: int(s.isin(WARN_LEVELS).sum())),
         "nodes": g["ips"].agg(lambda s: sorted({ip for ips in s for ip in ips})),
     })
+    errors, warnings_ = profile.error_events, profile.warning_events
     gold["n_events"] = gold.events.map(len)
     gold["sequence"] = gold.events.map(" ".join)
-    gold["error_events"] = gold.events.map(lambda e: sorted(set(e) & hdfs.ERROR_EVENTS, key=lambda x: int(x[1:])))
-    gold["warning_events"] = gold.events.map(lambda e: sorted(set(e) & hdfs.WARNING_EVENTS, key=lambda x: int(x[1:])))
+    gold["error_events"] = gold.events.map(lambda e: sorted(set(e) & errors, key=lambda x: int(x[1:])))
+    gold["warning_events"] = gold.events.map(lambda e: sorted(set(e) & warnings_, key=lambda x: int(x[1:])))
     gold["duration_s"] = (gold.end - gold.start).dt.total_seconds()
-    if fmt == "hdfs_raw":
+    if silver.timestamp.notna().any():
         gaps = silver.sort_values(["block_id", "timestamp"]).groupby("block_id").timestamp.diff().dt.total_seconds()
         gold["max_gap_s"] = gaps.groupby(silver.block_id).max()
     else:
         gold["max_gap_s"] = float("nan")
-    if fmt == "hdfs_trace_csv":
-        extra = clean.set_index("session_id")
-        for col in ("true_label", "latency"):
-            if col in extra:
-                gold[col] = extra[col].reindex(gold.index)
-        if "latency" in gold:
-            gold["duration_s"] = gold.latency
     gold.index.name = "block_id"
-    return gold.reset_index()
+    gold = gold.reset_index()
+    return profile.add_session_features(gold, silver, clean, fmt)
 
 
 def build_correlations(silver, gold):
@@ -99,12 +53,13 @@ class MedallionProcessor(Agent):
     task = "Organise data into Bronze, Silver and Gold layers"
 
     def run(self, ctx):
+        profile = ctx.profile
         fmt = ctx.data["identification"]["format"]
         bronze = ctx.data["clean"]
-        silver, unmatched = build_silver(bronze, fmt)
+        silver, unmatched = profile.build_silver(bronze, fmt)
         if silver.empty:
-            raise AgentError("No log line matched a known HDFS event template.")
-        gold = build_gold(silver, bronze, fmt)
+            raise AgentError(f"No log line matched a known {profile.title} event template.")
+        gold = build_gold(silver, bronze, fmt, profile)
         ctx.data["medallion"] = {"bronze": bronze, "silver": silver, "gold": gold,
                                  "correlations": build_correlations(silver, gold),
                                  "unmatched_lines": unmatched}
@@ -115,10 +70,11 @@ class MedallionProcessor(Agent):
             silver.to_csv(out / "silver.csv", index=False)
             gold.to_csv(out / "gold.csv", index=False)
             corr = ctx.data["medallion"]["correlations"]
-            corr["node_blocks"].rename("blocks").to_csv(out / "gold_node_activity.csv", index_label="node")
-            corr["blocks_per_minute"].rename("active_blocks").to_csv(out / "gold_timeline.csv", index_label="minute")
+            corr["node_blocks"].rename("sessions").to_csv(out / "gold_node_activity.csv", index_label="node")
+            corr["blocks_per_minute"].rename("active_sessions").to_csv(out / "gold_timeline.csv", index_label="minute")
             ctx.data["medallion"]["path"] = str(out)
-        msg = f"Bronze {len(bronze):,} rows → Silver {len(silver):,} events → Gold {len(gold):,} block sessions"
+        noun = profile.session_noun
+        msg = f"Bronze {len(bronze):,} rows → Silver {len(silver):,} events → Gold {len(gold):,} {noun} sessions"
         if unmatched:
             msg += f" ({unmatched:,} lines matched no template)"
         return msg

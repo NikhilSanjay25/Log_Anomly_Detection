@@ -1,0 +1,3572 @@
+{
+ "E1": {
+  "template": "instruction cache parity error corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 105924
+ },
+ "E2": {
+  "template": "MidplaneSwitchController performing bit sparing on <*> bit <*>",
+  "component": "LINKCARD",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 964
+ },
+ "E3": {
+  "template": "generating <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1706751
+ },
+ "E4": {
+  "template": "<*> ddr errors(s) detected and corrected on rank <*>, symbol <*>, bit <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 33939
+ },
+ "E5": {
+  "template": "<*> L3 EDRAM error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 4534
+ },
+ "E6": {
+  "template": "CE sym <*>, at <*>, mask <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 201206
+ },
+ "E7": {
+  "template": "total of <*> ddr error(s) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 28485
+ },
+ "E8": {
+  "template": "ddr: activating redundant bit steering: rank=<*> symbol=<*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1314
+ },
+ "E9": {
+  "template": "ddr: excessive soft failures, consider replacing the card",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 41
+ },
+ "E10": {
+  "template": "ciod: Error loading <*> invalid or missing program image, No such file or directory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 46416
+ },
+ "E11": {
+  "template": "<*> double-hummer alignment exceptions",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 295764
+ },
+ "E12": {
+  "template": "<*> tree receiver <*> in re-synch state event(s) (dcr <*>) detected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 7847
+ },
+ "E13": {
+  "template": "idoproxydb has been started: $Name: <*> $ Input parameters: -enableflush -loguserinfo db.properties BlueGene1",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 114
+ },
+ "E14": {
+  "template": "ciodb has been restarted.",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 129
+ },
+ "E15": {
+  "template": "mmcs_db_server has been started: <*> --useDatabase BGL --dbproperties <*> --iolog /bgl/BlueLight/logs/BGL --reconnect-blocks all",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 63
+ },
+ "E16": {
+  "template": "ciod: LOGIN <*> failed: No such file or directory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 43647
+ },
+ "E17": {
+  "template": "ciod: failed to read message prefix on control stream (CioStream socket to <*>",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5983
+ },
+ "E18": {
+  "template": "<*> L3 directory error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 444
+ },
+ "E19": {
+  "template": "data TLB error interrupt",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 152734
+ },
+ "E20": {
+  "template": "instruction address: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 51227
+ },
+ "E21": {
+  "template": "machine check <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6755
+ },
+ "E22": {
+  "template": "machine check status register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 246
+ },
+ "E23": {
+  "template": "summary...........................1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 244
+ },
+ "E24": {
+  "template": "instruction plb <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 298
+ },
+ "E25": {
+  "template": "data read plb <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 297
+ },
+ "E26": {
+  "template": "data write plb <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 296
+ },
+ "E27": {
+  "template": "tlb <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 296
+ },
+ "E28": {
+  "template": "i-cache parity error..............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 296
+ },
+ "E29": {
+  "template": "d-cache search parity <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 294
+ },
+ "E30": {
+  "template": "d-cache flush parity <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 294
+ },
+ "E31": {
+  "template": "imprecise machine <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 289
+ },
+ "E32": {
+  "template": "machine state register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8454
+ },
+ "E33": {
+  "template": "wait state enable.................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6745
+ },
+ "E34": {
+  "template": "critical input interrupt <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6559
+ },
+ "E35": {
+  "template": "external input interrupt <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6556
+ },
+ "E36": {
+  "template": "problem state <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6546
+ },
+ "E37": {
+  "template": "floating point instr. <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6541
+ },
+ "E38": {
+  "template": "floating pt ex mode <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 13044
+ },
+ "E39": {
+  "template": "debug wait enable.................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6524
+ },
+ "E40": {
+  "template": "debug interrupt enable............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6521
+ },
+ "E41": {
+  "template": "instruction address space.........0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6506
+ },
+ "E42": {
+  "template": "data address space................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6503
+ },
+ "E43": {
+  "template": "core configuration register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6431
+ },
+ "E44": {
+  "template": "disable store gathering..................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6495
+ },
+ "E45": {
+  "template": "disable apu instruction broadcast........0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2396
+ },
+ "E46": {
+  "template": "disable trace broadcast..................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2393
+ },
+ "E47": {
+  "template": "guaranteed instruction cache block touch.0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2390
+ },
+ "E48": {
+  "template": "guaranteed data cache block touch........1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2389
+ },
+ "E49": {
+  "template": "force load/store alignment...............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2389
+ },
+ "E50": {
+  "template": "icache prefetch <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4777
+ },
+ "E51": {
+  "template": "general purpose registers:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2318
+ },
+ "E52": {
+  "template": "<*>:<*> <*>:<*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 16444
+ },
+ "E53": {
+  "template": "special purpose registers:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2316
+ },
+ "E54": {
+  "template": "lr:<*> cr:<*> xer:<*> ctr:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2316
+ },
+ "E55": {
+  "template": "rts panic! - stopping execution",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3983
+ },
+ "E56": {
+  "template": "<*> torus receiver <*> input pipe error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 10487
+ },
+ "E57": {
+  "template": "data address: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 14499
+ },
+ "E58": {
+  "template": "rts internal error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2187
+ },
+ "E59": {
+  "template": "ciod: Message code <*> is not <*> or <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2278
+ },
+ "E60": {
+  "template": "ciod: pollControlDescriptors: Detected the debugger died.",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 6443
+ },
+ "E61": {
+  "template": "ciod: for node <*>, read continuation request but ioState is <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 395
+ },
+ "E62": {
+  "template": "ciod: cpu <*> at treeaddr <*> sent unrecognized message <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2569
+ },
+ "E63": {
+  "template": "machine check interrupt (bit=<*>): L2 dcache unit data parity error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 49
+ },
+ "E64": {
+  "template": "ciod: LOGIN <*> failed: Permission denied",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 472
+ },
+ "E65": {
+  "template": "machine check interrupt (bit=<*>): L3 major internal error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 57
+ },
+ "E66": {
+  "template": "L3 global control register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E67": {
+  "template": "start <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 192
+ },
+ "E68": {
+  "template": "disable speculative access...............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E69": {
+  "template": "close EDRAM pages as soon as possible....0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E70": {
+  "template": "size of scratchpad portion of L3.........0 (0M)",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E71": {
+  "template": "disable all access to cache directory....0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E72": {
+  "template": "write buffer commit threshold............2",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E73": {
+  "template": "size of DDR we are caching...............1 (512M)",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E74": {
+  "template": "prefetch depth for core <*>................1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 96
+ },
+ "E75": {
+  "template": "prefetch depth for PLB slave.............1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E76": {
+  "template": "max number of outstanding prefetches.....7",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E77": {
+  "template": "turn on hidden refreshes.................1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E78": {
+  "template": "disable write lines <*>:<*>..................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E79": {
+  "template": "L3 ecc control register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E80": {
+  "template": "capture first directory correctable error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 48
+ },
+ "E81": {
+  "template": "capture first directory uncorrectable error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E82": {
+  "template": "capture first EDRAM correctable error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E83": {
+  "template": "capture first EDRAM uncorrectable error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E84": {
+  "template": "capture first EDRAM parity error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E85": {
+  "template": "capture first DDR uncorrectable error address..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E86": {
+  "template": "disable flagging of DDR UE's as major internal error.0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E87": {
+  "template": "L3 ecc status register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E88": {
+  "template": "correctable error detected in directory <*>......0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E89": {
+  "template": "uncorrectable error detected in directory <*>....0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E90": {
+  "template": "correctable error detected in EDRAM bank <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E91": {
+  "template": "uncorrectable error detected in EDRAM bank <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E92": {
+  "template": "parity error in bank <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E93": {
+  "template": "uncorrectable error detected in external <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E94": {
+  "template": "parity error in read queue <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 141
+ },
+ "E95": {
+  "template": "parity error in write buffer...................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E96": {
+  "template": "number of correctable errors detected in L3 <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E97": {
+  "template": "interrupt threshold...0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E98": {
+  "template": "number of lines with parity errors written to L3 <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E99": {
+  "template": "DDR machine check register: <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E100": {
+  "template": "memory and bus summary...........................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E101": {
+  "template": "command manager unit summary.....................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E102": {
+  "template": "memory manager uncorrectable <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E103": {
+  "template": "memory manager strobe gate.......................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E104": {
+  "template": "memory manager address parity error..............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E105": {
+  "template": "memory manager <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E106": {
+  "template": "memory manager address error.....................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E107": {
+  "template": "memory manager store buffer parity...............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E108": {
+  "template": "memory manager RMW buffer parity.................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E109": {
+  "template": "memory manager refresh counter timeout...........0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E110": {
+  "template": "memory manager refresh contention................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E111": {
+  "template": "state machine....................................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E112": {
+  "template": "memory manager / command manager address parity..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E113": {
+  "template": "regctl scancom interface.........................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E114": {
+  "template": "DDR failing info register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18
+ },
+ "E115": {
+  "template": "capture <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E116": {
+  "template": "symbol................15",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E117": {
+  "template": "mask..................<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E118": {
+  "template": "miscompare............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E119": {
+  "template": "uncorrectable <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E120": {
+  "template": "address parity error..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E121": {
+  "template": "correctable <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E122": {
+  "template": "qw trapped............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E123": {
+  "template": "chip select...........0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E124": {
+  "template": "DDR failing data registers: <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E125": {
+  "template": "<*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 141
+ },
+ "E126": {
+  "template": "DDR failing address register: <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 47
+ },
+ "E127": {
+  "template": "<*>:<*> <*>:ffffffff <*>:<*> <*>:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2092
+ },
+ "E128": {
+  "template": "PrepareForService is being done on this card(mLctn(<*>), mCardSernum(<*>), <*> mIp(<*>), mType(<*>)) by root",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 5
+ },
+ "E129": {
+  "template": "PrepareForService shutting down <*> mCardSernum(<*>), <*> mIp(<*>), mType(<*>)) as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 2316
+ },
+ "E130": {
+  "template": "EndServiceAction is restarting the NodeCards in midplane <*> as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 338
+ },
+ "E131": {
+  "template": "EndServiceAction <*> performed upon <*> by <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 233
+ },
+ "E132": {
+  "template": "Node card is not fully functional",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 17364
+ },
+ "E133": {
+  "template": "Can not get assembly information for node card",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 17305
+ },
+ "E134": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD IS NOT OK. MPGOOD ERROR LATCH IS ACTIVE. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 16896
+ },
+ "E135": {
+  "template": "Node card VPD check: <*> node in processor card slot <*> do not match. VPD ecid <*> found <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 21356
+ },
+ "E136": {
+  "template": "ciod: sendMsgToDebugger: error sending PROGRAM_EXITED message to debugger.",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3
+ },
+ "E137": {
+  "template": "machine check interrupt (bit=<*>): L2 DCU read error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3
+ },
+ "E138": {
+  "template": "<*> torus sender <*> retransmission error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1145
+ },
+ "E139": {
+  "template": "L3 correctable errors exceeds threshold (iar <*> lr <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 20
+ },
+ "E140": {
+  "template": "Starting SystemController",
+  "component": "CMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 71
+ },
+ "E141": {
+  "template": "Controlling BG/L rows [ <*> <*> <*> <*> ]",
+  "component": "CMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 20
+ },
+ "E142": {
+  "template": "Running as background command",
+  "component": "CMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 70
+ },
+ "E143": {
+  "template": "data storage interrupt",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 63493
+ },
+ "E144": {
+  "template": "exception syndrome register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18013
+ },
+ "E145": {
+  "template": "machine check: i-fetch......................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18017
+ },
+ "E146": {
+  "template": "program interrupt: illegal <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 13920
+ },
+ "E147": {
+  "template": "program interrupt: privileged instruction...0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 9824
+ },
+ "E148": {
+  "template": "program interrupt: trap <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 9824
+ },
+ "E149": {
+  "template": "floating point <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 9824
+ },
+ "E150": {
+  "template": "store <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 9824
+ },
+ "E151": {
+  "template": "data store interrupt caused by <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 19646
+ },
+ "E152": {
+  "template": "auxiliary processor.........................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8419
+ },
+ "E153": {
+  "template": "program interrupt: unimplemented operation..0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E154": {
+  "template": "byte ordering exception.....................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E155": {
+  "template": "program interrupt: imprecise exception......0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E156": {
+  "template": "program interrupt: fp cr update.............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E157": {
+  "template": "program interrupt: fp compare...............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E158": {
+  "template": "program interrupt: fp cr field .............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8102
+ },
+ "E159": {
+  "template": "<*> torus processor sram reception error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 66
+ },
+ "E160": {
+  "template": "external input interrupt (unit=<*> bit=<*>): torus sender <*> retransmission error was corrected",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1322
+ },
+ "E161": {
+  "template": "external input interrupt (unit=<*> bit=<*>): number of corrected SRAM errors has exceeded threshold",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 39
+ },
+ "E162": {
+  "template": "suppressing further interrupts of same type",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 7694
+ },
+ "E163": {
+  "template": "symbol................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 41
+ },
+ "E164": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:E7:<*>:<*>:0D:<*>:E9:<*>:EB ip=<*> v=<*> t=<*> status=M Fri Jun <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E165": {
+  "template": "BGLMaster has been started: ./BGLMaster --consoleip <*> --consoleport <*> --configfile bglmaster.init",
+  "component": "BGLMASTER",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 6
+ },
+ "E166": {
+  "template": "BglIdoChip table has <*> IDOs with the same IP address (<*>)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 9
+ },
+ "E167": {
+  "template": "SerialNumber(<*>) IpAddress(<*>) Status(A)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 64
+ },
+ "E168": {
+  "template": "While initializing node card iDo machine with LP of <*> caught java.io.IOException: Could not contact iDo with <*> and IP=/<*> because java.lang.RuntimeException: Communication error: (DirectIDo for Uninitialized DirectIDo for <*> is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 488
+ },
+ "E169": {
+  "template": "NodeCard VPD is corrupt",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 10
+ },
+ "E170": {
+  "template": "While initializing node card, ido with LP of <*> caught java.lang.IllegalStateException: IDo is not in functional state -- currently in state COMMUNICATION_ERROR",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 9
+ },
+ "E171": {
+  "template": "ciod: Unexpected eof at line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 328
+ },
+ "E172": {
+  "template": "ciod: Error creating node map from file <*> No child processes",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 320
+ },
+ "E173": {
+  "template": "ddr: Unable to steer rank=<*>, symbol=<*> - rank is already steering symbol <*>. Due to multiple symbols being over the correctable e",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 22
+ },
+ "E174": {
+  "template": "rror threshold, consider replacing the card",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 22
+ },
+ "E175": {
+  "template": "ddr: Unable to steer rank=<*>, symbol=<*> - rank is already steering symbol <*>. Due to multiple symbols being over the correctable",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 23
+ },
+ "E176": {
+  "template": "error threshold, consider replacing the card",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 23
+ },
+ "E177": {
+  "template": "symbol................7",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E178": {
+  "template": "PrepareForService is being done on this part (mLctn(<*>), mCardSernum(<*>), <*> mIp(<*>), mType(<*>)) by <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 131
+ },
+ "E179": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Jun <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3
+ },
+ "E180": {
+  "template": "ciod: Error loading <*> program image too big, <*> > <*>",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1512
+ },
+ "E181": {
+  "template": "critical input interrupt (unit=<*> bit=<*>): warning for tree <*> wire",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2245
+ },
+ "E182": {
+  "template": "job <*> timed out. Block freed.",
+  "component": "FATAL",
+  "level": "KILL",
+  "kind": "normal",
+  "count": 306
+ },
+ "E183": {
+  "template": "program interrupt",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3667
+ },
+ "E184": {
+  "template": "ciod: X coordinate <*> exceeds physical dimension <*> at line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 168
+ },
+ "E185": {
+  "template": "ciod: Error creating node map from file <*> Cannot allocate memory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 144
+ },
+ "E186": {
+  "template": "<*> floating point alignment exceptions",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 267725
+ },
+ "E187": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:EA:<*>:<*>:0D:<*>:E9:<*>:8E ip=<*> v=<*> t=<*> status=M Mon Jun <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E188": {
+  "template": "Problem communicating with node card, iDo machine with LP of <*> caught java.lang.IllegalStateException: while executing <*> Operation caught java.lang.RuntimeException: Communication error: (DirectIDo for com.ibm.ido.DirectIDo object <*> with image version <*> and card type <*>] is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 20
+ },
+ "E189": {
+  "template": "While initializing node card, ido with LP of <*> caught java.lang.IllegalStateException: while executing <*> Operation caught java.lang.RuntimeException: Communication error: (DirectIDo for com.ibm.ido.DirectIDo object <*> with image version <*> and card type <*>] is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 10
+ },
+ "E190": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD IS NOT OK. MPGOOD ERROR LATCH IS ACTIVE. THE <*> VOLT RAIL IS NOT OK. THE <*> VOLT RAIL IS NOT OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 116
+ },
+ "E191": {
+  "template": "NodeCard temperature sensor chip <*> is not accessible",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 5
+ },
+ "E192": {
+  "template": "NodeCard power module <*> is not accessible",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 230
+ },
+ "E193": {
+  "template": "NodeCard VPD chip is not accessible",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 1
+ },
+ "E194": {
+  "template": "While initializing node card, ido with LP of FF:F2:9F:<*>:E6:<*>:<*>:0D:<*>:E9:<*>:<*> caught java.lang.NullPointerException",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 1
+ },
+ "E195": {
+  "template": "Node card status: ALERT <*>, ALERT <*>, ALERT <*>, ALERT <*> is (are) active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. TEMPERATURE MASK IS ACTIVE. No temperature error. Temperature Limit Error Latch is clear. PGOOD is asserted. PGOOD error latch is clear. MPGOOD is OK. MPGOOD error latch is clear. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 1
+ },
+ "E196": {
+  "template": "Target=ido://FF:F2:9F:<*>:E6:<*>:<*>:0D:<*>:E9:<*>:<*>/JTAG/<*> Message=Pll failed to lock",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3
+ },
+ "E197": {
+  "template": "<*> Message=ScomError",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3
+ },
+ "E198": {
+  "template": "<*> Message=Invalid JtagId = ffffffff",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 63
+ },
+ "E199": {
+  "template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> socket closed",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 168
+ },
+ "E200": {
+  "template": "mmcs_server exited normally with exit code <*>",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 9
+ },
+ "E201": {
+  "template": "MidplaneSwitchController::sendTrain() port disconnected: <*>-U19-E",
+  "component": "LINKCARD",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 24
+ },
+ "E202": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:EB:E0:<*>:0D:<*>:E9:<*>:1F ip=<*> v=<*> t=<*> status=M Wed Jun <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E203": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD is OK. MPGOOD ERROR LATCH IS ACTIVE. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 49
+ },
+ "E204": {
+  "template": "critical input interrupt (unit=<*> bit=<*>): warning for torus <*> wire",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 5437
+ },
+ "E205": {
+  "template": "ddr: Unable to steer rank=<*>, symbol=<*> - rank is already steering symbol <*>. Due to multiple symbols being over the correctabl",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E206": {
+  "template": "e error threshold, consider replacing the card",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E207": {
+  "template": "ciod: Error opening node map file <*> No such file or directory",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1936
+ },
+ "E208": {
+  "template": "ciod: Error creating node map from file <*> Bad file descriptor",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1936
+ },
+ "E209": {
+  "template": "<*> torus non-crc error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 62
+ },
+ "E210": {
+  "template": "shutdown complete",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 99
+ },
+ "E211": {
+  "template": "machine check interrupt (bit=<*>): Torus/Tree/GI read error <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E212": {
+  "template": "PrepareForService is being done on this Midplane <*> <*> <*> by <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 249
+ },
+ "E213": {
+  "template": "EndServiceAction is restarting the LinkCards in midplane <*> as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 199
+ },
+ "E214": {
+  "template": "PrepareForService is being done on this rack <*> by <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 30
+ },
+ "E215": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Fri Jul <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 802
+ },
+ "E216": {
+  "template": "LinkCard power module U58 is not accessible",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 319
+ },
+ "E217": {
+  "template": "NodeCard is not fully functional",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 60
+ },
+ "E218": {
+  "template": "LinkCard is not fully functional",
+  "component": "HARDWARE",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 248
+ },
+ "E219": {
+  "template": "this link card is not fully functional",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 22
+ },
+ "E220": {
+  "template": "no ethernet link",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 14
+ },
+ "E221": {
+  "template": "rts: kernel terminated for reason 1004rts: bad message header: expecting type <*>, type=<*>, cpu=<*>, index=<*>, total=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1139
+ },
+ "E222": {
+  "template": "ciod: In packet from node <*> <*> message code <*> is not <*> or <*> (softheader=<*> <*> <*> <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 176
+ },
+ "E223": {
+  "template": "ciod: Missing or invalid fields on line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2048
+ },
+ "E224": {
+  "template": "ciod: Error creating node map from file <*> Resource temporarily unavailable",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2048
+ },
+ "E225": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:EB:CC:<*>:0D:<*>:E9:<*>:<*> ip=<*> v=<*> t=<*> status=M Tue Jul <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E226": {
+  "template": "Power deactivated: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 192
+ },
+ "E227": {
+  "template": "Problem reading the ethernet arl entries fro the service card: java.lang.IllegalStateException: while executing I2C Operation caught java.lang.RuntimeException: Communication error: (DirectIDo for com.ibm.ido.DirectIDo object <*> with image version <*> and card type <*>] is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 4
+ },
+ "E228": {
+  "template": "parity error.......0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E229": {
+  "template": "machine state register:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E230": {
+  "template": "machine state register: machine state register: machine state register: machine state register: machine state register: machine",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5
+ },
+ "E231": {
+  "template": "state register: machine state register: machine state register: machine state register: machine state register: machine state re",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5
+ },
+ "E232": {
+  "template": "gister: machine state register: machine state register: machine state register: machine state register: machine state register:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5
+ },
+ "E233": {
+  "template": "New ido chip inserted into the database: <*> ip=<*> v=<*> t=<*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3455
+ },
+ "E234": {
+  "template": "rts: kernel terminated for reason 1001rts: bad message header: invalid cpu, type=<*>, cpu=<*>, index=<*>, total=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3334
+ },
+ "E235": {
+  "template": "rts: kernel terminated for reason 1002rts: bad message header: too many packets, type=<*>, cpu=<*>, index=<*>, <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 250
+ },
+ "E236": {
+  "template": "rts: kernel terminated for reason 1002rts: bad message header: too many packets, type=<*>, cpu=<*>, index=<*>, total=<*>, <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 28
+ },
+ "E237": {
+  "template": "max=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 130
+ },
+ "E238": {
+  "template": "<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 856
+ },
+ "E239": {
+  "template": "MidplaneSwitchController::parityAlignment() pap failed: <*> <*> <*>",
+  "component": "LINKCARD",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 14
+ },
+ "E240": {
+  "template": "ciod: duplicate canonical-rank <*> to logical-rank <*> mapping at line <*> of node map file /p/gb2/pakin1/sweep3d-5x5x400-10mk-3mmi-1024pes-sweep/sweep.map",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 512
+ },
+ "E241": {
+  "template": "ciod: Error creating node map from file /p/gb2/pakin1/sweep3d-5x5x400-10mk-3mmi-1024pes-sweep/sweep.map: Device or resource busy",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 512
+ },
+ "E242": {
+  "template": "ciod: T coordinate <*> exceeds physical dimension <*> at line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1016
+ },
+ "E243": {
+  "template": "ciod: Error creating node map from file <*> Block device required",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1016
+ },
+ "E244": {
+  "template": "ciod: Y coordinate <*> exceeds physical dimension <*> at line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1272
+ },
+ "E245": {
+  "template": "ciod: Error creating node map from file <*> Permission denied",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1272
+ },
+ "E246": {
+  "template": "<*>, max=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 103
+ },
+ "E247": {
+  "template": "external input interrupt (unit=<*> bit=<*>): uncorrectable torus error",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 10
+ },
+ "E248": {
+  "template": "Torus non-recoverable error DCRs follow.",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 10
+ },
+ "E249": {
+  "template": "DCR <*> : <*>",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 130
+ },
+ "E250": {
+  "template": "ax=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 13
+ },
+ "E251": {
+  "template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> unexpected socket error: Broken pipe",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E252": {
+  "template": "mmcs_server exited abnormally due to signal: Aborted",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 11
+ },
+ "E253": {
+  "template": "ciod: Error loading <*> invalid or missing program image, Exec format error",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 22032
+ },
+ "E254": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:E0:<*>:<*>:0D:<*>:E9:1F:9D ip=<*> v=<*> t=<*> status=M Wed Jul <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E255": {
+  "template": "ciod: Z coordinate <*> exceeds physical dimension <*> at line <*> of node map file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1056
+ },
+ "E256": {
+  "template": "ciod: Error creating node map from file <*> Bad address",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1056
+ },
+ "E257": {
+  "template": ", max=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 13
+ },
+ "E258": {
+  "template": "x=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E259": {
+  "template": "ciod: Error loading ../homme/build.Linux/preqx -n <*>: invalid or missing program image, No such file or directory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 64
+ },
+ "E260": {
+  "template": "ciodb exited normally with exit code <*>",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 2
+ },
+ "E261": {
+  "template": "Ido packet timeout",
+  "component": "MMCS",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 4276
+ },
+ "E262": {
+  "template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> BGLERR_IDO_PKT_TIMEOUT connection lost to node/link/service card",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 14
+ },
+ "E263": {
+  "template": "ciod: Error reading message prefix after <*> on CioStream socket to <*>: Link has been severed",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 23105
+ },
+ "E264": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:EC:<*>:<*>:0D:<*>:E9:<*>:<*> ip=<*> v=<*> t=<*> status=M Thu Jul <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E265": {
+  "template": "<*>:fffffefa <*>:<*> <*>:<*> <*>:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E266": {
+  "template": "mmcs_server exited abnormally due to signal: Segmentation fault",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 3
+ },
+ "E267": {
+  "template": "monitor caught java.lang.UnsupportedOperationException: power module <*> not present and is stopping",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 2
+ },
+ "E268": {
+  "template": "While inserting monitor info into DB caught java.lang.NullPointerException",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 2
+ },
+ "E269": {
+  "template": "Node card VPD check: missing <*> node, VPD ecid <*> in processor card slot <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 887
+ },
+ "E270": {
+  "template": "DeclareServiceNetworkCharacteristics has been run but the DB is not empty",
+  "component": "SERV_NET",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 1
+ },
+ "E271": {
+  "template": "DeclareServiceNetworkCharacteristics has been run with the force option but the DB is not empty",
+  "component": "SERV_NET",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 1
+ },
+ "E272": {
+  "template": "Added <*> subnets and <*> addresses to DB",
+  "component": "SERV_NET",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E273": {
+  "template": "Controlling BG/L rows [ <*> <*> <*> <*> <*> <*> <*> <*> ]",
+  "component": "CMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 50
+ },
+ "E274": {
+  "template": "Problem communicating with service card, ido chip: <*> java.lang.IllegalStateException: IDo is not in functional state -- currently in state COMMUNICATION_ERROR",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 6
+ },
+ "E275": {
+  "template": "While initializing service card iDo with LP of <*> caught java.io.IOException: Could not contact iDo with <*> and IP=/<*> because java.lang.RuntimeException: Communication error: (DirectIDo for Uninitialized DirectIDo for <*> is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 197
+ },
+ "E276": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2795
+ },
+ "E277": {
+  "template": "While initializing link card iDo machine with LP of <*> caught java.io.IOException: Could not contact iDo with <*> and IP=/<*> because java.lang.RuntimeException: Communication error: (DirectIDo for Uninitialized DirectIDo for <*> is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 30
+ },
+ "E278": {
+  "template": "Expected <*> active FanModules, but found <*> ( Found J300 J301 J302 J303 J304 <*> <*> <*> <*> ).",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 11
+ },
+ "E279": {
+  "template": "BGLMaster has been started: ./BGLMaster --consoleip <*> --consoleport <*> --configfile bglmaster.init --autorestart y",
+  "component": "BGLMASTER",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 59
+ },
+ "E280": {
+  "template": "Found invalid node ecid in processor card slot <*> ecid <*>",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 5558
+ },
+ "E281": {
+  "template": "Node card status: ALERT <*>, ALERT <*>, ALERT <*>, ALERT <*> is (are) active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD is asserted. PGOOD error latch is clear. MPGOOD is OK. MPGOOD error latch is clear. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 171
+ },
+ "E282": {
+  "template": "idoproxy exited normally with exit code <*>",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 1
+ },
+ "E283": {
+  "template": "Problem communicating with service card, ido chip: <*> java.io.IOException: Could not find EthernetSwitch on port:address <*>:<*>",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 166
+ },
+ "E284": {
+  "template": "Bad cable going into LinkCard <*> Jtag (<*>) Port <*> - <*> bad wires",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 232
+ },
+ "E285": {
+  "template": "Missing reverse cable: Cable <*> <*> F <*> --> <*> <*> C <*> is present BUT the reverse cable <*> <*> F <*> --> <*> <*> C <*> is missing",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 354
+ },
+ "E286": {
+  "template": "Error: unable to mount filesystem",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 720
+ },
+ "E287": {
+  "template": "Lustre mount FAILED : <*> : block_id : location",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5105
+ },
+ "E288": {
+  "template": "idoproxydb hit ASSERT condition: ASSERT <*> Source <*> Source line=<*> Function=int <*> <*>",
+  "component": "MMCS",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 84250
+ },
+ "E289": {
+  "template": "Target=ido://FF:F2:9F:<*>:E6:<*>:<*>:0D:<*>:E9:<*>:FB/JTAG/<*> Message=JtagId All all zeros, power good may be low",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4
+ },
+ "E290": {
+  "template": "Microloader Assertion",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1504
+ },
+ "E291": {
+  "template": "VALIDATE_LOAD_IMAGE_CRC_IN_DRAM",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8
+ },
+ "E292": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Thu Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3235
+ },
+ "E293": {
+  "template": "Problem communicating with link card iDo machine with LP of FF:F2:9F:<*>:7E:<*>:<*>:0D:<*>:EA:<*>:BF, caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.RuntimeException: Communication error: (DirectIDo for com.ibm.ido.DirectIDo object [FF:F2:9F:<*>:7E:<*>:<*>:0D:<*>:EA:<*>:BF@/<*> with image version <*> and card type <*>] is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 1
+ },
+ "E294": {
+  "template": "Problem communicating with service card, ido chip: <*> java.lang.IllegalStateException: while executing CONTROL Operation caught java.lang.RuntimeException: Communication error: (DirectIDo for com.ibm.ido.DirectIDo object <*> with image version <*> and card type <*>] is in state = COMMUNICATION_ERROR, sequenceNumberIsOk = false, ExpectedSequenceNumber = <*>, Reply Sequence Number = <*>, timedOut = true, retries = <*>, timeout = <*>, Expected Op Command = <*>, Actual Op Reply = <*>, Expected Sync Command = <*>, Actual Sync Reply = <*>)",
+  "component": "DISCOVERY",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 2
+ },
+ "E295": {
+  "template": "Missing reverse cable: Cable <*> <*> E (J13) --> <*> <*> D (J15) is present BUT the reverse cable <*> <*> E (J05) --> <*> <*> D (J07) is missing",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 168
+ },
+ "E296": {
+  "template": "idoproxydb hit ASSERT condition: ASSERT expression=!(nMsgLen > <*>) Source file=idomarshalerio.cpp Source line=<*> Function=int IdoMarshalerRecvBuffer::ReadBlock(IdoMsg::IdoMsgHdr*&)",
+  "component": "MMCS",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 2
+ },
+ "E297": {
+  "template": "idoproxydb hit ASSERT condition: ASSERT expression=!(RecvMsgHdr.ulLen > <*>) Source file=idomarshalerio.cpp Source line=<*> Function=virtual int IdoMarshalerIo::RunRecv()",
+  "component": "MMCS",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 1
+ },
+ "E298": {
+  "template": "ciod: Error reading message prefix after LOAD_MESSAGE on CioStream socket to <*>: Connection reset by peer",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 114
+ },
+ "E299": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Fri Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 102
+ },
+ "E300": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Sun Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 308
+ },
+ "E301": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Mon Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 122
+ },
+ "E302": {
+  "template": "MidplaneSwitchController::receiveTrain() iap failed: <*> <*> <*>",
+  "component": "LINKCARD",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 166
+ },
+ "E303": {
+  "template": "rts tree/torus link training failed: wanted: A C X+ X- Y+ Y- Z+ Z- got: A C <*> <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 132
+ },
+ "E304": {
+  "template": "rts tree/torus link training failed: wanted: C X+ X- Y+ Y- Z+ Z- got: C <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18
+ },
+ "E305": {
+  "template": "rts tree/torus link training failed: wanted: B C X+ X- Y+ Y- Z+ Z- got: B C <*> <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 82
+ },
+ "E306": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: A B C <*> <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 162
+ },
+ "E307": {
+  "template": "rts tree/torus link training failed: wanted: A C X+ X- Y+ Y- Z+ Z- got: A C <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 56
+ },
+ "E308": {
+  "template": "rts tree/torus link training failed: wanted: C X+ X- Y+ Y- Z+ Z- got: C <*> <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 54
+ },
+ "E309": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: A B C <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 44
+ },
+ "E310": {
+  "template": "rts tree/torus link training failed: wanted: B C X+ X- Y+ Y- Z+ Z- got: B C <*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 26
+ },
+ "E311": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: C X+ X- Y+ Y- Z+ Z-",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E312": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: C X- Y+ Y- Z+ Z-",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4
+ },
+ "E313": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: A B C X- <*> Z+",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4
+ },
+ "E314": {
+  "template": "rts tree/torus link training failed: wanted: C X+ X- Y+ Y- Z+ Z- got: C X+ Y- Z-",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E315": {
+  "template": "rts tree/torus link training failed: wanted: A C X+ X- Y+ Y- Z+ Z- got: A C X+ <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6
+ },
+ "E316": {
+  "template": "rts tree/torus link training failed: wanted: B C X+ X- Y+ Y- Z+ Z- got: B C X- <*> Z-",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4
+ },
+ "E317": {
+  "template": "ddr: Unable to steer rank=<*>, symbol=<*> - rank is already steering symbol <*>. Due to multiple symbols being over the correctable error threshold, consider replacing the card",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 197
+ },
+ "E318": {
+  "template": "rts tree/torus link training failed: wanted: A B C X+ X- Y+ Y- Z+ Z- got: A C X+ X- Y+ Y- Z+ Z-",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 9
+ },
+ "E319": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Wed Aug <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 25
+ },
+ "E320": {
+  "template": "ciodb exited abnormally due to signal: Aborted",
+  "component": "BGLMASTER",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 23
+ },
+ "E321": {
+  "template": "ciod: Error loading <*> invalid or missing program image, Permission denied",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 43040
+ },
+ "E322": {
+  "template": "ciod: generated <*> core files for program <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 62484
+ },
+ "E323": {
+  "template": "rts: kernel terminated for reason <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18587
+ },
+ "E324": {
+  "template": "rts: bad message header: cpu <*> invalid <*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 619
+ },
+ "E325": {
+  "template": "rts: bad message header: packet index <*> greater than max <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 114
+ },
+ "E326": {
+  "template": "rts: bad message header: index <*> greater than total <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 238
+ },
+ "E327": {
+  "template": "rts: bad message header: expecting type <*> instead of type <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1146
+ },
+ "E328": {
+  "template": "kernel panic",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 18
+ },
+ "E329": {
+  "template": "external input interrupt (unit=<*> bit=<*>): 1M tree receiver <*> in resynch mode",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E330": {
+  "template": "mmcs_db_server has been started: ./mmcs_db_server --useDatabase BGL --dbproperties <*> --iolog /bgl/BlueLight/logs/BGL --reconnect-blocks all --shutdown-timeout <*>",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 72
+ },
+ "E331": {
+  "template": "iar <*> dear <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 442966
+ },
+ "E332": {
+  "template": "NFS Mount failed on <*> slept <*> seconds, retrying (<*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2670
+ },
+ "E333": {
+  "template": "CHECK_INITIAL_GLOBAL_INTERRUPT_VALUES",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 544
+ },
+ "E334": {
+  "template": "Lustre mount FAILED : <*> : point /p/gb1",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 26426
+ },
+ "E335": {
+  "template": "mmcs_db_server has been started: ./mmcs_db_server --useDatabase BGL --dbproperties serverdb.properties --iolog /bgl/BlueLight/logs/BGL --reconnect-blocks all --no-reconnect-blocks",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2
+ },
+ "E336": {
+  "template": "<*>:ffffffff <*>:<*> <*>:<*> <*>:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E337": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Fri Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 106
+ },
+ "E338": {
+  "template": "EndServiceAction <*> was performed upon <*> by root",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 3
+ },
+ "E339": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Sat Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 253
+ },
+ "E340": {
+  "template": "<*> torus sender sram ecc error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E341": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Wed Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 153
+ },
+ "E342": {
+  "template": "EndServiceAction <*> was performed upon <*> by pjmccart",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 1
+ },
+ "E343": {
+  "template": "external input interrupt (unit=<*> bit=<*>): tree header with no target waiting",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E344": {
+  "template": "power module status fault detected on node card. status registers are: <*>/<*>/<*>/<*>",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 4
+ },
+ "E345": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:D7:FD:<*>:0D:<*>:E9:<*>:<*> ip=<*> v=<*> t=<*> status=M Mon Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E346": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3383
+ },
+ "E347": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:E9:F7:<*>:0D:<*>:E9:<*>:<*> ip=<*> v=<*> t=<*> status=M Sun Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E348": {
+  "template": "pro",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E349": {
+  "template": "program",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E350": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:BD:BF:<*>:0D:<*>:E9:<*>:<*> ip=<*> v=<*> t=<*> status=M Thu Sep <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E351": {
+  "template": "floating point unavailable interrupt",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3
+ },
+ "E352": {
+  "template": "<*> torus receiver sram ecc error(s) (dcr <*>) detected and corrected",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 5
+ },
+ "E353": {
+  "template": "symbol................13",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E354": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Oct <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 4
+ },
+ "E355": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:C4:F4:<*>:0D:<*>:E9:3B:0B ip=<*> v=<*> t=<*> status=M Wed Oct <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E356": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Fri Oct <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3
+ },
+ "E357": {
+  "template": "Error getting detailed hw info for node, caught java.io.IOException: Problems with the chip, clear all resets",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 1
+ },
+ "E358": {
+  "template": "Error getting detailed hw info for node, caught java.io.IOException: Problems with the chip, could not pull all resets",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 30
+ },
+ "E359": {
+  "template": "Error getting detailed hw info for node, caught java.io.IOException: Problems with the chip, could not enable clock domains",
+  "component": "DISCOVERY",
+  "level": "SEVERE",
+  "kind": "error",
+  "count": 5
+ },
+ "E360": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD IS NOT OK. MPGOOD ERROR LATCH IS ACTIVE. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 227
+ },
+ "E361": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD IS NOT OK. MPGOOD ERROR LATCH IS ACTIVE. THE <*> VOLT RAIL IS NOT OK. THE <*> VOLT RAIL IS NOT OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 49
+ },
+ "E362": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD is OK. MPGOOD ERROR LATCH IS ACTIVE. The <*> volt rail is OK. The <*> volt rail is OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 1
+ },
+ "E363": {
+  "template": "Node card status: no ALERTs are active. Clock Mode is Low. Clock Select is Midplane. Phy JTAG Reset is asserted. ASIC JTAG Reset is not asserted. Temperature Mask is not active. No temperature error. Temperature Limit Error Latch is clear. PGOOD IS NOT ASSERTED. PGOOD ERROR LATCH IS ACTIVE. MPGOOD IS NOT OK. MPGOOD ERROR LATCH IS ACTIVE. The <*> volt rail is OK. THE <*> VOLT RAIL IS NOT OK.",
+  "component": "DISCOVERY",
+  "level": "ERROR",
+  "kind": "error",
+  "count": 3
+ },
+ "E364": {
+  "template": "Error sending packet on tree network, packet at address <*> is not aligned",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 5
+ },
+ "E365": {
+  "template": "data cache flush parity error detected. attempting to correct",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 65
+ },
+ "E366": {
+  "template": "data cache search parity error detected. attempting to correct",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 13941
+ },
+ "E367": {
+  "template": "ddr: redundant bit steering failed, sequencer timeout",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E368": {
+  "template": "ddrSize == <*>*<*>*<*> || ddrSize == <*>*<*>*<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E369": {
+  "template": "rts assertion failed: `personality->version == BGLPERSONALITY_VERSION' in `void start()' at start.cc:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E370": {
+  "template": "L3 major internal error",
+  "component": "MMCS",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 3
+ },
+ "E371": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:E5:A3:<*>:0D:<*>:E9:1A:5C ip=<*> v=<*> t=<*> status=M Mon Oct <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E372": {
+  "template": "Ido chip status changed: FF:F2:9F:<*>:C4:EA:<*>:0D:<*>:E9:3B:<*> ip=<*> v=<*> t=<*> status=M Thu Oct <*> <*>:<*>:<*> PDT <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E373": {
+  "template": "Error receiving packet on tree network, expecting type <*> instead of type <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 6144
+ },
+ "E374": {
+  "template": "ddr: activating redundant bit steering for next allocation: rank=<*> symbol=<*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 492
+ },
+ "E375": {
+  "template": "<*>:afffffff <*>:<*> <*>:<*> <*>:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E376": {
+  "template": "SRAM correctable errors exceeds threshold (iar <*> lr <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 6
+ },
+ "E377": {
+  "template": "L1 DCACHE summary averages: #ofDirtyLines: <*> out of <*> #ofDirtyDblWord: <*> out of <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3149
+ },
+ "E378": {
+  "template": "No power module U58 found found on link card",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 6
+ },
+ "E379": {
+  "template": "Temperature Over Limit on link card",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 972
+ },
+ "E380": {
+  "template": "Link PGOOD error latched on link card",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 349
+ },
+ "E381": {
+  "template": "ciod: Error loading /g/g11/draeger/testqbox_devel/qb_devel_bgl: invalid or missing program image, No such device",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8
+ },
+ "E382": {
+  "template": "Local PGOOD error latched on link card",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 4
+ },
+ "E383": {
+  "template": "<*>:<*> <*>:afffffff <*>:<*> <*>:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E384": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Mon Nov <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 16
+ },
+ "E385": {
+  "template": "BGLMaster has been started: ./BGLMaster --consoleip <*> --consoleport <*> --configfile bglmaster.init --autorestart y --db2profile /u/bgdb2cli/sqllib/db2profile --dbproperties db.properties",
+  "component": "BGLMASTER",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 31
+ },
+ "E386": {
+  "template": "critical input interrupt (unit=<*> bit=<*>): warning for torus <*> wire, suppressing further interrupts of same type",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2314
+ },
+ "E387": {
+  "template": "critical input interrupt (unit=<*> bit=<*>): warning for tree <*> wire, suppressing further interrupts of same type",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1232
+ },
+ "E388": {
+  "template": "<*> tree receiver <*> in re-synch state event(s) (dcr <*>) detected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3148
+ },
+ "E389": {
+  "template": "<*> torus receiver <*> input pipe error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 3512
+ },
+ "E390": {
+  "template": "<*> ddr error(s) detected and corrected on rank <*>, symbol <*> over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 10436
+ },
+ "E391": {
+  "template": "total of <*> ddr error(s) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 10415
+ },
+ "E392": {
+  "template": "<*> L3 EDRAM error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1327
+ },
+ "E393": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Nov <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 168
+ },
+ "E394": {
+  "template": "idoproxy communication failure: socket closed",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 41
+ },
+ "E395": {
+  "template": "Machine Check Status Register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 56
+ },
+ "E396": {
+  "template": "Machine State Register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E397": {
+  "template": "Core Configuration Register <*>: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E398": {
+  "template": "DDR failing info register: DDR Fail Info Register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 29
+ },
+ "E399": {
+  "template": "General Purpose Registers:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E400": {
+  "template": "r00=<*> r01=<*> r02=<*> r03=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E401": {
+  "template": "r04=<*> r05=<*> r06=<*> r07=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E402": {
+  "template": "r08=<*> r09=<*> r10=<*> r11=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 69
+ },
+ "E403": {
+  "template": "r12=<*> r13=<*> r14=<*> r15=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E404": {
+  "template": "r16=<*> r17=<*> r18=<*> r19=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E405": {
+  "template": "r20=<*> r21=<*> r22=<*> r23=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E406": {
+  "template": "r24=<*> r25=<*> r26=<*> r27=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E407": {
+  "template": "r28=<*> r29=<*> r30=<*> r31=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E408": {
+  "template": "Special Purpose Registers:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E409": {
+  "template": "lr=<*> cr=<*> xer=<*> ctr=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E410": {
+  "template": "msr=<*> dear=<*> esr=<*> fpscr=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E411": {
+  "template": "dbcr0=<*> dbsr=<*> ccr0=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E412": {
+  "template": "Floating Point Status and Control Register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E413": {
+  "template": "exception <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E414": {
+  "template": "enabled exception summary................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E415": {
+  "template": "invalid operation exception <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 204
+ },
+ "E416": {
+  "template": "overflow exception.......................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E417": {
+  "template": "underflow <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E418": {
+  "template": "divide-by-zero <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E419": {
+  "template": "inexact <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E420": {
+  "template": "invalid <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 408
+ },
+ "E421": {
+  "template": "fraction <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 136
+ },
+ "E422": {
+  "template": "quiet NaN................................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E423": {
+  "template": "minus <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 136
+ },
+ "E424": {
+  "template": "minus normalized <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E425": {
+  "template": "minus denormalized number................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E426": {
+  "template": "plus <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 136
+ },
+ "E427": {
+  "template": "plus denormalized number.................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E428": {
+  "template": "plus normalized <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E429": {
+  "template": "reserved.................................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E430": {
+  "template": "invalid operation exception (int cnvt)...0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E431": {
+  "template": "enable invalid operation exceptions......0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E432": {
+  "template": "enable overflow exceptions...............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E433": {
+  "template": "enable underflow exceptions..............0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E434": {
+  "template": "enable divide-by-zero exceptions.........0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E435": {
+  "template": "enable inexact exceptions................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E436": {
+  "template": "enable non-IEEE mode.....................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E437": {
+  "template": "round nearest............................0",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E438": {
+  "template": "round toward <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 204
+ },
+ "E439": {
+  "template": "Floating Point Registers:",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 68
+ },
+ "E440": {
+  "template": "<*> ffffffff ffffffff ffffffff",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 835
+ },
+ "E441": {
+  "template": "ciod: Received signal <*>, code=<*>, errno=<*>, address=<*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 39457
+ },
+ "E442": {
+  "template": "PrepareForService shutting down Node card(mLctn(<*>), mCardSernum(<*>), <*> mIp(<*>), mType(<*>)) as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 687
+ },
+ "E443": {
+  "template": "Power Good signal deactivated: <*>. A service action may be required.",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 94
+ },
+ "E444": {
+  "template": "<*> torus sender <*> retransmission error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1034
+ },
+ "E445": {
+  "template": "ciod: Error reading message prefix on CioStream socket to <*>, Link has been severed",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 26546
+ },
+ "E446": {
+  "template": "EndServiceAction is restarting the Node cards in Midplane <*> as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 44
+ },
+ "E447": {
+  "template": "Target=ido://FF:F2:9F:<*>:D5:<*>:<*>:0D:<*>:E9:2A:FE/JTAG/<*> Message=Invalid JtagId = ffffffff Run environmental monitor to diagnose possible hardware failure.",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E448": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Thu Nov <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2
+ },
+ "E449": {
+  "template": "ciod: Error reading message prefix on CioStream socket to <*>, Connection reset by peer",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2256
+ },
+ "E450": {
+  "template": "com.ibm.bgldevices.BulkPowerModule with VPD of com.ibm.bgldevices.BulkPowerModule$VpdReply: IBM Part Number: 53P5763, Vendor: Cherokee International, Vendor Serial Number: <*>, Assembly Revision: \u0000.A, Code Revision: B.1, Manufacture Date: during week <*> of <*>, Manufacture Location: Tustin, CA, USA is usable but not a supported version",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 4
+ },
+ "E451": {
+  "template": "<*> L3 directory error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 187
+ },
+ "E452": {
+  "template": "monitor caught java.lang.IllegalStateException: while executing CONTROL Operation caught java.io.EOFException and is stopping",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 1
+ },
+ "E453": {
+  "template": "monitor caught java.lang.IllegalStateException: while executing <*> Operation caught java.net.SocketException: Broken pipe and is stopping",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 190
+ },
+ "E454": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 8
+ },
+ "E455": {
+  "template": "Hardware monitor caught java.lang.IllegalStateException: while executing I2C Operation caught java.net.SocketException: Broken pipe and is stopping",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 4
+ },
+ "E456": {
+  "template": "While setting fan speed caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 8
+ },
+ "E457": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 8
+ },
+ "E458": {
+  "template": "While setting fan speed caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 8
+ },
+ "E459": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 8
+ },
+ "E460": {
+  "template": "While setting fan speed caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 7
+ },
+ "E461": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 7
+ },
+ "E462": {
+  "template": "While setting fan speed caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 5
+ },
+ "E463": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 5
+ },
+ "E464": {
+  "template": "While setting fan speed caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 3
+ },
+ "E465": {
+  "template": "While reading FanModule caught java.lang.IllegalStateException: while executing I2C Operation caught java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.lang.IllegalStateException: client not in a usable state because java.net.SocketException: Broken pipe",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 3
+ },
+ "E466": {
+  "template": "Hardware monitor caught java.net.SocketException: Broken pipe and is stopping",
+  "component": "MONITOR",
+  "level": "FAILURE",
+  "kind": "error",
+  "count": 77
+ },
+ "E467": {
+  "template": "ciod: Error loading -mode VN: invalid or missing program image, No such file or directory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1024
+ },
+ "E468": {
+  "template": "MACHINE CHECK PLB write IRQ (mc=1b08x iar <*> lr <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E469": {
+  "template": "MACHINE CHECK DCR read timeout (mc=e08x iar <*> lr <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 14481
+ },
+ "E470": {
+  "template": "ciod: Error reading message prefix on CioStream socket to <*>, Connection timed out",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1991
+ },
+ "E471": {
+  "template": "Exception Syndrome Register: <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 4
+ },
+ "E472": {
+  "template": "<*> <*> <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 740
+ },
+ "E473": {
+  "template": "mmcs_db_server has been started: ./mmcs_db_server --useDatabase BGL --dbproperties db.properties --iolog /bgl/BlueLight/logs/BGL --reconnect-blocks all --shutdown-timeout <*> --shutdown-timeout <*>",
+  "component": "MMCS",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 18
+ },
+ "E474": {
+  "template": "idoproxy communication failure: BGLERR_IDO_PKT_TIMEOUT connection lost to node/link/service card",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E475": {
+  "template": "ciod: In packet from node <*> (<*>), message still ready for node <*> (softheader=<*> <*> <*> <*>)",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 2
+ },
+ "E476": {
+  "template": "machine check interrupt (bit=<*>): L2 dcache unit read return parity error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8
+ },
+ "E477": {
+  "template": "<*> ffffffff <*> <*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 599
+ },
+ "E478": {
+  "template": "machine check interrupt (bit=<*>): L2 dcache unit write data parity error",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 15
+ },
+ "E479": {
+  "template": "PrepareForService shutting down Link card(mLctn(<*>), mCardSernum(<*>), <*> mIp(<*>), mType(<*>)) as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 28
+ },
+ "E480": {
+  "template": "EndServiceAction is restarting the Link cards in Midplane <*> as part of Service Action <*>",
+  "component": "HARDWARE",
+  "level": "WARNING",
+  "kind": "warning",
+  "count": 7
+ },
+ "E481": {
+  "template": "MidplaneSwitchController::clearPort() bll_clear_port failed: <*>-U19-A",
+  "component": "LINKCARD",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E482": {
+  "template": "ciod: Error creating node map from file my_map.txt: No such file or directory",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 24
+ },
+ "E483": {
+  "template": "ciod: Error creating node map from file my_map.txt: Argument list too long",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 8
+ },
+ "E484": {
+  "template": "symbol................18",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E485": {
+  "template": "<*> torus receiver sram ecc error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E486": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Wed Nov <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 16
+ },
+ "E487": {
+  "template": "<*> microseconds spent in the rbs signal handler during <*> calls. <*> microseconds was the maximum time for a single instance of a correctable ddr.",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 135092
+ },
+ "E488": {
+  "template": "<*> total interrupts. <*> critical input interrupts. <*> microseconds total spent on critical input interrupts, <*> microseconds max time in a critical input interrupt.",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 135092
+ },
+ "E489": {
+  "template": "instance of a correctable ddr. RAS KERNEL INFO <*> microseconds spent in the rbs signal handler during <*> calls. <*> microseconds was the maximum time for a single instance of a correctable ddr.",
+  "component": "a",
+  "level": "SINGLE",
+  "kind": "normal",
+  "count": 4
+ },
+ "E490": {
+  "template": "max time in a cr RAS KERNEL INFO <*> total interrupts. <*> critical input interrupts. <*> microseconds total spent on critical input interrupts, <*> microseconds max time in a critical input interrupt.",
+  "component": "0",
+  "level": "MICROSECONDS",
+  "kind": "normal",
+  "count": 4
+ },
+ "E491": {
+  "template": "fpr13=<*> <*> <*> fffffffc",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E492": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Fri Dec <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 40
+ },
+ "E493": {
+  "template": "external input interrupt (unit=<*> bit=<*>): number of corrected SRAM errors has exceeded threshold, suppressing further interrupts of same type",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 57
+ },
+ "E494": {
+  "template": "ddr: Suppressing further CE interrupts",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 302
+ },
+ "E495": {
+  "template": "instruction TLB error interrupt",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E496": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Sat Dec <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 272
+ },
+ "E497": {
+  "template": "Kernel detected <*> integer alignment exceptions (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 22175
+ },
+ "E498": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Tue Dec <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 32
+ },
+ "E499": {
+  "template": "dear <*> (<*> RAS KERNEL INFO Kernel detected <*> integer alignment exceptions (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*> (<*>) iar <*>, dear <*>",
+  "component": "iar",
+  "level": "0X00544EB8,",
+  "kind": "normal",
+  "count": 2
+ },
+ "E500": {
+  "template": "ciod: Error loading /p/gb1/light3/sppm_chkpt/sppm: not a CNK program image",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1024
+ },
+ "E501": {
+  "template": "<*> torus processor sram injection error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ },
+ "E502": {
+  "template": "ciod: LOGIN chdir(/p/gb1/stella/RAPTOR/<*>) failed: Input/output error",
+  "component": "APP",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 816
+ },
+ "E503": {
+  "template": "Error receiving packet on tree network, packet index <*> greater than max <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E504": {
+  "template": "<*> torus processor sram reception error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 13
+ },
+ "E505": {
+  "template": "rts assertion failed: `vaddr % PAGE_SIZE_1M == <*>' in `int initializeAppMemory(int, TLBEntry&, unsigned int, unsigned int)' at mmu.cc:<*>",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 1
+ },
+ "E506": {
+  "template": "symbol................16",
+  "component": "KERNEL",
+  "level": "FATAL",
+  "kind": "error",
+  "count": 2
+ },
+ "E507": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Mon Dec <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 32
+ },
+ "E508": {
+  "template": "ciod: for node <*>, incomplete data written to core file <*>",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 38
+ },
+ "E509": {
+  "template": "Ido chip status changed: <*> ip=<*> v=<*> t=<*> status=M Thu Dec <*> <*>:<*>:<*> PST <*>",
+  "component": "DISCOVERY",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 20
+ },
+ "E510": {
+  "template": "<*> torus non-crc error(s) (dcr <*>) detected and corrected over <*> seconds",
+  "component": "KERNEL",
+  "level": "INFO",
+  "kind": "normal",
+  "count": 1
+ }
+}

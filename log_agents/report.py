@@ -11,6 +11,9 @@ def build_report(ctx):
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "source": ctx.source_name,
         "origin": ctx.origin,
+        "dataset": ctx.profile.name if ctx.profile else None,
+        "dataset_title": ctx.profile.title if ctx.profile else None,
+        "session_noun": ctx.profile.session_noun if ctx.profile else "session",
         "status": d.get("status"),
         "error": d.get("error"),
         "duration_s": round(time.time() - ctx.started, 2),
@@ -27,10 +30,9 @@ def build_report(ctx):
         rep["anomaly_summary"] = {
             "sessions": len(s), "anomalies": int(s.is_anomaly.sum()),
             "anomaly_rate": float(s.is_anomaly.mean()),
-            "uncertain": int(s.uncertain.sum()), "slm_second_opinion": det["slm_note"],
-            "evaluation": det.get("metrics"),
+            "uncertain": int(s.uncertain.sum()), "evaluation": det.get("metrics"),
         }
-        cols = ["block_id", "n_events", "anomaly_proba", "is_anomaly", "slm_label", "slm_disagrees", "sequence"]
+        cols = ["block_id", "n_events", "anomaly_proba", "is_anomaly", "uncertain", "sequence"]
         rep["anomalous_sessions"] = (s[s.is_anomaly == 1].sort_values("anomaly_proba", ascending=False)[cols]
                                      .head(200).to_dict("records"))
     if d.get("medallion"):
@@ -40,7 +42,7 @@ def build_report(ctx):
         rep["correlations"] = d["rca"]["correlations"]
         rep["rca_sessions"] = d["rca"]["sessions"][:50]
     if d.get("insight"):
-        rep["insight"] = {k: v for k, v in d["insight"].items() if k not in ("facts", "slm_raw")}
+        rep["insight"] = {k: v for k, v in d["insight"].items() if k != "facts"}
     summ = rep.get("anomaly_summary", {})
     rep["summary"] = {"run_id": ctx.run_id, "source": ctx.source_name, "status": rep["status"],
                       "sessions": summ.get("sessions"), "anomalies": summ.get("anomalies"),
@@ -50,7 +52,9 @@ def build_report(ctx):
 
 
 def to_markdown(rep):
-    L = [f"# HDFS Log Anomaly Report", "",
+    title = rep.get("dataset_title") or "Log"
+    noun = rep.get("session_noun") or "session"
+    L = [f"# {title} Log Anomaly Report", "",
          f"- **Run:** `{rep['run_id']}`  ", f"- **Source:** {rep['source']} ({rep['origin']})  ",
          f"- **Generated:** {rep['generated_at']}  ", f"- **Status:** {rep['status']}", ""]
     if rep.get("error"):
@@ -61,9 +65,8 @@ def to_markdown(rep):
     a = rep.get("anomaly_summary")
     if a:
         L += ["## Anomaly Summary", "",
-              f"| Sessions | Anomalies | Rate | Uncertain |", "|---|---|---|---|",
-              f"| {a['sessions']:,} | {a['anomalies']:,} | {a['anomaly_rate']:.2%} | {a['uncertain']:,} |", "",
-              f"SLM second opinion: {a['slm_second_opinion']}", ""]
+              f"| Sessions ({noun}s) | Anomalies | Rate | Flagged uncertain |", "|---|---|---|---|",
+              f"| {a['sessions']:,} | {a['anomalies']:,} | {a['anomaly_rate']:.2%} | {a['uncertain']:,} |", ""]
         if a.get("evaluation"):
             e = a["evaluation"]
             L += [f"Ground-truth evaluation (n={e['n']:,}): accuracy {e['accuracy']:.4f}, precision {e['precision']:.4f}, "
@@ -87,13 +90,13 @@ def to_markdown(rep):
                   c["explanation"], "", f"*Impact:* {c['impact']}", ""]
             if c["key_events"]:
                 L += ["Key events: " + "; ".join(c["key_events"]), ""]
-            L += ["Example blocks: " + ", ".join(f"`{b}`" for b in c["example_blocks"]), ""]
+            L += [f"Example {noun}s: " + ", ".join(f"`{b}`" for b in c["example_blocks"]), ""]
         corr = rep.get("correlations", {})
         if any(corr.values()):
             L += ["### Correlations", ""]
-            L += [f"- DataNode `{n['node']}`: {n['anomalous_blocks']}/{n['total_blocks']} blocks anomalous" for n in corr["nodes"]]
+            L += [f"- Node `{n['node']}`: {n['anomalous_blocks']}/{n['total_blocks']} {noun}s anomalous" for n in corr["nodes"]]
             L += [f"- Burst: {b['anomalies']} anomalies at {b['minute']}" for b in corr["time_bursts"]]
-            L += [f"- Pattern repeated in {p['blocks']} blocks: `{p['sequence'][:120]}`" for p in corr["patterns"]]
+            L += [f"- Pattern repeated in {p['blocks']} {noun}s: `{p['sequence'][:120]}`" for p in corr["patterns"]]
             L += [""]
     if rep.get("rca_sessions"):
         L += ["## Evidence (top anomalous sessions)", ""]

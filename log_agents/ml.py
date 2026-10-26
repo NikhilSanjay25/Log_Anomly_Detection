@@ -1,9 +1,10 @@
 """The existing ML pipeline: Transformer encoder → FAISS vector DB → RAG augmentation → Random Forest.
 
-Architecture and feature construction mirror OtherTests/RAG__Trans_RF.ipynb exactly:
-  * sequences encoded with event2id, truncated to the LAST 60 events, right-padded with 0
+Architecture and feature construction mirror OtherTests/RAG__Trans_RF.ipynb exactly (HDFS) and
+scripts/train_dataset.py (BGL, OpenStack), which reuses the same classes:
+  * sequences encoded with event2id, truncated to the LAST `max_len` events (60 for HDFS), right-padded with 0
   * feature = masked mean of the transformer encoder output (64-d)
-  * RAG feature = concat(feature, mean of the k=5 nearest training features)
+  * RAG feature = concat(feature, mean of the k=5 nearest training features[, numeric session features])
     NOTE: training used the *raw* (un-normalised) neighbour features for the mean, while the FAISS
     index stores L2-normalised vectors. rag_metadata.npz restores the raw neighbour features so
     inference matches training (the old Streamlit app averaged the normalised vectors).
@@ -55,13 +56,14 @@ class TransformerModel(nn.Module):
         return self.fc(self.extract_features(x))
 
 
-def load_backbone(device="cpu"):
-    event2id = joblib.load(config.EVENT2ID_PATH)
-    id2event = joblib.load(config.ID2EVENT_PATH)
-    cfg = joblib.load(config.MODEL_CONFIG_PATH)
+def load_backbone(paths, device="cpu"):
+    """paths: datasets.base.ArtifactPaths of one dataset."""
+    event2id = joblib.load(paths.event2id)
+    id2event = joblib.load(paths.id2event)
+    cfg = joblib.load(paths.model_config)
     model = TransformerModel(**{k: cfg[k] for k in
                                 ["vocab_size", "emb_dim", "nhead", "num_layers", "dim_feedforward", "num_classes"]})
-    model.load_state_dict(torch.load(config.BACKBONE_PATH, map_location=device))
+    model.load_state_dict(torch.load(paths.backbone, map_location=device))
     model.to(device).eval()
     return model, event2id, id2event, cfg
 
@@ -85,27 +87,34 @@ def extract_features(model, encoded, device="cpu", batch_size=2048):
 
 
 class AnomalyPipeline:
-    """Loads all artifacts once; `predict` scores a batch of event sequences."""
+    """Loads all artifacts of one dataset once; `predict` scores a batch of event sequences."""
 
-    def __init__(self, device=None):
+    def __init__(self, profile, device=None):
         import faiss  # imported lazily: heavy
         self.faiss = faiss
+        self.profile = profile
+        paths = profile.paths
+        missing = paths.missing()
+        if missing:
+            raise FileNotFoundError(
+                f"{profile.title} model artifacts not found in {paths.directory} (missing: {', '.join(missing)}). "
+                f"Train them with: python scripts/train_dataset.py --dataset {profile.name}")
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.model, self.event2id, self.id2event, self.model_config = load_backbone(self.device)
+        self.max_len = profile.max_seq_len
+        self.model, self.event2id, self.id2event, self.model_config = load_backbone(paths, self.device)
         with warnings.catch_warnings():
-            # RF was pickled with sklearn 1.7.0. Not compared against 1.7 outputs; with sklearn 1.8 the
-            # pipeline scores F1 0.999 on the held-out CV fold (scripts/build_rag_metadata.py --eval).
+            # The HDFS RF was pickled with sklearn 1.7.0 and loads under newer versions with a warning.
             warnings.simplefilter("ignore")
-            self.rf = joblib.load(config.RF_PATH)
-        self.index = faiss.read_index(str(config.FAISS_PATH))
+            self.rf = joblib.load(paths.rf)
+        self.index = faiss.read_index(str(paths.faiss))
 
         self.meta = None
-        if config.RAG_METADATA_PATH.exists():
-            m = np.load(config.RAG_METADATA_PATH, allow_pickle=False)
+        if paths.rag_meta.exists():
+            m = np.load(paths.rag_meta, allow_pickle=False)
             self.meta = {k: m[k] for k in m.files}
         self.event_stats = {}
-        if config.EVENT_STATS_PATH.exists():
-            self.event_stats = json.loads(config.EVENT_STATS_PATH.read_text())
+        if paths.event_stats.exists():
+            self.event_stats = json.loads(paths.event_stats.read_text())
 
     @property
     def has_metadata(self):
@@ -128,18 +137,28 @@ class AnomalyPipeline:
         flat = np.vstack([self.index.reconstruct(int(i)) for i in idx.ravel()])
         return flat.reshape(idx.shape[0], idx.shape[1], -1)
 
-    def predict(self, sequences, k=config.RAG_K):
-        """sequences: list of event lists. Returns a dict of arrays aligned with the input."""
-        encoded = encode_sequences(sequences, self.event2id)
-        # Identical (truncated) sequences give identical predictions -> score unique rows only
-        uniq, inverse = np.unique(encoded, axis=0, return_inverse=True)
+    def predict(self, sequences, k=config.RAG_K, extras=None):
+        """sequences: list of event lists; extras: optional (N, m) numeric session features (NaN = missing).
+        Returns a dict of arrays aligned with the input."""
+        encoded = encode_sequences(sequences, self.event2id, self.max_len)
+        if extras is not None:
+            extras = np.nan_to_num(np.asarray(extras, dtype=np.float32), nan=-1.0)
+            key = np.hstack([encoded.astype(np.float32), extras])
+        else:
+            key = encoded
+        # Identical (truncated) sequences with identical numeric features give identical predictions
+        _, first, inverse = np.unique(key, axis=0, return_index=True, return_inverse=True)
         inverse = inverse.reshape(-1)
+        uniq = encoded[first]
         feats = extract_features(self.model, uniq, self.device)
         q = feats.astype(np.float32).copy()
         self.faiss.normalize_L2(q)
         dist, idx = self.index.search(q, k)
         nb_mean = self._neighbour_raw_features(idx).mean(axis=1)
-        aug = np.concatenate([feats, nb_mean], axis=1)
+        if self.model_config.get("rf_inputs", "full") == "extras":
+            aug = extras[first]
+        else:
+            aug = np.concatenate([feats, nb_mean] + ([extras[first]] if extras is not None else []), axis=1)
         proba = self.rf.predict_proba(aug)[:, list(self.rf.classes_).index(1)]
         empty = (uniq != 0).sum(axis=1) == 0
         proba[empty] = np.nan

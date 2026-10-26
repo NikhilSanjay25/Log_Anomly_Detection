@@ -5,9 +5,8 @@ pandas>=2.1
 scikit-learn>=1.5
 faiss-cpu>=1.8
 joblib>=1.3
-# SLMs (Qwen3-1.7B insight model, Qwen3-0.6B LoRA classifier)
+# Chat model (Qwen3-1.7B, used only by the follow-up chat)
 transformers>=4.51
-peft>=0.15
 accelerate>=0.30
 # UI + tests
 streamlit>=1.40

@@ -20,6 +20,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from log_agents import config  # noqa: E402
+from log_agents.datasets import get_profile  # noqa: E402
 from log_agents.ml import AnomalyPipeline, encode_sequences, extract_features, load_backbone  # noqa: E402
 
 
@@ -37,7 +38,8 @@ def main():
     assert len(blocks) == len(x_raw), "anomaly_label.csv rows must align with HDFS.npz"
     print(f"[data] {len(x_raw):,} sessions, {int(y.sum()):,} anomalies ({time.time() - t0:.0f}s)")
 
-    model, event2id, _, _ = load_backbone("cpu")
+    profile = get_profile("hdfs")
+    model, event2id, _, _ = load_backbone(profile.paths, "cpu")
     seqs = [[str(e).strip() for e in s] for s in x_raw]
     enc = encode_sequences(seqs, event2id)
 
@@ -92,19 +94,21 @@ def main():
     config.EVENT_STATS_PATH.write_text(json.dumps(stats, indent=1))
     print(f"[out] {config.EVENT_STATS_PATH}")
 
-    # ── sanity evaluation on the fold the RF never trained on ─────────────
+    # ── evaluation on the fold the deployed model never trained on (fold 1 validation) ──
     if args.eval:
         from sklearn.metrics import precision_recall_fscore_support
         from sklearn.model_selection import StratifiedKFold
-        *_, (_, val_idx) = StratifiedKFold(5, shuffle=True, random_state=42).split(enc, y)
+        # The deployed artifacts were trained on the training split of fold 1 (verified against the FAISS contents),
+        # so fold 1's validation indices are the only ones the model has never seen.
+        _, val_idx = next(iter(StratifiedKFold(5, shuffle=True, random_state=42).split(enc, y)))
         rng = np.random.default_rng(0)
         val_idx = rng.choice(val_idx, size=min(args.eval, len(val_idx)), replace=False)
-        pipe = AnomalyPipeline(device="cpu")
+        pipe = AnomalyPipeline(profile, device="cpu")
         proba = pipe.predict([seqs[i] for i in val_idx])["anomaly_proba"]
         pred = (proba >= 0.5).astype(int)
         p, r, f, _ = precision_recall_fscore_support(y[val_idx], pred, average="binary", zero_division=0)
         acc = (pred == y[val_idx]).mean()
-        print(f"[eval] held-out fold sample n={len(val_idx):,}: acc={acc:.4f} precision={p:.4f} recall={r:.4f} f1={f:.4f}")
+        print(f"[eval] fold 1 (held out) sample n={len(val_idx):,}: acc={acc:.4f} precision={p:.4f} recall={r:.4f} f1={f:.4f}")
     print(f"[done] {time.time() - t0:.0f}s")
 
 

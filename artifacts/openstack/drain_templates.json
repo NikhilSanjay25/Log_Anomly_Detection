@@ -1,0 +1,211 @@
+{
+"depth": 4,
+"sim_threshold": 0.5,
+"max_children": 100,
+"templates": {
+"1": [
+"VM",
+"Started",
+"(Lifecycle",
+"Event)"
+],
+"2": [
+"VM",
+"Paused",
+"(Lifecycle",
+"Event)"
+],
+"3": [
+"During",
+"sync_power_state",
+"the",
+"instance",
+"has",
+"a",
+"pending",
+"task",
+"<*>",
+"Skip."
+],
+"4": [
+"VM",
+"Resumed",
+"(Lifecycle",
+"Event)"
+],
+"5": [
+"Instance",
+"spawned",
+"successfully."
+],
+"6": [
+"Took",
+"<*>",
+"seconds",
+"to",
+"spawn",
+"the",
+"instance",
+"on",
+"the",
+"hypervisor."
+],
+"7": [
+"Took",
+"<*>",
+"seconds",
+"to",
+"build",
+"instance."
+],
+"8": [
+"Terminating",
+"instance"
+],
+"9": [
+"Instance",
+"destroyed",
+"successfully."
+],
+"10": [
+"Deleting",
+"instance",
+"files",
+"<*>"
+],
+"11": [
+"Deletion",
+"of",
+"<*>",
+"complete"
+],
+"12": [
+"Took",
+"<*>",
+"seconds",
+"to",
+"destroy",
+"the",
+"instance",
+"on",
+"the",
+"hypervisor."
+],
+"13": [
+"Took",
+"<*>",
+"seconds",
+"to",
+"deallocate",
+"network",
+"for",
+"instance."
+],
+"14": [
+"Attempting",
+"claim:",
+"memory",
+"<*>",
+"MB,",
+"disk",
+"<*>",
+"GB,",
+"vcpus",
+"<*>",
+"CPU"
+],
+"15": [
+"Total",
+"memory:",
+"<*>",
+"MB,",
+"used:",
+"<*>",
+"MB"
+],
+"16": [
+"memory",
+"limit:",
+"<*>",
+"MB,",
+"free:",
+"<*>",
+"MB"
+],
+"17": [
+"Total",
+"disk:",
+"<*>",
+"GB,",
+"used:",
+"<*>",
+"GB"
+],
+"18": [
+"disk",
+"limit",
+"not",
+"specified,",
+"defaulting",
+"to",
+"unlimited"
+],
+"19": [
+"Total",
+"vcpu:",
+"<*>",
+"VCPU,",
+"used:",
+"<*>",
+"VCPU"
+],
+"20": [
+"vcpu",
+"limit",
+"not",
+"specified,",
+"defaulting",
+"to",
+"unlimited"
+],
+"21": [
+"Claim",
+"successful"
+],
+"22": [
+"Creating",
+"image"
+],
+"23": [
+"VM",
+"Stopped",
+"(Lifecycle",
+"Event)"
+]
+},
+"sizes": {
+"1": 2066,
+"2": 2066,
+"3": 4053,
+"4": 4132,
+"5": 2066,
+"6": 2066,
+"7": 2066,
+"8": 2064,
+"9": 2064,
+"10": 2064,
+"11": 2064,
+"12": 2064,
+"13": 2065,
+"14": 2065,
+"15": 2065,
+"16": 2065,
+"17": 2065,
+"18": 2065,
+"19": 2065,
+"20": 2065,
+"21": 2065,
+"22": 2066,
+"23": 2067
+}
+}

@@ -1,11 +1,12 @@
 """
-Agentic HDFS Log Anomaly Detection - Streamlit UI
---------------------------------------------------
+Agentic Log Anomaly Detection (HDFS · BGL · OpenStack) - Streamlit UI
+---------------------------------------------------------------------
     streamlit run streamlit_app.py
 
-Log Ingestion → Log Identification Agent → Preprocessing & Cleaning Agent → Medallion (Bronze/Silver/Gold)
-→ Anomaly Detection Agent (Transformer → FAISS → RAG → Random Forest [+ Qwen3-0.6B LoRA second opinion])
-→ Root Cause Analysis Agent → Insight Agent (Qwen3-1.7B SLM) → this UI, all orchestrated by the Coordinator Agent.
+Log Ingestion → Log Identification Agent (which dataset?) → Preprocessing & Cleaning Agent → Medallion
+(Bronze/Silver/Gold) → Anomaly Detection Agent (Transformer → FAISS → RAG → Random Forest, one model set per
+dataset) → Root Cause Analysis Agent → Insight Agent (knowledge base) → this UI, all orchestrated by the
+Coordinator Agent. The Qwen language model is used only by the follow-up chat, which is fed the relevant raw logs.
 """
 import html
 import json
@@ -17,9 +18,9 @@ import streamlit as st
 
 from log_agents import config
 from log_agents.agents.coordinator import CoordinatorAgent
-from log_agents.chat import RunChat
+from log_agents.chat import RunChat, has_raw_logs, session_lines
 from log_agents.context import RunMemory, RunOptions
-from log_agents.hdfs import EVENT_INFO, TEMPLATE_TEXT
+from log_agents.datasets import PROFILES
 from log_agents.ingestion import KubernetesSource, TextSource, UploadSource
 from log_agents.report import to_markdown
 from log_agents.resources import Resources
@@ -28,7 +29,7 @@ SAMPLES = Path(__file__).parent / "samples"
 SEV_ICON = {"critical": "🟥", "high": "🔴", "medium": "🟠", "low": "🟢"}
 STATUS_ICON = {"ok": "✅", "fallback": "🟡", "failed": "❌", "skipped": "⏭️", "running": "⏳"}
 
-st.set_page_config(page_title="HDFS Log Anomaly Agents", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="Log Anomaly Agents", page_icon="🔍", layout="wide")
 
 # Base colours/fonts live in .streamlit/config.toml; this adds what the theme config cannot express:
 # the radial background, frosted-glass panels, the gradient title and the agent terminal.
@@ -163,11 +164,10 @@ def agent_terminal(messages):
     return '<div class="agent-terminal">' + "".join(rows) + "</div>"
 
 
-@st.cache_resource(show_spinner="Loading ML pipeline (Transformer, FAISS, Random Forest)…")
+@st.cache_resource(show_spinner="Starting…")
 def get_resources():
-    res = Resources()
-    res.pipeline()
-    return res
+    return Resources()      # a dataset's model set is loaded the first time that dataset is analysed
+
 
 
 resources = get_resources()
@@ -180,47 +180,50 @@ with st.sidebar:
                            label_visibility="collapsed")
     batch_source = None
     if source_kind == "Upload file":
-        up = st.file_uploader("HDFS log file", type=["log", "txt", "csv"],
-                              help="Raw HDFS log lines, an Event_traces.csv, or event-ID sequences (one per line)")
+        up = st.file_uploader("Log file", type=["log", "txt", "csv"],
+                              help="Raw HDFS / BGL / OpenStack log lines, an HDFS Event_traces.csv, or HDFS "
+                                   "event-ID sequences (one per line)")
         if up:
             batch_source = UploadSource(up.name, up.getvalue())
     elif source_kind == "Paste logs":
-        txt = st.text_area("Raw HDFS log lines or event sequences", height=160,
+        txt = st.text_area("Raw log lines (HDFS, BGL, OpenStack) or HDFS event sequences", height=160,
                            placeholder="E22 E5 E5 E5 E11 E9 E11 E9 E26 E26\n"
                                        "or\n081109 203615 148 INFO dfs.DataNode$PacketResponder: …")
         if txt.strip():
             batch_source = TextSource(txt)
     elif source_kind == "Sample logs":
-        samples = sorted(p.name for p in SAMPLES.glob("*")) if SAMPLES.exists() else []
+        samples = sorted(p.name for p in SAMPLES.glob("*") if p.is_file() and p.suffix in (".log", ".txt", ".csv")
+                         ) if SAMPLES.exists() else []
         if samples:
             pick = st.selectbox("Sample", samples)
             batch_source = UploadSource(pick, (SAMPLES / pick).read_bytes())
         else:
-            st.info("Run `python scripts/make_sample_logs.py` to create sample logs.")
+            st.info("Run `python scripts/make_sample_logs.py` and `python scripts/make_dataset_samples.py`.")
     else:
         st.info("**Coming soon.** " + KubernetesSource.__doc__.split("\n\n")[1].strip().replace("\n", " "))
         st.text_input("Namespace", "default", disabled=True)
         st.text_input("Pod", "hdfs-datanode-0", disabled=True)
 
     st.header("⚙️ Agent settings")
-    use_slm = st.toggle("Insight Agent uses SLM", value=True,
-                        help=f"{config.INSIGHT_MODEL}. Off = deterministic knowledge-base insight (instant).")
-    lora_available = resources.status()["lora_available"]
-    lora_mode = st.selectbox("LoRA SLM second opinion (advisory)", ["auto", "all", "off"],
-                             disabled=not lora_available,
-                             help="auto: only uncertain sessions · all: every unique pattern (slower) · off. "
-                                  "Shown as evidence only - the RF decision is final.",
-                             index=0 if lora_available else 2)
+    dataset_choice = st.selectbox("Dataset", ["Auto-detect"] + [p.title for p in PROFILES.values()],
+                                  help="Auto-detect lets the Log Identification Agent decide from the log lines.")
+    forced = next((n for n, p in PROFILES.items() if p.title == dataset_choice), None)
     threshold = st.slider("Anomaly threshold (RF probability)", 0.1, 0.9, 0.5, 0.05)
     persist = st.toggle("Save medallion layers + run memory", value=True)
 
     st.header("🖥️ System status")
-    ps = resources.pipeline().status()
-    st.caption(f"Device **{ps['device']}** · FAISS **{ps['faiss_vectors']:,}** vectors · "
-               f"RF **{ps['rf_estimators']}** trees · RAG metadata {'✅' if ps['rag_metadata'] else '⚠️ missing'}")
-    st.caption(f"Insight SLM: `{config.INSIGHT_MODEL}` · LoRA adapter {'✅' if lora_available else '❌ not found'}")
-    if ps["device"] == "cpu":
-        st.caption("⚠️ CPU only: SLM steps take a few minutes. Install CUDA PyTorch to use your GPU.")
+    rs = resources.status()
+    for name, prof in PROFILES.items():
+        mark = "✅ ready" if rs["available"][name] else "❌ not trained"
+        loaded = " · loaded" if name in rs["pipelines_loaded"] else ""
+        st.caption(f"**{prof.title}** models {mark}{loaded}")
+    st.caption(f"Chat model: `{config.CHAT_MODEL}` "
+               f"({'loaded' if rs['chat_loaded'] else 'loads on the first question'})")
+    for name in rs["pipelines_loaded"]:
+        ps = resources.pipeline(name).status()
+        st.caption(f"{PROFILES[name].title}: device **{ps['device']}** · FAISS **{ps['faiss_vectors']:,}** vectors · "
+                   f"RF **{ps['rf_estimators']}** trees")
+
 
     recent = RunMemory().recent(5)
     if recent:
@@ -229,12 +232,12 @@ with st.sidebar:
             st.caption(f"{r['generated_at'][5:16]} · {r['source']} · {r.get('anomalies', '–')}/{r.get('sessions', '–')} anomalous")
 
 # ═══════════════════════════════ HEADER ════════════════════════════════
-PIPELINE = [("Ingestion", ""), ("Identification", ""), ("Preprocessing", ""), ("Medallion", ""),
-            ("Transformer · FAISS · RAG · RF", "ml"), ("LoRA SLM", "slm"), ("Root Cause Analysis", ""),
-            ("Insight SLM", "slm")]
-st.markdown('<div class="hero-title">Agentic HDFS Log Anomaly Detection</div>'
-            '<p class="hero-sub">A Coordinator Agent runs specialised agents end to end, from raw logs to root '
-            'causes and recommendations.</p><div class="pipeline">'
+PIPELINE = [("Ingestion", ""), ("Identification: HDFS · BGL · OpenStack", ""), ("Preprocessing", ""),
+            ("Medallion", ""), ("Transformer · FAISS · RAG · RF", "ml"), ("Root Cause Analysis", ""),
+            ("Insight", ""), ("Chat SLM (Qwen)", "slm")]
+st.markdown('<div class="hero-title">Agentic Log Anomaly Detection</div>'
+            '<p class="hero-sub">A Coordinator Agent runs specialised agents end to end on HDFS, BGL and OpenStack '
+            'logs, from raw lines to root causes, recommendations and a log-aware chat.</p><div class="pipeline">'
             + '<span class="arrow">→</span>'.join(f'<span class="chip {cls}">{name}</span>' for name, cls in PIPELINE)
             + "</div>", unsafe_allow_html=True)
 
@@ -244,8 +247,7 @@ run_clicked = st.button("▶️ Run analysis", type="primary", width="stretch", 
 run_area = st.container()
 if run_clicked:
     batch = batch_source.read()
-    opts = RunOptions(use_slm_insight=use_slm, lora_mode=lora_mode if lora_available else "off",
-                      threshold=threshold, persist=persist)
+    opts = RunOptions(threshold=threshold, persist=persist, dataset=forced)
     with run_area, st.status("Coordinator Agent is running the workflow…", expanded=True) as status:
         def on_step(step):
             st.write(f"{STATUS_ICON.get(step.status, '•')} **{step.agent}** ({step.duration_s:.1f}s) — {step.summary}")
@@ -262,12 +264,12 @@ if ctx is None:
     st.info("Choose a log source in the sidebar and press **Run analysis**. "
             "Try *Sample logs → hdfs_raw_sample.log* for a full demo.")
     AGENTS = [
-        ("Log Identification Agent", "Recognises raw HDFS lines, Event_traces CSV or event sequences and picks the workflow."),
+        ("Log Identification Agent", "Recognises HDFS, BGL or OpenStack logs (and the input format) and picks the workflow."),
         ("Preprocessing & Cleaning Agent", "Parses, normalises, de-duplicates and removes noise."),
-        ("Medallion Processing", "Bronze raw cleaned logs → Silver structured events → Gold block sessions."),
-        ("Anomaly Detection Agent", "Transformer → FAISS → RAG → Random Forest, with an advisory LoRA SLM opinion."),
-        ("Root Cause Analysis Agent", "Ranks causes from error events, similar logs, context and correlations."),
-        ("Insight Agent", "Qwen3-1.7B writes explanation, impact and next-best actions, validated against the facts."),
+        ("Medallion Processing", "Bronze raw cleaned logs → Silver structured events → Gold sessions (blocks, windows, instances)."),
+        ("Anomaly Detection Agent", "Transformer → FAISS → RAG → Random Forest, trained separately for each dataset."),
+        ("Root Cause Analysis Agent", "Ranks causes from error events, timings, similar logs, context and correlations."),
+        ("Insight Agent", "Explanation, impact and next-best actions from the knowledge base; Qwen answers follow-up questions in the chat."),
     ]
     st.markdown('<div class="agent-grid">' + "".join(
         f'<div class="agent-card"><div class="step">0{i}</div><div class="name">{n}</div><div class="desc">{d}</div></div>'
@@ -278,7 +280,7 @@ if ctx.data["status"] != "completed":
     st.error(ctx.data.get("error", "The workflow failed."))
     ident = ctx.data.get("identification") or {}
     if ident.get("family") == "unsupported":
-        st.caption("Supported inputs: raw HDFS log lines · Event_traces.csv · event sequences like `E5 E22 E11 E9 E26`")
+        st.caption("Supported inputs: raw HDFS lines · HDFS Event_traces.csv · HDFS event sequences like `E5 E22 E11` · raw BGL RAS lines · raw OpenStack nova lines")
     st.stop()
 
 d = ctx.data
@@ -287,6 +289,8 @@ sessions = d["detection"]["sessions"]
 rca = d["rca"]
 insight = d["insight"]
 n_anom = int(sessions.is_anomaly.sum())
+profile = ctx.profile
+noun, noun_pl = profile.session_noun, profile.session_noun_plural
 
 for w in ctx.warnings:
     st.warning(w)
@@ -301,24 +305,15 @@ with tabs[0]:
              else '<span class="badge-healthy">● Healthy: no anomalies detected</span>')
     st.markdown(badge, unsafe_allow_html=True)
     c = st.columns(5)
-    c[0].metric("Block sessions", f"{len(sessions):,}")
+    c[0].metric(f"{noun_pl.capitalize()} analysed", f"{len(sessions):,}")
     c[1].metric("Anomalies", f"{n_anom:,}", f"{n_anom / len(sessions):.1%}", delta_color="inverse")
-    c[2].metric("Uncertain", f"{int(sessions.uncertain.sum()):,}",
-                help="RF probability near the threshold, or RF disagrees with similar historical sessions")
+    c[2].metric("Flagged uncertain", f"{int(sessions.uncertain.sum()):,}",
+                help="RF probability near the threshold, or RF disagrees with similar historical sessions. "
+                     "The label is not changed; review these first.")
     c[3].metric("Root-cause groups", len(rca["causes"]))
     c[4].metric("Severity", insight["impact"]["severity"].upper())
     st.caption(f"Log family **{ident['family']}** · format `{ident['format']}` · confidence {ident['confidence']:.0%} · "
                f"workflow: {ident['workflow']}")
-    st.caption(f"SLM second opinion: {d['detection']['slm_note']}")
-    n_dis = int(sessions.slm_disagrees.sum())
-    if n_dis:
-        st.warning(f"The LoRA SLM disagrees with the RF on {n_dis} session(s). The RF label is kept "
-                   "(it is far more accurate on held-out data); review these sessions manually.")
-        dis = sessions[sessions.slm_disagrees]
-        with st.expander("Sessions where the SLM disagrees"):
-            st.dataframe(pd.DataFrame({"Block": dis.block_id, "RF label": dis.rf_label.map({1: "Anomaly", 0: "Normal"}),
-                                       "RF prob.": dis.anomaly_proba.round(3), "SLM": dis.slm_label,
-                                       "Sequence": dis.sequence}), hide_index=True, width="stretch")
     if d["detection"].get("metrics"):
         m = d["detection"]["metrics"]
         st.success(f"Ground-truth labels found in input — accuracy {m['accuracy']:.4f} · precision {m['precision']:.4f} · "
@@ -330,10 +325,11 @@ with tabs[0]:
     else:
         prim = {p["block_id"]: p["hypotheses"][0]["title"] for p in rca["sessions"]}
         st.dataframe(pd.DataFrame({
-            "Block": view.block_id, "Probable cause": view.block_id.map(prim),
+            noun.capitalize(): view.block_id, "Probable cause": view.block_id.map(prim),
             "Anomaly prob.": view.anomaly_proba, "Events": view.n_events,
             "Error events": view.error_events.map(", ".join),
-            "SLM opinion (advisory)": view.slm_label.fillna("–") + view.slm_disagrees.map({True: " ⚠️ disagrees", False: ""}),
+            **{c: view[c] for c in profile.extra_features if c in view},
+            "Uncertain": view.uncertain.map({True: "⚠️ review", False: ""}),
             "Sequence": view.sequence}),
             hide_index=True, width="stretch",
             column_config={"Anomaly prob.": st.column_config.ProgressColumn(min_value=0, max_value=1, format="%.2f")})
@@ -352,21 +348,21 @@ with tabs[1]:
                 st.write(f"**Impact:** {c['impact']}")
                 if c["key_events"]:
                     st.write("**Key events:** " + " · ".join(c["key_events"]))
-                st.write("**Example blocks:** " + ", ".join(f"`{b}`" for b in c["example_blocks"]))
+                st.write(f"**Example {noun_pl}:** " + ", ".join(f"`{b}`" for b in c["example_blocks"]))
                 st.code(c["example_sequence"], language=None)
         corr = rca["correlations"]
         st.subheader("Correlations across anomalies")
         if not any(corr.values()):
-            st.caption("No DataNode, time-window or repeated-pattern correlations found.")
+            st.caption(f"No {profile.node_noun}, time-window or repeated-pattern correlations found.")
         if corr["nodes"]:
-            st.write("**DataNodes concentrated in anomalous blocks**")
+            st.write(f"**{profile.node_noun}s concentrated in anomalous {noun_pl}**")
             st.dataframe(pd.DataFrame(corr["nodes"]), hide_index=True, width="stretch",
                          column_config={"anomaly_share": st.column_config.NumberColumn(format="percent")})
         if corr["time_bursts"]:
             st.write("**Bursts of anomalies**")
             st.dataframe(pd.DataFrame(corr["time_bursts"]), hide_index=True)
         if corr["patterns"]:
-            st.write("**Identical anomalous patterns in multiple blocks**")
+            st.write(f"**Identical anomalous patterns in multiple {noun_pl}**")
             st.dataframe(pd.DataFrame(corr["patterns"]), hide_index=True, width="stretch")
 
 # ── AI Insights ───────────────────────────────────────────────────────
@@ -384,19 +380,17 @@ with tabs[2]:
     st.write(insight["impact"]["description"])
     if insight["impact"].get("affected"):
         st.write("**Affected:** " + ", ".join(f"`{a}`" for a in insight["impact"]["affected"]))
-    if insight.get("slm_problems"):
-        with st.expander("Why the SLM answer was rejected"):
-            st.write(insight["slm_problems"])
-            st.code(insight.get("slm_raw", ""), language=None)
     if insight.get("facts"):
-        with st.expander("Grounding facts sent to the SLM"):
+        with st.expander("Facts the chat model is grounded on"):
             st.code(insight["facts"], language=None)
 
     st.divider()
     st.subheader("💬 Ask about this analysis")
-    st.caption(f"Answered by `{config.INSIGHT_MODEL}` from the same facts as this report. Name a block such as "
-               "`blk_…` to pull in its own evidence and similar historical sessions. A small model can still reason "
-               "wrongly; anything the run cannot back up is flagged under the answer. Each answer takes ~15-35 s.")
+    st.caption(f"Answered by `{config.CHAT_MODEL}` from the same facts as this report plus the raw log lines "
+               f"relevant to your question. Name a {noun} id to pull in its own logs, evidence and similar historical "
+               "sessions, or mention an event id (E12) or a keyword to see the matching log lines. A small model can "
+               "still reason wrongly; anything the run cannot back up is flagged under the answer. Each answer takes "
+               "~15-35 s.")
     chat = st.session_state.get("chat")
     if chat is None or chat.ctx is not ctx:
         chat = st.session_state["chat"] = RunChat(ctx, coordinator.rca)
@@ -416,12 +410,12 @@ with tabs[2]:
         with conversation, st.chat_message("assistant"):
             msgs, content = chat.messages_for(question)
             try:
-                if not resources.status()["insight_slm_loaded"]:
-                    with st.spinner(f"Loading {config.INSIGHT_MODEL}…"):
-                        resources.insight_slm()
-                raw = st.write_stream(resources.insight_slm().stream_chat(msgs))
+                if not resources.status()["chat_loaded"]:
+                    with st.spinner(f"Loading {config.CHAT_MODEL}…"):
+                        resources.chat_slm()
+                raw = st.write_stream(resources.chat_slm().stream_chat(msgs))
             except Exception as e:
-                st.error(f"The SLM could not answer: {type(e).__name__}: {e}")
+                st.error(f"The chat model could not answer: {type(e).__name__}: {e}")
             else:
                 _, issues = chat.finish(question, content, raw)
                 for issue in issues:
@@ -467,15 +461,19 @@ with tabs[4]:
         if p.get("similar_logs"):
             st.write("**Similar historical sessions (FAISS / RAG)**")
             st.dataframe(pd.DataFrame([{
-                "historical block": n.get("block_id"), "label": n.get("label"), "distance": n["distance"],
+                f"historical {noun}": n.get("block_id"), "label": n.get("label"), "distance": n["distance"],
                 "pattern seen": n.get("occurrences"), "anomaly rate": n.get("anomaly_rate"),
                 "sequence": " ".join(n.get("sequence", []))} for n in p["similar_logs"]]),
                 hide_index=True, width="stretch")
         timeline = d["medallion"]["silver"]
         timeline = timeline[timeline.block_id == pick]
-        st.write("**Block timeline (Silver layer)**")
-        st.dataframe(timeline.assign(description=timeline.event_id.map(lambda e: EVENT_INFO[e][2]))
+        st.write(f"**{noun.capitalize()} timeline (Silver layer)**")
+        st.dataframe(timeline.assign(description=timeline.event_id.map(profile.describe))
                      .drop(columns=["block_id"]), hide_index=True, width="stretch")
+        if has_raw_logs(ctx):
+            lines, total = session_lines(ctx, pick, limit=200)
+            st.write(f"**Raw log lines of this {noun}** ({len(lines)} of {total} shown, in file order)")
+            st.code("\n".join(lines), language=None)
     else:
         st.caption("No anomalous sessions to show evidence for.")
 
@@ -488,18 +486,19 @@ with tabs[4]:
     st.dataframe(df.head(500).astype(str), hide_index=True, width="stretch")
     with st.expander("Preprocessing & cleaning details"):
         st.json(d["preprocessing"])
-    with st.expander("HDFS event templates"):
-        st.dataframe(pd.DataFrame([{"event": e, "template": TEMPLATE_TEXT[e], "stage": s, "kind": k, "meaning": m}
-                                   for e, (s, k, m) in EVENT_INFO.items()]), hide_index=True, width="stretch")
+    with st.expander(f"{profile.title} event templates"):
+        st.dataframe(pd.DataFrame([{"event": e, "template": profile.template_text[e], "stage": st_, "kind": k,
+                                    "meaning": m} for e, (st_, k, m) in profile.event_info.items()]),
+                     hide_index=True, width="stretch")
 
 # ── Reports ───────────────────────────────────────────────────────────
 with tabs[5]:
     md = to_markdown(report)
     c1, c2 = st.columns(2)
-    c1.download_button("⬇️ Markdown report", md, file_name=f"hdfs_report_{ctx.run_id}.md",
+    c1.download_button("⬇️ Markdown report", md, file_name=f"{profile.name}_report_{ctx.run_id}.md",
                        mime="text/markdown", width="stretch")
     c2.download_button("⬇️ JSON report", json.dumps(report, indent=1, default=str),
-                       file_name=f"hdfs_report_{ctx.run_id}.json", mime="application/json", width="stretch")
+                       file_name=f"{profile.name}_report_{ctx.run_id}.json", mime="application/json", width="stretch")
     st.markdown(md)
 
 # ── Agent trace ───────────────────────────────────────────────────────
