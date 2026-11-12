@@ -40,7 +40,7 @@ def main(argv=None):
 
     print(f"Analysing {path} ...", file=sys.stderr)
     coordinator = CoordinatorAgent(Resources())
-    ctx = coordinator.run(batch, opts, on_step=progress)
+    ctx = coordinator.run(batch, opts, on_step=progress, on_event=print_event)
     report = ctx.data["report"]
     text = json.dumps(report, indent=1, default=str) if args.out and args.out.endswith(".json") else to_markdown(report)
     if args.out:
@@ -52,6 +52,23 @@ def main(argv=None):
     if args.chat and report["status"] == "completed":
         chat_loop(ctx, coordinator)
     return 0 if report["status"] == "completed" else 1
+
+
+def print_event(kind, d):
+    """Show what the investigator is doing, live, on stderr."""
+    if kind == "model_loading":
+        print(f"  loading {d['model']} ...", file=sys.stderr, flush=True)
+    elif kind == "investigation_start":
+        print(f"  {d['model']} investigates {d['cases']} case(s) ({d['anomalies']} anomalies in {d['groups']} groups)",
+              file=sys.stderr, flush=True)
+    elif kind == "case_start":
+        print(f"  case {d['index'] + 1}/{d['total']}: {d['noun']} {d['block_id']} ({d['group_size']} identical, "
+              f"p={d['probability']:.0%})", file=sys.stderr, flush=True)
+    elif kind == "step":
+        print(f"      step {d['n']}: {d['action']} (picked with {d['options'][d['action']]:.0%})", file=sys.stderr, flush=True)
+    elif kind == "case_done":
+        note = "" if d["agrees"] else f"   [rule engine said: {d['rule_top_title']}]"
+        print(f"      -> {d['title']}{note}", file=sys.stderr, flush=True)
 
 
 def chat_loop(ctx, coordinator):

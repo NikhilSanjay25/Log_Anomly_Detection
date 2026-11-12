@@ -34,9 +34,11 @@ class CoordinatorAgent:
         self.investigator = InvestigatorAgent(resources)      # a language model investigates and decides the causes
         self.insight = InsightAgent(resources)
 
-    def run(self, batch, options=None, on_step=None):
-        """batch: ingestion.LogBatch. on_step(trace_step) is called after every step (UI progress)."""
+    def run(self, batch, options=None, on_step=None, on_event=None):
+        """batch: ingestion.LogBatch. on_step(trace_step) is called after every step (UI progress);
+        on_event(kind, data) is called while an agent works (the investigator reports every tool it picks)."""
         ctx = RunContext(batch.name, batch.text, options or RunOptions(), origin=batch.origin)
+        ctx.on_event = on_event
         ctx.data["memory"] = self.memory.recent(3)
         self._on_step = on_step or (lambda step: None)
         ctx.data["plan"] = ["Log Identification Agent"]

@@ -48,6 +48,7 @@ class RunContext:
         self.options = options or RunOptions()
         self.data = {}              # blackboard: agents publish results here
         self.profile = None         # DatasetProfile, set by the Log Identification agent
+        self.on_event = None        # optional listener(kind, data): lets a UI show what an agent is doing live
         self.messages = []
         self.trace = []
         self.warnings = []
@@ -55,6 +56,15 @@ class RunContext:
 
     def send(self, sender, recipient, content):
         self.messages.append(Message(sender, recipient, content))
+
+    def emit(self, kind, **data):
+        """Tell the listener what an agent is doing right now. A broken listener never stops the run (Streamlit's
+        stop / rerun signals are BaseExceptions, so they still get through)."""
+        if self.on_event is not None:
+            try:
+                self.on_event(kind, data)
+            except Exception:
+                pass
 
     def warn(self, msg):
         self.warnings.append(msg)

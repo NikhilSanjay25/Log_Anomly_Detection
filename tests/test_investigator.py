@@ -193,3 +193,71 @@ def test_chunked_prefill_gives_the_same_answer_as_one_pass(monkeypatch):
     monkeypatch.setattr(slm, "CHOOSE_CHUNK", 100_000)
     whole_pick, whole = llm.choose("You are an engineer.", user, labels)
     assert chunked_pick == whole_pick and all(abs(chunked[l] - whole[l]) < 0.15 for l in labels)
+
+
+def listen():
+    events = []
+    return events, (lambda kind, data: events.append((kind, data)))
+
+
+def run_listened(llm, listener, name="hdfs_raw_sample.log", **opts):
+    return coordinator(llm).run(UploadSource(name, (SAMPLES / name).read_bytes()).read(),
+                                RunOptions(persist=False, agent_model=FAKE, **opts), on_event=listener)
+
+
+def test_live_events_report_the_investigation_as_it_happens():
+    events, listener = listen()
+    ctx = run_listened(ScriptedLLM(), listener)
+    inv = ctx.data["investigation"]
+    kinds = [k for k, _ in events]
+    assert kinds[:3] == ["model_loading", "model_loaded", "investigation_start"] and kinds[-1] == "investigation_done"
+    n = inv["cases"]
+    assert kinds.count("case_start") == kinds.count("deciding") == kinds.count("decision") == kinds.count("case_done") == n
+    steps = [d for k, d in events if k == "step"]
+    assert len(steps) == sum(len(ep["steps"]) for ep in inv["episodes"])
+    assert all(abs(sum(s_["options"].values()) - 1) < 1e-2 and s_["action"] in s_["options"] for s_ in steps)
+    # inside every case the order is: start, its steps, deciding, decision, done
+    case = [k for k, _ in events[kinds.index("case_start"):kinds.index("case_done") + 1]]
+    assert case[0] == "case_start" and case[-1] == "case_done" and case[-3:-1] == ["deciding", "decision"]
+    assert set(case[1:-3]) == {"step"}
+
+
+def test_the_decision_event_matches_what_is_recorded():
+    events, listener = listen()
+    ctx = run_listened(ScriptedLLM(), listener)
+    ep = ctx.data["investigation"]["episodes"][0]
+    decision = next(d for k, d in events if k == "decision")
+    assert decision["choice"] == ep["choice"] and sum(c["chosen"] for c in decision["candidates"]) == 1
+    assert [c["score"] for c in decision["candidates"]] == sorted((c["score"] for c in decision["candidates"]), reverse=True)
+    assert sum(c["rule_top"] for c in decision["candidates"]) <= 1
+    done = next(d for k, d in events if k == "case_done")
+    assert done["choice"] == ep["choice"] and done["agrees"] == (ep["choice"] == ep["rule_top"])
+
+
+def test_a_broken_listener_does_not_stop_the_run():
+    def broken(kind, data):
+        raise RuntimeError("the UI crashed")
+    ctx = run_listened(ScriptedLLM(), broken)
+    plain = run(coordinator(ScriptedLLM()))
+    assert ctx.data["status"] == "completed"
+    assert ([e["choice"] for e in ctx.data["investigation"]["episodes"]]
+            == [e["choice"] for e in plain.data["investigation"]["episodes"]])
+
+
+def test_no_listener_and_the_rule_based_mode_work_without_events():
+    events, listener = listen()
+    coord = coordinator(ScriptedLLM())
+    ctx = coord.run(UploadSource("s", (SAMPLES / "hdfs_raw_sample.log").read_bytes()).read(),
+                    RunOptions(persist=False, agent_model="rules"), on_event=listener)
+    assert ctx.data["status"] == "completed" and not events                 # nothing to report without a model
+
+
+def test_a_missing_model_is_reported_to_the_listener():
+    def missing(model):
+        raise OSError("weights not found")
+    coord = CoordinatorAgent(Resources())
+    coord.investigator = InvestigatorAgent(coord.res, llm_factory=missing)
+    events, listener = listen()
+    coord.run(UploadSource("s", (SAMPLES / "hdfs_raw_sample.log").read_bytes()).read(),
+              RunOptions(persist=False, agent_model=FAKE), on_event=listener)
+    assert [k for k, _ in events] == ["model_loading", "model_failed"] and "weights not found" in events[1][1]["reason"]

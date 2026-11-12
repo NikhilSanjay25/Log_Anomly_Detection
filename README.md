@@ -46,6 +46,23 @@ when to stop; then it is shown a shortlist of candidate root causes and picks on
 * **The BGL alert-tag column is never shown to the model** (a label is not a log field), and the BGL root-cause signatures
   come from training windows only.
 
+## Watching the investigator work
+
+The investigation is streamed live while it runs, so you can see what the model is doing instead of a frozen spinner:
+
+* **In the web app**, under the stage list: the model loading, a progress bar (case *i* of *N*, model calls so far, seconds),
+  the case in progress, and every tool the model picks as an expandable step with **its scores for every option it was
+  offered** and **what the tool returned** (e.g. the raw log lines). Then the **final choice table** (the model's score for each
+  candidate, which one is the rule engine's own pick, which was chosen) and a running list of finished cases, with ↔️ marking
+  every case where the model chose a different cause than the rule engine. *Slow down the live view* in the sidebar pauses after
+  each step so an audience can follow. When the run ends the box collapses; the same trace stays in the **Investigation** tab and
+  the report.
+* **On the command line** the same events print to stderr (`case 3/11: window win_0000021 ... step 1: similar_cases (picked
+  with 97%) ... -> <cause>`).
+* **In code**, `CoordinatorAgent.run(batch, options, on_event=callback)` receives `(kind, data)` for `model_loading`,
+  `model_loaded`, `investigation_start`, `case_start`, `step`, `deciding`, `decision`, `case_done`, `investigation_done`. A listener
+  that raises never stops the run.
+
 ## Which model? A measured comparison
 
 The same investigator, tools and shortlist were run with each model and compared with the rule-based analysis it replaces.
@@ -150,7 +167,7 @@ scripts/                    train_dataset.py (BGL, OpenStack), compare_agents.py
 artifacts/bgl, artifacts/openstack   trained models, metrics.json, templates;  artifacts/agent_comparison.json
 (repo root)                 HDFS models: transformer_backbone.pth, rag_random_forest.joblib, hdfs_faiss_index.index (Git LFS)
 samples/                    demo inputs for all three datasets
-tests/                      53 tests
+tests/                      58 tests
 OtherTests/, Baselines/     experiment notebooks and baseline models (not part of the pipeline)
 ```
 
@@ -173,7 +190,7 @@ In the UI pick the **Investigator** under *Agent settings* (the Investigation ta
 python -m log_agents.cli samples/bgl_raw_sample.log --agent-model Qwen/Qwen3-4B     # dataset detected automatically
 python -m log_agents.cli samples/openstack_raw_sample.log --agent-model rules --out report.md   # rule-based, no model
 python -m log_agents.cli my.log --dataset bgl --chat                                # then ask follow-up questions
-python -m pytest tests -q                                                           # 53 tests, fast, no GPU needed
+python -m pytest tests -q                                                           # 58 tests, fast, no GPU needed
 python scripts/compare_agents.py --cases 20 --models Qwen/Qwen3-4B                  # a quick comparison pilot
 ```
 

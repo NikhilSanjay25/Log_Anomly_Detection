@@ -85,12 +85,16 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
         inv = ctx.data["investigation"]
         if model in (None, "", config.RULES) or not per_session:
             return
+        ctx.emit("model_loading", model=model)
+        t_load = time.time()
         try:
             llm = self.llm_factory(model)
         except Exception as e:                           # weights missing, no GPU for 4-bit, out of memory...
             inv.update(status="unavailable", reason=f"{type(e).__name__}: {str(e)[:150]}")
             ctx.warn(f"Investigator: could not load {model} ({inv['reason']}); used the rule-based analysis instead.")
+            ctx.emit("model_failed", model=model, reason=inv["reason"])
             return
+        ctx.emit("model_loaded", model=llm.label, seconds=time.time() - t_load)
 
         groups = defaultdict(list)
         for p in per_session:
@@ -98,8 +102,13 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
         order = sorted(groups.values(), key=lambda g: (-len(g), -g[0]["anomaly_proba"]))
         n_cases = min(len(order), ctx.options.agent_max_cases)
         t0, failures, calls = time.time(), 0, 0
-        for g in order[:n_cases]:
+        ctx.emit("investigation_start", model=llm.label, anomalies=len(per_session), groups=len(order),
+                 cases=n_cases, noun=ctx.profile.session_noun)
+        kb = ctx.profile.root_causes
+        for k, g in enumerate(order[:n_cases]):
             rep = g[0]
+            ctx.emit("case_start", index=k, total=n_cases, block_id=rep["block_id"], group_size=len(g),
+                     probability=rep["anomaly_proba"], noun=ctx.profile.session_noun)
             try:
                 ep = self._investigate(ctx, llm, rep, rows[rep["block_id"]], per_session, correlations, len(g),
                                        ctx.options.agent_max_steps)
@@ -107,6 +116,7 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
                 failures += 1
                 ctx.warn(f"Investigator: case {rep['block_id']} failed ({type(e).__name__}: {str(e)[:100]}); "
                          "kept the rule-based cause.")
+                ctx.emit("case_failed", index=k, block_id=rep["block_id"])
                 if failures > 3:
                     raise AgentError("the language model failed on several cases; stopped") from e
                 continue
@@ -115,6 +125,10 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
             calls += ep["model_calls"]
             for p in g:
                 p["primary_cause"], p["decided_by"], p["investigation"] = ep["choice"], llm.label, ep["case"]
+            ctx.emit("case_done", index=k, total=n_cases, block_id=rep["block_id"], group_size=len(g),
+                     choice=ep["choice"], title=kb[ep["choice"]]["title"], rule_top=ep["rule_top"],
+                     rule_top_title=kb[ep["rule_top"]]["title"], agrees=ep["choice"] == ep["rule_top"],
+                     seconds=ep["seconds"], model_calls=ep["model_calls"])
         for g in order[n_cases:]:
             for p in g:
                 p["decided_by"] = "rules (case limit reached)"
@@ -129,6 +143,8 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
             ctx.warn(f"Investigator: investigated {n_cases} of {len(order)} anomaly groups; the rest use the "
                      "rule-based cause.")
         ctx.send(self.name, "Insight Agent", f"{len(eps)} case(s) investigated by {llm.label}")
+        ctx.emit("investigation_done", cases=len(eps), model_calls=calls, seconds=inv["seconds"],
+                 agrees=inv["agrees_with_rule_top"], model=llm.label)
 
     # ── one investigation ─────────────────────────────────────────────────
     def _investigate(self, ctx, llm, entry, row, per_session, correlations, group_size, max_steps):
@@ -153,19 +169,23 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
             letter, probs = llm.choose(system, prompt, available)
             calls += 1
             name = ACTIONS[letter][0]
+            options = {ACTIONS[l][0]: round(float(p), 3) for l, p in probs.items()}
             if name == "decide":
-                steps.append({"action": name, "probs": _round(probs), "observation": ""})
+                steps.append({"action": name, "probs": _round(probs), "options": options, "observation": ""})
+                ctx.emit("step", n=len(steps), action=name, options=options, observation="", max_steps=max_steps)
                 break
             obs = tools[name]()
             used.add(name)
             evidence.append(f"[{name}] {obs}")
-            steps.append({"action": name, "probs": _round(probs), "observation": obs})
+            steps.append({"action": name, "probs": _round(probs), "options": options, "observation": obs})
+            ctx.emit("step", n=len(steps), action=name, options=options, observation=obs, max_steps=max_steps)
 
         # final decision: a shortlist from the rule engine, shuffled, scores hidden unless the model asked for them
         cand = self.shortlist(entry, row)
         rule_top = entry["hypotheses"][0]["cause"]
         kb = profile.root_causes
         decision = ctx.options.agent_decision
+        ctx.emit("deciding", candidates=[kb[c]["title"] for c in cand], method=decision)
         if len(cand) == 1:
             choice, cprobs = cand[0], {cand[0]: 1.0}
         else:
@@ -193,6 +213,9 @@ class InvestigatorAgent(RootCauseAnalysisAgent):
                         cprobs[c] += pr[l] / len(rotations)
                     calls += 1
             choice = max(cand, key=lambda c: (cprobs[c], -cand.index(c)))
+        ctx.emit("decision", method=decision, choice=choice, candidates=sorted(
+            ({"cause": c, "title": kb[c]["title"], "score": round(float(cprobs.get(c, 0.0)), 3),
+              "rule_top": c == rule_top, "chosen": c == choice} for c in cand), key=lambda d: -d["score"]))
         return {"block_id": entry["block_id"], "group_size": group_size, "steps": steps,
                 "candidates": cand, "rule_top": rule_top, "choice": choice,
                 "choice_probs": _round(cprobs), "decision": decision, "used_rule_ranking": "rule_ranking" in used,

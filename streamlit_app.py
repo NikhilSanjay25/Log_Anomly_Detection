@@ -10,6 +10,7 @@ Coordinator Agent. The Qwen language model is used only by the follow-up chat, w
 """
 import html
 import json
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -164,6 +165,112 @@ def agent_terminal(messages):
     return '<div class="agent-terminal">' + "".join(rows) + "</div>"
 
 
+ACTION_ICONS = {"read_logs": "📜", "similar_cases": "🔎", "event_evidence": "📊", "structural_check": "🧪",
+                "node_correlation": "🖧", "repeat_pattern": "🔁", "rule_ranking": "📏", "text_match": "🔤", "decide": "✅"}
+
+
+def _md(text):
+    """Cause titles contain template wildcards like <*>; keep Markdown from reading them as emphasis."""
+    return text.replace("*", "∗")
+
+
+class LiveAgentView:
+    """Shows what the investigator is doing while it works, inside the progress box: the model loading, the case it is on,
+    every tool it picks (with the score it gave each option) and what the tool returned, the final candidates with the
+    model's scores, and a running list of the finished cases. `pace` pauses after each step so an audience can follow."""
+
+    def __init__(self, pace=0.0):
+        self.pace, self.box, self.finished = pace, None, []
+        self.case, self.steps, self.decision, self.choosing = None, [], None, None
+        self.total, self.calls_done, self.t0 = 1, 0, time.time()
+
+    def __call__(self, kind, d):
+        if self.box is None:
+            self.box = st.container(border=True)
+            with self.box:
+                st.markdown("**🕵️ Investigator Agent, live**")
+                self.head, self.bar, self.now, self.done = st.empty(), st.empty(), st.empty(), st.empty()
+        handler = getattr(self, "_" + kind, None)
+        if handler:
+            handler(d)
+            if self.pace and kind in ("step", "decision", "case_done"):
+                time.sleep(self.pace)
+
+    def _progress(self, done):
+        calls = self.calls_done + len(self.steps)
+        self.bar.progress(min(done / max(self.total, 1), 1.0),
+                          text=f"Case {min(done + 1, self.total)} of {self.total} · {calls} model calls · {time.time() - self.t0:.0f}s")
+
+    def _model_loading(self, d):
+        self.head.info(f"🧠 Loading **{d['model']}** into GPU memory. The first run takes a while (about a minute for the 8B model).")
+
+    def _model_loaded(self, d):
+        self.head.success(f"🧠 **{d['model']}** is loaded ({d['seconds']:.0f}s)")
+
+    def _model_failed(self, d):
+        self.head.error(f"Could not load {d['model']}: {d['reason']}. Using the rule-based analysis instead.")
+
+    def _investigation_start(self, d):
+        self.total = d["cases"]
+        self.head.success(f"🧠 **{d['model']}** is investigating {d['cases']} case(s): {d['anomalies']} anomalies in {d['groups']} groups")
+        self.bar.progress(0.0, text="Starting…")
+
+    def _case_start(self, d):
+        self.case, self.steps, self.decision, self.choosing = d, [], None, None
+        self._progress(d["index"])
+        self._render()
+
+    def _step(self, d):
+        self.steps.append(d)
+        self._progress(self.case["index"])
+        self._render()
+
+    def _deciding(self, d):
+        self.choosing = d
+        self._render()
+
+    def _decision(self, d):
+        self.decision = d
+        self._render()
+
+    def _case_done(self, d):
+        self.calls_done += d["model_calls"]
+        self.steps = []
+        note = "" if d["agrees"] else f" (the rule engine said: {_md(d['rule_top_title'])})"
+        self.finished.insert(0, f"{'✅' if d['agrees'] else '↔️'} `{d['block_id']}` → **{_md(d['title'])}**{note} · {d['seconds']:.0f}s")
+        self.done.markdown("**Finished cases** (↔️ = a different cause than the rule engine's)\n\n"
+                           + "\n".join("- " + line for line in self.finished[:12]))
+        self._progress(d["index"] + 1)
+
+    def _investigation_done(self, d):
+        self.bar.progress(1.0, text=f"Done: {d['cases']} case(s), {d['model_calls']} model calls, {d['seconds']:.0f}s")
+        self.now.empty()
+
+    def _render(self):
+        c = self.case
+        with self.now.container():
+            st.markdown(f"**Now investigating {c['noun']} `{c['block_id']}`** ({c['group_size']} identical anomalies; "
+                        f"the detector gave it {c['probability']:.0%})")
+            for i, s in enumerate(self.steps, 1):
+                ranked = sorted(s["options"].items(), key=lambda kv: -kv[1])
+                latest = i == len(self.steps) and not self.choosing
+                with st.expander(f"{i}. {ACTION_ICONS.get(s['action'], '•')} {s['action']}: picked with {ranked[0][1]:.0%}",
+                                 expanded=latest):
+                    st.caption("The model's scores for the options it was offered: "
+                               + ", ".join(f"{k} {v:.0%}" for k, v in ranked[:5]))
+                    if s["observation"]:
+                        st.code(s["observation"], language=None)
+            if self.choosing and not self.decision:
+                st.markdown("🤔 Enough evidence. **Choosing the root cause** from: " + "; ".join(_md(t) for t in self.choosing["candidates"]))
+            if self.decision:
+                st.markdown("**Final choice** (the model scored every candidate; the order it saw was shuffled)")
+                st.dataframe(pd.DataFrame([{"root cause": x["title"], "model score": x["score"],
+                                            "rule engine's top": "✓" if x["rule_top"] else "",
+                                            "chosen": "✅" if x["chosen"] else ""} for x in self.decision["candidates"]]),
+                             hide_index=True, width="stretch",
+                             column_config={"model score": st.column_config.ProgressColumn(min_value=0, max_value=1, format="%.2f")})
+
+
 @st.cache_resource(show_spinner="Starting…")
 def get_resources():
     return Resources()      # a dataset's model set is loaded the first time that dataset is analysed
@@ -222,6 +329,8 @@ with st.sidebar:
              "fall back to the rules (python scripts/download_models.py).")
     threshold = st.slider("Anomaly threshold (RF probability)", 0.1, 0.9, 0.5, 0.05)
     persist = st.toggle("Save medallion layers + run memory", value=True)
+    pace = st.slider("Slow down the live view (demo)", 0.0, 3.0, 0.0, 0.25,
+                     help="Seconds to pause after each step of the investigation, so an audience can follow what the model does.")
 
     st.header("🖥️ System status")
     for name, prof in PROFILES.items():
@@ -263,7 +372,7 @@ if run_clicked:
             st.write(f"{STATUS_ICON.get(step.status, '•')} **{step.agent}** ({step.duration_s:.1f}s) — {step.summary}")
             for issue in step.issues:
                 st.caption(f"↳ {issue}")
-        ctx = coordinator.run(batch, opts, on_step=on_step)
+        ctx = coordinator.run(batch, opts, on_step=on_step, on_event=LiveAgentView(pace))
         ok = ctx.data["status"] == "completed"
         status.update(label="Workflow completed" if ok else "Workflow stopped",
                       state="complete" if ok else "error", expanded=not ok)
@@ -375,6 +484,9 @@ with tabs[1]:
                 for i, step in enumerate(ep["steps"], 1):
                     top = max(step["probs"], key=step["probs"].get)
                     st.markdown(f"**Step {i}: `{step['action']}`** (the model gave it {step['probs'][top]:.0%})")
+                    if step.get("options"):
+                        st.caption("Scores for the options it was offered: " + ", ".join(
+                            f"{k} {v:.0%}" for k, v in sorted(step["options"].items(), key=lambda kv: -kv[1])[:5]))
                     if step["observation"]:
                         st.code(step["observation"], language=None)
                 st.markdown("**Final choice among the shortlist** (the order shown to the model was shuffled)")
