@@ -208,17 +208,27 @@ with st.sidebar:
     dataset_choice = st.selectbox("Dataset", ["Auto-detect"] + [p.title for p in PROFILES.values()],
                                   help="Auto-detect lets the Log Identification Agent decide from the log lines.")
     forced = next((n for n, p in PROFILES.items() if p.title == dataset_choice), None)
+    rs = resources.status()
+    MODEL_LABELS = {config.RULES: "Rule-based (no language model)", "Qwen/Qwen3-1.7B": "Qwen3-1.7B",
+                    "Qwen/Qwen3-4B": "Qwen3-4B (4-bit)", "Qwen/Qwen3-8B": "Qwen3-8B (4-bit)"}
+    model_options = [config.RULES] + config.LLM_CHOICES
+    agent_model = st.selectbox(
+        "Investigator", model_options,
+        index=model_options.index(config.AGENT_MODEL) if config.AGENT_MODEL in model_options else 1,
+        format_func=lambda m: MODEL_LABELS[m] + ("" if m == config.RULES or rs["models_available"][m]
+                                                 else " (not downloaded)"),
+        help="The language model that investigates each anomaly: it picks the next evidence step from a menu and then "
+             "the root cause from a shortlist. Rule-based = the old rule engine only. Models that are not downloaded "
+             "fall back to the rules (python scripts/download_models.py).")
     threshold = st.slider("Anomaly threshold (RF probability)", 0.1, 0.9, 0.5, 0.05)
     persist = st.toggle("Save medallion layers + run memory", value=True)
 
     st.header("🖥️ System status")
-    rs = resources.status()
     for name, prof in PROFILES.items():
         mark = "✅ ready" if rs["available"][name] else "❌ not trained"
         loaded = " · loaded" if name in rs["pipelines_loaded"] else ""
         st.caption(f"**{prof.title}** models {mark}{loaded}")
-    st.caption(f"Chat model: `{config.CHAT_MODEL}` "
-               f"({'loaded' if rs['chat_loaded'] else 'loads on the first question'})")
+    st.caption("Language model: " + (f"`{rs['llm_loaded']}` loaded" if rs["llm_loaded"] else "loads when first needed"))
     for name in rs["pipelines_loaded"]:
         ps = resources.pipeline(name).status()
         st.caption(f"{PROFILES[name].title}: device **{ps['device']}** · FAISS **{ps['faiss_vectors']:,}** vectors · "
@@ -233,8 +243,8 @@ with st.sidebar:
 
 # ═══════════════════════════════ HEADER ════════════════════════════════
 PIPELINE = [("Ingestion", ""), ("Identification: HDFS · BGL · OpenStack", ""), ("Preprocessing", ""),
-            ("Medallion", ""), ("Transformer · FAISS · RAG · RF", "ml"), ("Root Cause Analysis", ""),
-            ("Insight", ""), ("Chat SLM (Qwen)", "slm")]
+            ("Medallion", ""), ("Transformer · FAISS · RAG · RF", "ml"),
+            ("Investigator (Qwen picks the steps)", "slm"), ("Insight", ""), ("Chat (Qwen)", "slm")]
 st.markdown('<div class="hero-title">Agentic Log Anomaly Detection</div>'
             '<p class="hero-sub">A Coordinator Agent runs specialised agents end to end on HDFS, BGL and OpenStack '
             'logs, from raw lines to root causes, recommendations and a log-aware chat.</p><div class="pipeline">'
@@ -247,7 +257,7 @@ run_clicked = st.button("▶️ Run analysis", type="primary", width="stretch", 
 run_area = st.container()
 if run_clicked:
     batch = batch_source.read()
-    opts = RunOptions(threshold=threshold, persist=persist, dataset=forced)
+    opts = RunOptions(threshold=threshold, persist=persist, dataset=forced, agent_model=agent_model)
     with run_area, st.status("Coordinator Agent is running the workflow…", expanded=True) as status:
         def on_step(step):
             st.write(f"{STATUS_ICON.get(step.status, '•')} **{step.agent}** ({step.duration_s:.1f}s) — {step.summary}")
@@ -295,8 +305,8 @@ noun, noun_pl = profile.session_noun, profile.session_noun_plural
 for w in ctx.warnings:
     st.warning(w)
 
-tabs = st.tabs(["📊 Anomaly Summary", "🧭 Root Cause Analysis", "🤖 AI Insights", "🛠️ Recommendations",
-                "🔬 Evidence", "📄 Reports", "🕸️ Agent Trace"])
+tabs = st.tabs(["📊 Anomaly Summary", "🕵️ Investigation", "🧭 Root Cause Analysis", "🤖 AI Insights",
+                "🛠️ Recommendations", "🔬 Evidence", "📄 Reports", "🕸️ Agent Trace"])
 
 # ── Anomaly Summary ───────────────────────────────────────────────────
 with tabs[0]:
@@ -334,8 +344,49 @@ with tabs[0]:
             hide_index=True, width="stretch",
             column_config={"Anomaly prob.": st.column_config.ProgressColumn(min_value=0, max_value=1, format="%.2f")})
 
-# ── Root Cause Analysis ───────────────────────────────────────────────
+# ── Investigation ─────────────────────────────────────────────────────
 with tabs[1]:
+    inv = d.get("investigation") or {}
+    if inv.get("status") == "unavailable":
+        st.warning(f"The language model could not be used ({inv.get('reason')}). The rule-based analysis was used instead.")
+    elif inv.get("status") != "agent":
+        st.info("Rule-based analysis: no language model was used. Choose a Qwen model under **Investigator** in the "
+                "sidebar to have it investigate each anomaly.")
+    else:
+        st.caption(f"**{inv['model_label']}** investigates each group of identical anomalies. Every turn it picks ONE "
+                   "action from a menu of tools (the tools are ordinary code); when it has looked enough it picks the "
+                   "root cause from a shortlist. It does not decide what is anomalous, and it cannot invent a cause.")
+        c = st.columns(5)
+        c[0].metric("Cases investigated", f"{inv['cases']:,}", help=f"{inv['anomalies']} anomalies in {inv['groups']} groups")
+        c[1].metric("Model calls", f"{inv['model_calls']:,}")
+        c[2].metric("Evidence steps / case", f"{inv['mean_steps']:.1f}")
+        c[3].metric("Asked the rule engine", f"{inv['rule_ranking_used']}/{inv['cases']}")
+        c[4].metric("Same cause as rules", f"{inv['agrees_with_rule_top']}/{inv['cases']}",
+                    help="How often the model chose the rule engine's own top cause")
+        counts = pd.Series([s_["action"] for ep in inv["episodes"] for s_ in ep["steps"]]).value_counts()
+        if len(counts):
+            st.write("**Tools the model chose to use**")
+            st.bar_chart(counts, horizontal=True)
+        st.write("**Cases**")
+        kb = profile.root_causes
+        for ep in inv["episodes"][:40]:
+            title = kb[ep["choice"]]["title"]
+            with st.expander(f"`{ep['block_id']}` ({ep['group_size']} identical) → {title}"):
+                for i, step in enumerate(ep["steps"], 1):
+                    top = max(step["probs"], key=step["probs"].get)
+                    st.markdown(f"**Step {i}: `{step['action']}`** (the model gave it {step['probs'][top]:.0%})")
+                    if step["observation"]:
+                        st.code(step["observation"], language=None)
+                st.markdown("**Final choice among the shortlist** (the order shown to the model was shuffled)")
+                st.dataframe(pd.DataFrame([{"cause": kb[k]["title"], "model score": ep["choice_probs"].get(k, 0.0),
+                                            "rule engine's top": k == ep["rule_top"], "chosen": k == ep["choice"]}
+                                           for k in ep["candidates"]]), hide_index=True, width="stretch")
+                st.caption(f"{ep['model_calls']} model calls in {ep['seconds']:.1f}s · decision method: {ep['decision']}")
+        if inv["cases"] > 40:
+            st.caption(f"Showing 40 of {inv['cases']} cases.")
+
+# ── Root Cause Analysis ───────────────────────────────────────────────
+with tabs[2]:
     if not rca["causes"]:
         st.success("No anomalies, so no root causes to analyse.")
     else:
@@ -366,7 +417,7 @@ with tabs[1]:
             st.dataframe(pd.DataFrame(corr["patterns"]), hide_index=True, width="stretch")
 
 # ── AI Insights ───────────────────────────────────────────────────────
-with tabs[2]:
+with tabs[3]:
     st.caption(f"Generated by **{insight['source']}**")
     st.subheader("Summary")
     st.write(insight["summary"])
@@ -386,7 +437,7 @@ with tabs[2]:
 
     st.divider()
     st.subheader("💬 Ask about this analysis")
-    st.caption(f"Answered by `{config.CHAT_MODEL}` from the same facts as this report plus the raw log lines "
+    st.caption(f"Answered by `{ctx.options.agent_model if ctx.options.agent_model != config.RULES else config.CHAT_MODEL}` from the same facts as this report plus the raw log lines "
                f"relevant to your question. Name a {noun} id to pull in its own logs, evidence and similar historical "
                "sessions, or mention an event id (E12) or a keyword to see the matching log lines. A small model can "
                "still reason wrongly; anything the run cannot back up is flagged under the answer. Each answer takes "
@@ -410,10 +461,11 @@ with tabs[2]:
         with conversation, st.chat_message("assistant"):
             msgs, content = chat.messages_for(question)
             try:
-                if not resources.status()["chat_loaded"]:
-                    with st.spinner(f"Loading {config.CHAT_MODEL}…"):
-                        resources.chat_slm()
-                raw = st.write_stream(resources.chat_slm().stream_chat(msgs))
+                chat_model = ctx.options.agent_model if ctx.options.agent_model != config.RULES else config.CHAT_MODEL
+                if resources.status()["llm_loaded"] != chat_model:
+                    with st.spinner(f"Loading {chat_model}…"):
+                        resources.llm(chat_model)
+                raw = st.write_stream(resources.llm(chat_model).stream_chat(msgs))
             except Exception as e:
                 st.error(f"The chat model could not answer: {type(e).__name__}: {e}")
             else:
@@ -422,7 +474,7 @@ with tabs[2]:
                     st.caption(f"⚠️ Not backed by the facts: {issue}")
 
 # ── Recommendations ───────────────────────────────────────────────────
-with tabs[3]:
+with tabs[4]:
     st.subheader("🚀 Next best actions")
     for i, a in enumerate(insight["next_best_actions"], 1):
         st.markdown(f"**{i}.** {a}")
@@ -437,7 +489,7 @@ with tabs[3]:
                     st.markdown(f"- {a}")
 
 # ── Evidence ──────────────────────────────────────────────────────────
-with tabs[4]:
+with tabs[5]:
     if rca["sessions"]:
         by_block = {p["block_id"]: p for p in rca["sessions"]}
         pick = st.selectbox("Anomalous session", list(by_block),
@@ -492,7 +544,7 @@ with tabs[4]:
                      hide_index=True, width="stretch")
 
 # ── Reports ───────────────────────────────────────────────────────────
-with tabs[5]:
+with tabs[6]:
     md = to_markdown(report)
     c1, c2 = st.columns(2)
     c1.download_button("⬇️ Markdown report", md, file_name=f"{profile.name}_report_{ctx.run_id}.md",
@@ -502,7 +554,7 @@ with tabs[5]:
     st.markdown(md)
 
 # ── Agent trace ───────────────────────────────────────────────────────
-with tabs[6]:
+with tabs[7]:
     st.subheader("Workflow plan")
     st.write(" → ".join(d["plan"]))
     st.subheader("Execution trace")

@@ -13,6 +13,7 @@ from .anomaly import AnomalyDetectionAgent
 from .base import AgentError
 from .identification import LogIdentificationAgent
 from .insight import InsightAgent, deterministic_insight
+from .investigator import InvestigatorAgent
 from .preprocessing import PreprocessingAgent
 from .rca import RootCauseAnalysisAgent
 
@@ -29,7 +30,8 @@ class CoordinatorAgent:
         self.preprocessing = PreprocessingAgent()
         self.medallion = MedallionProcessor()
         self.detection = AnomalyDetectionAgent(resources)
-        self.rca = RootCauseAnalysisAgent(resources)
+        self.rca = RootCauseAnalysisAgent(resources)          # the rule engine: evidence tools, fallback, chat lookups
+        self.investigator = InvestigatorAgent(resources)      # a language model investigates and decides the causes
         self.insight = InsightAgent(resources)
 
     def run(self, batch, options=None, on_step=None):
@@ -45,7 +47,7 @@ class CoordinatorAgent:
             self._execute(ctx, self.preprocessing, critical=True)
             self._execute(ctx, self.medallion, critical=True)
             self._execute(ctx, self.detection, critical=True)
-            self._execute(ctx, self.rca, critical=False)
+            self._execute(ctx, self.investigator, critical=False, fallback=lambda: self.rca.run(ctx))
             if "rca" not in ctx.data:
                 ctx.data["rca"] = {"sessions": [], "causes": [], "normal_examples": [],
                                    "correlations": {"nodes": [], "time_bursts": [], "patterns": []}}
@@ -74,8 +76,9 @@ class CoordinatorAgent:
         profile = ctx.profile
         plan = ["Preprocessing & Cleaning Agent", "Medallion Data Processing (Bronze → Silver → Gold)",
                 f"Anomaly Detection Agent ({profile.title} Transformer → FAISS → RAG → Random Forest)",
-                "Root Cause Analysis Agent",
-                "Insight Agent (knowledge base)"]
+                ("Investigator Agent (rule-based: no language model)" if ctx.options.agent_model == "rules" else
+                 f"Investigator Agent ({ctx.options.agent_model} picks each next step and the root cause)"),
+                "Insight Agent (knowledge base + the investigation's conclusions)"]
         ctx.send(NAME, "Log Identification Agent",
                  f"Identified {ident['family']} / {ident['format']} → workflow: {ident['workflow']}")
         return plan

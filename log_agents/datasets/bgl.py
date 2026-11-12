@@ -182,6 +182,9 @@ class BGLProfile(MinedProfile):
         base = gold[list(self.extra_features)].to_numpy(dtype=np.float32)
         return np.hstack([base, counts @ W])
 
+    def display_line(self, raw):
+        return raw.split(" ", 1)[1] if " " in raw else raw          # drop the alert-tag column
+
     # ── identification ────────────────────────────────────────────────
     def detect(self, lines):
         return {"bgl_raw": sum(1 for ln in lines if HEAD_RE.match(ln)) / len(lines)}

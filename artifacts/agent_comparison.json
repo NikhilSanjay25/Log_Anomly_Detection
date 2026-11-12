@@ -1,0 +1,563 @@
+{
+ "date": "2026-11-12 19:59",
+ "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+ "settings": {
+  "max_steps": 5,
+  "shortlist": 5,
+  "seed": 23,
+  "region": "test",
+  "openstack_truth": "slow_spawn only (strict; an earlier run also accepted slow_build)"
+ },
+ "datasets": {
+  "bgl": {
+   "cases": 146,
+   "configs": {
+    "rules": {
+     "n": 146,
+     "correct": 64,
+     "accuracy": 0.4383561643835616,
+     "ci95": [
+      0.36,
+      0.519
+     ],
+     "seconds": 5.7
+    },
+    "retrieval": {
+     "n": 146,
+     "correct": 136,
+     "accuracy": 0.9315068493150684,
+     "ci95": [
+      0.879,
+      0.962
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 76,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.0
+    },
+    "random_shortlist": {
+     "n": 146,
+     "correct": 32,
+     "accuracy": 0.2191780821917808,
+     "ci95": [
+      0.16,
+      0.293
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 16,
+     "losses_vs_rules": 48,
+     "sign_test_p": 0.0001
+    },
+    "Qwen/Qwen3-1.7B | listwise_debiased | no_evidence": {
+     "n": 146,
+     "correct": 20,
+     "accuracy": 0.136986301369863,
+     "ci95": [
+      0.09,
+      0.202
+     ],
+     "seconds": 86.6,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 44,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 530,
+     "mean_steps": 0.0,
+     "seconds_per_case": 0.71,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.69,
+     "mean_final_confidence": 0.249,
+     "action_counts": {},
+     "final_letter_counts": {
+      "B": 23,
+      "C": 16,
+      "D": 26,
+      "E": 20,
+      "A": 21
+     }
+    },
+    "Qwen/Qwen3-1.7B | listwise_debiased | investigation": {
+     "n": 146,
+     "correct": 53,
+     "accuracy": 0.363013698630137,
+     "ci95": [
+      0.289,
+      0.444
+     ],
+     "seconds": 246.9,
+     "wins_vs_rules": 9,
+     "losses_vs_rules": 20,
+     "sign_test_p": 0.0614,
+     "independent_cases": 106,
+     "model_calls": 1060,
+     "mean_steps": 5.0,
+     "seconds_per_case": 2.3,
+     "consulted_rule_ranking": 0.86,
+     "agrees_with_rule_top": 0.54,
+     "mean_final_confidence": 0.245,
+     "action_counts": {
+      "similar_cases": 106,
+      "event_evidence": 106,
+      "text_match": 106,
+      "repeat_pattern": 105,
+      "rule_ranking": 91,
+      "read_logs": 10,
+      "structural_check": 6
+     },
+     "final_letter_counts": {
+      "C": 14,
+      "D": 29,
+      "A": 17,
+      "B": 25,
+      "E": 21
+     }
+    },
+    "Qwen/Qwen3-1.7B:nf4 | listwise_debiased | no_evidence": {
+     "n": 146,
+     "correct": 17,
+     "accuracy": 0.11643835616438356,
+     "ci95": [
+      0.074,
+      0.179
+     ],
+     "seconds": 105.1,
+     "wins_vs_rules": 4,
+     "losses_vs_rules": 51,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 530,
+     "mean_steps": 0.0,
+     "seconds_per_case": 0.92,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.52,
+     "mean_final_confidence": 0.237,
+     "action_counts": {},
+     "final_letter_counts": {
+      "B": 22,
+      "E": 24,
+      "A": 22,
+      "C": 17,
+      "D": 21
+     }
+    },
+    "Qwen/Qwen3-1.7B:nf4 | listwise_debiased | investigation": {
+     "n": 146,
+     "correct": 30,
+     "accuracy": 0.2054794520547945,
+     "ci95": [
+      0.148,
+      0.278
+     ],
+     "seconds": 287.7,
+     "wins_vs_rules": 13,
+     "losses_vs_rules": 47,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 817,
+     "mean_steps": 2.71,
+     "seconds_per_case": 2.68,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.25,
+     "mean_final_confidence": 0.22,
+     "action_counts": {
+      "read_logs": 106,
+      "decide": 106,
+      "similar_cases": 62,
+      "node_correlation": 13
+     },
+     "final_letter_counts": {
+      "C": 26,
+      "B": 16,
+      "E": 16,
+      "D": 24,
+      "A": 24
+     }
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | no_evidence": {
+     "n": 146,
+     "correct": 21,
+     "accuracy": 0.14383561643835616,
+     "ci95": [
+      0.096,
+      0.21
+     ],
+     "seconds": 227.4,
+     "wins_vs_rules": 11,
+     "losses_vs_rules": 54,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 530,
+     "mean_steps": 0.0,
+     "seconds_per_case": 2.0,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.41,
+     "mean_final_confidence": 0.32,
+     "action_counts": {},
+     "final_letter_counts": {
+      "B": 22,
+      "E": 23,
+      "A": 17,
+      "C": 25,
+      "D": 19
+     }
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | investigation": {
+     "n": 146,
+     "correct": 128,
+     "accuracy": 0.8767123287671232,
+     "ci95": [
+      0.814,
+      0.921
+     ],
+     "seconds": 964.5,
+     "wins_vs_rules": 70,
+     "losses_vs_rules": 6,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 1060,
+     "mean_steps": 5.0,
+     "seconds_per_case": 9.07,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.25,
+     "mean_final_confidence": 0.485,
+     "action_counts": {
+      "read_logs": 106,
+      "text_match": 106,
+      "similar_cases": 106,
+      "event_evidence": 106,
+      "structural_check": 106
+     },
+     "final_letter_counts": {
+      "A": 15,
+      "D": 19,
+      "C": 23,
+      "B": 19,
+      "E": 30
+     }
+    },
+    "Qwen/Qwen3-8B | listwise_debiased | no_evidence": {
+     "n": 146,
+     "correct": 22,
+     "accuracy": 0.1506849315068493,
+     "ci95": [
+      0.102,
+      0.218
+     ],
+     "seconds": 364.6,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 42,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 530,
+     "mean_steps": 0.0,
+     "seconds_per_case": 3.17,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.71,
+     "mean_final_confidence": 0.722,
+     "action_counts": {},
+     "final_letter_counts": {
+      "B": 20,
+      "E": 23,
+      "A": 26,
+      "C": 12,
+      "D": 25
+     }
+    },
+    "Qwen/Qwen3-8B | listwise_debiased | investigation": {
+     "n": 146,
+     "correct": 129,
+     "accuracy": 0.8835616438356164,
+     "ci95": [
+      0.821,
+      0.926
+     ],
+     "seconds": 1565.3,
+     "wins_vs_rules": 72,
+     "losses_vs_rules": 7,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 1060,
+     "mean_steps": 5.0,
+     "seconds_per_case": 14.74,
+     "consulted_rule_ranking": 0.01,
+     "agrees_with_rule_top": 0.25,
+     "mean_final_confidence": 0.846,
+     "action_counts": {
+      "read_logs": 106,
+      "text_match": 106,
+      "similar_cases": 106,
+      "event_evidence": 99,
+      "node_correlation": 68,
+      "repeat_pattern": 32,
+      "structural_check": 12,
+      "rule_ranking": 1
+     },
+     "final_letter_counts": {
+      "A": 13,
+      "D": 24,
+      "C": 19,
+      "B": 19,
+      "E": 31
+     }
+    }
+   },
+   "shortlist_contains_truth": 0.959
+  },
+  "openstack": {
+   "cases": 4,
+   "configs": {
+    "rules": {
+     "n": 4,
+     "correct": 4,
+     "accuracy": 1.0,
+     "ci95": [
+      0.51,
+      1.0
+     ],
+     "seconds": 2.7
+    },
+    "retrieval": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125
+    },
+    "random_shortlist": {
+     "n": 4,
+     "correct": 2,
+     "accuracy": 0.5,
+     "ci95": [
+      0.15,
+      0.85
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 2,
+     "sign_test_p": 0.5
+    },
+    "Qwen/Qwen3-1.7B | listwise_debiased | no_evidence": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 20.3,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 5,
+     "mean_steps": 0.0,
+     "seconds_per_case": 1.33,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.492,
+     "action_counts": {},
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-1.7B | listwise_debiased | investigation": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 3.3,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 10,
+     "mean_steps": 5.0,
+     "seconds_per_case": 3.05,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.252,
+     "action_counts": {
+      "read_logs": 1,
+      "structural_check": 1,
+      "similar_cases": 1,
+      "repeat_pattern": 1,
+      "text_match": 1
+     },
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-1.7B:nf4 | listwise_debiased | no_evidence": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 8.4,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 5,
+     "mean_steps": 0.0,
+     "seconds_per_case": 1.27,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.218,
+     "action_counts": {},
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-1.7B:nf4 | listwise_debiased | investigation": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 3.3,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 8,
+     "mean_steps": 3.0,
+     "seconds_per_case": 3.13,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.226,
+     "action_counts": {
+      "read_logs": 1,
+      "similar_cases": 1,
+      "decide": 1
+     },
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | no_evidence": {
+     "n": 4,
+     "correct": 4,
+     "accuracy": 1.0,
+     "ci95": [
+      0.51,
+      1.0
+     ],
+     "seconds": 17.1,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 0,
+     "sign_test_p": 1.0,
+     "independent_cases": 1,
+     "model_calls": 5,
+     "mean_steps": 0.0,
+     "seconds_per_case": 1.68,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 1.0,
+     "mean_final_confidence": 0.349,
+     "action_counts": {},
+     "final_letter_counts": {
+      "E": 1
+     }
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | investigation": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 7.3,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 10,
+     "mean_steps": 5.0,
+     "seconds_per_case": 7.13,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.779,
+     "action_counts": {
+      "read_logs": 1,
+      "text_match": 1,
+      "similar_cases": 1,
+      "event_evidence": 1,
+      "structural_check": 1
+     },
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-8B | listwise_debiased | no_evidence": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 41.5,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 5,
+     "mean_steps": 0.0,
+     "seconds_per_case": 2.78,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.776,
+     "action_counts": {},
+     "final_letter_counts": {
+      "D": 1
+     }
+    },
+    "Qwen/Qwen3-8B | listwise_debiased | investigation": {
+     "n": 4,
+     "correct": 0,
+     "accuracy": 0.0,
+     "ci95": [
+      0.0,
+      0.49
+     ],
+     "seconds": 12.9,
+     "wins_vs_rules": 0,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.125,
+     "independent_cases": 1,
+     "model_calls": 10,
+     "mean_steps": 5.0,
+     "seconds_per_case": 12.69,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.0,
+     "mean_final_confidence": 0.799,
+     "action_counts": {
+      "read_logs": 1,
+      "structural_check": 1,
+      "similar_cases": 1,
+      "text_match": 1,
+      "event_evidence": 1
+     },
+     "final_letter_counts": {
+      "D": 1
+     }
+    }
+   },
+   "shortlist_contains_truth": 1.0
+  }
+ }
+}

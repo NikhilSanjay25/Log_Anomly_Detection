@@ -128,6 +128,11 @@ class DatasetProfile:
         return []
 
     # ── helpers ───────────────────────────────────────────────────────
+    def display_line(self, raw):
+        """A raw log line as shown to the investigator and the chat model. The dataset's label column, if it has
+        one, is a label and not a log field, so it is not shown."""
+        return raw
+
     def enrich_events(self, silver):
         """Add template text, lifecycle stage and severity (from the event vocabulary) to a Silver frame."""
         info = silver.event_id.map(self.event_info)

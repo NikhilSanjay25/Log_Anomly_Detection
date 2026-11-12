@@ -87,6 +87,17 @@ def _normal_sentence(det, prefix):
             + (f", and their most similar historical sessions were on average {share} normal" if share else "") + ".")
 
 
+def investigation_lines(ctx, entry):
+    """Facts lines about how the investigator reached the cause of `entry` (empty for the rule-based analysis)."""
+    inv = ctx.data.get("investigation") or {}
+    if inv.get("status") != "agent" or entry.get("investigation") is None:
+        return []
+    ep = inv["episodes"][entry["investigation"]]
+    steps = " → ".join(s["action"] for s in ep["steps"] if s["action"] != "decide") or "no evidence gathered"
+    return [f"  Investigation by {inv['model_label']}: it chose to run {steps}, then picked this cause "
+            f"(rule engine's own top cause: {'the same' if ep['rule_top'] == ep['choice'] else 'a different one'})."]
+
+
 def build_facts(ctx):
     """Everything the run established, as plain text. The chat model is told to answer only from this."""
     profile = ctx.profile
@@ -111,6 +122,7 @@ def build_facts(ctx):
         for ln in describe_neighbours(ex["sequence"].split(), ex.get("similar_logs"), profile.max_seq_len):
             lines.append(f"  {ln}")
         lines.append(f"  Suggested actions (knowledge base): {' | '.join(c['actions'][:3])}")
+        lines += investigation_lines(ctx, ex)
     corr = rca["correlations"]
     for n in corr["nodes"][:3]:
         lines.append(f"\nCORRELATION: {profile.node_noun} {n['node']} is involved in {n['anomalous_blocks']} anomalous of "
@@ -131,6 +143,13 @@ def build_facts(ctx):
                 lines.append(f"  Evidence: {e}")
             for ln in describe_neighbours(p["sequence"].split(), p.get("similar_logs"), profile.max_seq_len):
                 lines.append(f"  {ln}")
+    inv = ctx.data.get("investigation") or {}
+    if inv.get("status") == "agent":
+        lines.append(f"\nINVESTIGATION: {inv['model_label']} investigated {inv['cases']} case(s) "
+                     f"(groups of identical anomalies) in {inv['model_calls']} model calls; it consulted the rule engine "
+                     f"in {inv['rule_ranking_used']} of them and chose the rule engine's own top cause in "
+                     f"{inv['agrees_with_rule_top']}. Causes are chosen from a shortlist; the model does not label "
+                     "sessions anomalous.")
     prev = ctx.data.get("memory", [])
     if prev:
         p = prev[0]
@@ -270,8 +289,11 @@ class InsightAgent(Agent):
     def run(self, ctx):
         facts = build_facts(ctx)
         ctx.data["insight_facts"] = facts            # the grounding material of the follow-up chat
-        ctx.data["insight"] = {**deterministic_insight(ctx), "source": "knowledge base", "facts": facts}
-        return "Knowledge-base insight generated from the RCA evidence (the language model is only used in the chat)"
+        inv = ctx.data.get("investigation") or {}
+        source = (f"investigation by {inv['model_label']} + knowledge base" if inv.get("status") == "agent"
+                  else "knowledge base")
+        ctx.data["insight"] = {**deterministic_insight(ctx), "source": source, "facts": facts}
+        return f"Insight from the {'investigator' if inv.get('status') == 'agent' else 'rule-based'} conclusions and the knowledge base"
 
     def validate(self, ctx):
         return validate_insight(ctx.data.get("insight"), ctx)

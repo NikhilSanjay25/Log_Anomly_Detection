@@ -80,9 +80,10 @@ def test_coordinator_survives_rca_crash():
     def boom(ctx):
         raise RuntimeError("rca bug")
     coord.rca.run = boom
+    coord.investigator.run = boom
     ctx = coord.run(TextSource("E22 E5").read(), RunOptions(persist=False))
     assert ctx.data["status"] == "completed"
-    assert [s.status for s in ctx.trace if s.agent == "Root Cause Analysis Agent"] == ["failed"]
+    assert [s.status for s in ctx.trace if s.agent == "Investigator Agent"] == ["failed"]
     assert ctx.data["insight"]["summary"]
 
 

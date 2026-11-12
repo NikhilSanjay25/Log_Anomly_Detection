@@ -37,6 +37,14 @@ def build_report(ctx):
                                      .head(200).to_dict("records"))
     if d.get("medallion"):
         rep["medallion_path"] = d["medallion"].get("path")
+    inv = d.get("investigation")
+    if inv:
+        rep["investigation"] = {k: v for k, v in inv.items() if k != "episodes"}
+        rep["investigation"]["episodes"] = [
+            {k: ep[k] for k in ("case", "block_id", "group_size", "candidates", "rule_top", "choice", "choice_probs",
+                                "model_calls", "seconds")} | {"steps": [
+                {"action": s["action"], "probs": s["probs"], "observation": s["observation"][:400]}
+                for s in ep["steps"]]} for ep in inv["episodes"][:50]]
     if d.get("rca"):
         rep["root_causes"] = d["rca"]["causes"]
         rep["correlations"] = d["rca"]["correlations"]
@@ -83,6 +91,19 @@ def to_markdown(rep):
             L += ["Affected: " + ", ".join(map(str, imp["affected"])), ""]
         L += ["## Recommendations", ""] + [f"- {r}" for r in ins.get("recommendations", [])] + [""]
         L += ["## Next Best Actions", ""] + [f"{i}. {r}" for i, r in enumerate(ins.get("next_best_actions", []), 1)] + [""]
+    inv = rep.get("investigation")
+    if inv and inv.get("status") == "agent":
+        L += ["## Investigation", "",
+              f"{inv['model_label']} investigated {inv['cases']} case(s) ({inv['anomalies']} anomalies in {inv['groups']} groups) "
+              f"in {inv['model_calls']} model calls ({inv['seconds']:.0f}s). It picks each next step from a menu of tools, then "
+              "the root cause from a shortlist. Consulted the rule engine in "
+              f"{inv['rule_ranking_used']} case(s); chose the rule engine's own top cause in {inv['agrees_with_rule_top']}.", ""]
+        for ep in inv["episodes"][:10]:
+            L += [f"- `{ep['block_id']}` ({ep['group_size']} identical): " + " → ".join(s["action"] for s in ep["steps"])
+                  + f" → **{ep['choice']}**"]
+        L += [""]
+    elif inv and inv.get("status") == "unavailable":
+        L += ["## Investigation", "", f"Language model unavailable ({inv.get('reason')}); rule-based analysis used.", ""]
     if rep.get("root_causes"):
         L += ["## Root Cause Analysis", ""]
         for c in rep["root_causes"]:

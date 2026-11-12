@@ -242,7 +242,7 @@ def train_bgl(args, device):
 
     # pass 2: sessions (windows) through the production cleaning / Silver / Gold code
     log("BGL pass 2: windows")
-    golds, tag_event, event_lines, offset, seen = [], Counter(), Counter(), 0, 0
+    golds, pairs, offset, seen = [], [], 0, 0
     for text in iter_chunks(src, BGL_CHUNK):
         bronze, stats = profile.clean(text, "bgl_raw", window_offset=offset)
         silver, _ = profile.build_silver(bronze, "bgl_raw")
@@ -251,10 +251,8 @@ def train_bgl(args, device):
         gold["alert_tags"] = [tags.get(b, []) for b in gold.block_id]
         offset += stats["windows"]
         golds.append(gold)
-        m = silver[["line_no", "event_id"]].merge(bronze[["line_no", "label"]], on="line_no")
-        for (tag, ev), n in m.groupby(["label", "event_id"]).size().items():
-            tag_event[(tag, ev)] += int(n)
-            event_lines[ev] += int(n)
+        m = silver[["line_no", "event_id", "block_id"]].merge(bronze[["line_no", "label"]], on="line_no")
+        pairs.append(m.groupby(["block_id", "label", "event_id"]).size().rename("n").reset_index())
         seen += stats["input_lines"]
         log(f"  {seen:,} lines → {offset:,} windows")
         if seen >= limit:
@@ -265,6 +263,15 @@ def train_bgl(args, device):
     log(f"  {len(gold):,} windows, {int(y.sum()):,} anomalous ({y.mean():.1%})")
 
     event2id = {e: i + 1 for i, e in enumerate(sorted(events, key=lambda e: int(e[1:])))}
+    # Alert signatures (which events identify each alert tag) come from the TRAINING windows only, so evaluating the
+    # root-cause analysis on the test period does not use labels from that period.
+    train_ids = set(gold.block_id.iloc[:int(len(gold) * 0.8)])
+    pairs = pd.concat(pairs, ignore_index=True)
+    pairs = pairs[pairs.block_id.isin(train_ids)]
+    tag_event, event_lines = Counter(), Counter()
+    for (tag, ev), n in pairs.groupby(["label", "event_id"]).n.sum().items():
+        tag_event[(tag, ev)] += int(n)
+        event_lines[ev] += int(n)
     sig = alert_signatures(tag_event, event_lines, events)
     (out / "alert_signatures.json").write_text(json.dumps(sig, indent=1), encoding="utf-8")
     log(f"  {len(sig)} alert categories with signatures")

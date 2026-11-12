@@ -58,7 +58,8 @@ def has_raw_logs(ctx):
     return "raw" in med.get("bronze", ()) and "line_no" in med.get("silver", ())
 
 
-def _clip(line):
+def _clip(line, profile=None):
+    line = profile.display_line(line) if profile is not None else line
     return line if len(line) <= MAX_LINE_CHARS else line[:MAX_LINE_CHARS] + " …"
 
 
@@ -71,7 +72,7 @@ def session_lines(ctx, block_id, limit=config.CHAT_MAX_LOG_LINES):
     prio = sv.severity.map({"error": 0, "warning": 1}).fillna(2)
     chosen = sv.assign(p=prio).sort_values(["p", "position"]).head(limit).line_no.sort_values()
     raw = med["bronze"].drop_duplicates("line_no").set_index("line_no").raw
-    return [_clip(raw[n]) for n in chosen if n in raw.index], len(sv)
+    return [_clip(raw[n], ctx.profile) for n in chosen if n in raw.index], len(sv)
 
 
 def event_lines(ctx, event_ids, limit=12):
@@ -80,7 +81,7 @@ def event_lines(ctx, event_ids, limit=12):
     sv = med["silver"]
     nums = sv.loc[sv.event_id.isin(event_ids), "line_no"].drop_duplicates().head(limit)
     raw = med["bronze"].drop_duplicates("line_no").set_index("line_no").raw
-    return [_clip(raw[n]) for n in nums if n in raw.index]
+    return [_clip(raw[n], ctx.profile) for n in nums if n in raw.index]
 
 
 def keyword_lines(ctx, question, limit=12):
@@ -92,7 +93,7 @@ def keyword_lines(ctx, question, limit=12):
     raw = ctx.data["medallion"]["bronze"].raw
     hits = sum(raw.str.contains(t, case=False, regex=False).astype(int) for t in terms)
     top = hits[hits > 0].sort_values(ascending=False, kind="stable").head(limit)
-    return [_clip(raw[i]) for i in top.index.sort_values()]
+    return [_clip(raw[i], ctx.profile) for i in top.index.sort_values()]
 
 
 def log_context(ctx, question, named):

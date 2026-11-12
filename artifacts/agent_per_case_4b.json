@@ -1,0 +1,1465 @@
+{
+ "date": "2026-11-12 21:05",
+ "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+ "settings": {
+  "max_steps": 5,
+  "shortlist": 5,
+  "seed": 23,
+  "region": "test"
+ },
+ "datasets": {
+  "bgl": {
+   "cases": 146,
+   "configs": {
+    "rules": {
+     "n": 146,
+     "correct": 64,
+     "accuracy": 0.4383561643835616,
+     "ci95": [
+      0.36,
+      0.519
+     ],
+     "seconds": 5.4
+    },
+    "retrieval": {
+     "n": 146,
+     "correct": 136,
+     "accuracy": 0.9315068493150684,
+     "ci95": [
+      0.879,
+      0.962
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 76,
+     "losses_vs_rules": 4,
+     "sign_test_p": 0.0
+    },
+    "random_shortlist": {
+     "n": 146,
+     "correct": 32,
+     "accuracy": 0.2191780821917808,
+     "ci95": [
+      0.16,
+      0.293
+     ],
+     "seconds": 0.0,
+     "wins_vs_rules": 16,
+     "losses_vs_rules": 48,
+     "sign_test_p": 0.0001
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | no_evidence": {
+     "n": 146,
+     "correct": 21,
+     "accuracy": 0.14383561643835616,
+     "ci95": [
+      0.096,
+      0.21
+     ],
+     "seconds": 230.5,
+     "wins_vs_rules": 11,
+     "losses_vs_rules": 54,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 530,
+     "mean_steps": 0.0,
+     "seconds_per_case": 1.99,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.41,
+     "mean_final_confidence": 0.32,
+     "action_counts": {},
+     "final_letter_counts": {
+      "B": 22,
+      "E": 23,
+      "A": 17,
+      "C": 25,
+      "D": 19
+     },
+     "choices": {
+      "win_0000592": "APPCHILD",
+      "win_0000350": "KERNDTLB",
+      "win_0000349": "KERNDTLB",
+      "win_0000376": "KERNDTLB",
+      "win_0000348": "KERNDTLB",
+      "win_0000533": "KERNDTLB",
+      "win_0000531": "KERNDTLB",
+      "win_0000378": "KERNDTLB",
+      "win_0000377": "KERNDTLB",
+      "win_0000530": "KERNDTLB",
+      "win_0000506": "KERNDTLB",
+      "win_0000532": "KERNDTLB",
+      "win_0000361": "KERNDTLB",
+      "win_0000535": "KERNDTLB",
+      "win_0000536": "KERNDTLB",
+      "win_0000534": "KERNDTLB",
+      "win_0001396": "APPREAD",
+      "win_0001499": "APPREAD",
+      "win_0001257": "APPREAD",
+      "win_0001255": "APPSEV",
+      "win_0001223": "APPRES",
+      "win_0001415": "APPRES",
+      "win_0000701": "APPSEV",
+      "win_0000466": "KERNDTLB",
+      "win_0000538": "KERNDTLB",
+      "win_0000465": "KERNDTLB",
+      "win_0000351": "KERNDTLB",
+      "win_0000507": "KERNDTLB",
+      "win_0000508": "KERNDTLB",
+      "win_0000537": "KERNDTLB",
+      "win_0000539": "KERNDTLB",
+      "win_0000698": "APPREAD",
+      "win_0001256": "LINKPAP",
+      "win_0000683": "rare_pattern",
+      "win_0000573": "KERNDTLB",
+      "win_0001410": "APPSEV",
+      "win_0000693": "rare_pattern",
+      "win_0000347": "KERNRTSP",
+      "win_0001378": "rare_pattern",
+      "win_0001400": "rare_pattern",
+      "win_0001385": "rare_pattern",
+      "win_0001376": "rare_pattern",
+      "win_0001333": "rare_pattern",
+      "win_0001234": "rare_pattern",
+      "win_0001214": "rare_pattern",
+      "win_0001216": "rare_pattern",
+      "win_0000661": "rare_pattern",
+      "win_0000653": "rare_pattern",
+      "win_0000662": "rare_pattern",
+      "win_0000660": "rare_pattern",
+      "win_0000687": "rare_pattern",
+      "win_0001375": "rare_pattern",
+      "win_0001360": "rare_pattern",
+      "win_0001413": "rare_pattern",
+      "win_0001377": "rare_pattern",
+      "win_0001371": "rare_pattern",
+      "win_0001416": "rare_pattern",
+      "win_0001374": "rare_pattern",
+      "win_0000299": "KERNMC",
+      "win_0000540": "KERNMC",
+      "win_0001251": "APPSEV",
+      "win_0000652": "APPCHILD",
+      "win_0001490": "APPCHILD",
+      "win_0001384": "APPSEV",
+      "win_0001359": "APPCHILD",
+      "win_0001270": "rare_pattern",
+      "win_0001418": "rare_pattern",
+      "win_0000690": "APPRES",
+      "win_0001417": "APPSEV",
+      "win_0001224": "APPRES",
+      "win_0000718": "MASABNORM",
+      "win_0001441": "APPRES",
+      "win_0001492": "rare_pattern",
+      "win_0000680": "APPCHILD",
+      "win_0000688": "APPRES",
+      "win_0000707": "APPREAD",
+      "win_0000672": "APPSEV",
+      "win_0001412": "APPSEV",
+      "win_0001215": "APPSEV",
+      "win_0000572": "rare_pattern",
+      "win_0000685": "rare_pattern",
+      "win_0000654": "rare_pattern",
+      "win_0000558": "rare_pattern",
+      "win_0000620": "APPSEV",
+      "win_0000677": "rare_pattern",
+      "win_0001399": "APPRES",
+      "win_0001235": "APPCHILD",
+      "win_0000585": "APPSEV",
+      "win_0000552": "rare_pattern",
+      "win_0001494": "rare_pattern",
+      "win_0000644": "MASNORM",
+      "win_0000673": "APPSEV",
+      "win_0000550": "rare_pattern",
+      "win_0000699": "APPRES",
+      "win_0000681": "APPSEV",
+      "win_0000544": "rare_pattern",
+      "win_0000694": "rare_pattern",
+      "win_0000678": "rare_pattern",
+      "win_0000648": "APPSEV",
+      "win_0000646": "APPSEV",
+      "win_0000647": "APPSEV",
+      "win_0000549": "rare_pattern",
+      "win_0000684": "rare_pattern",
+      "win_0000557": "APPSEV",
+      "win_0001222": "KERNMNT",
+      "win_0001407": "rare_pattern",
+      "win_0000638": "APPRES",
+      "win_0000554": "rare_pattern",
+      "win_0000692": "rare_pattern",
+      "win_0000691": "rare_pattern",
+      "win_0001253": "KERNRTSP",
+      "win_0001252": "KERNMNTF",
+      "win_0001411": "rare_pattern",
+      "win_0000682": "rare_pattern",
+      "win_0000551": "APPRES",
+      "win_0000543": "KERNDTLB",
+      "win_0000679": "rare_pattern",
+      "win_0001238": "KERNMNTF",
+      "win_0000696": "KERNMNTF",
+      "win_0000697": "KERNDTLB",
+      "win_0000617": "APPRES",
+      "win_0000619": "APPRES",
+      "win_0000618": "rare_pattern",
+      "win_0000545": "rare_pattern",
+      "win_0001274": "KERNTERM",
+      "win_0000614": "APPCHILD",
+      "win_0001225": "rare_pattern",
+      "win_0001254": "MASABNORM",
+      "win_0001202": "rare_pattern",
+      "win_0001272": "KERNRTSP",
+      "win_0001489": "KERNREC",
+      "win_0000613": "APPCHILD",
+      "win_0000555": "APPRES",
+      "win_0001210": "APPRES",
+      "win_0000615": "rare_pattern",
+      "win_0000616": "rare_pattern",
+      "win_0000579": "KERNMNT",
+      "win_0000547": "rare_pattern",
+      "win_0000705": "KERNSTOR",
+      "win_0001273": "KERNDTLB",
+      "win_0000645": "KERNMNTF",
+      "win_0000509": "rare_pattern",
+      "win_0000541": "APPCHILD",
+      "win_0000546": "rare_pattern",
+      "win_0000362": "KERNMNTF",
+      "win_0000611": "MASABNORM"
+     }
+    },
+    "Qwen/Qwen3-4B | listwise_debiased | investigation": {
+     "n": 146,
+     "correct": 128,
+     "accuracy": 0.8767123287671232,
+     "ci95": [
+      0.814,
+      0.921
+     ],
+     "seconds": 1025.2,
+     "wins_vs_rules": 70,
+     "losses_vs_rules": 6,
+     "sign_test_p": 0.0,
+     "independent_cases": 106,
+     "model_calls": 1060,
+     "mean_steps": 5.0,
+     "seconds_per_case": 9.64,
+     "consulted_rule_ranking": 0.0,
+     "agrees_with_rule_top": 0.25,
+     "mean_final_confidence": 0.485,
+     "action_counts": {
+      "read_logs": 106,
+      "text_match": 106,
+      "similar_cases": 106,
+      "event_evidence": 106,
+      "structural_check": 106
+     },
+     "final_letter_counts": {
+      "A": 15,
+      "D": 19,
+      "C": 23,
+      "B": 19,
+      "E": 30
+     },
+     "choices": {
+      "win_0000592": "APPSEV",
+      "win_0000350": "KERNTERM",
+      "win_0000349": "KERNTERM",
+      "win_0000376": "KERNTERM",
+      "win_0000348": "KERNTERM",
+      "win_0000533": "KERNTERM",
+      "win_0000531": "KERNTERM",
+      "win_0000378": "KERNTERM",
+      "win_0000377": "KERNTERM",
+      "win_0000530": "KERNTERM",
+      "win_0000506": "KERNTERM",
+      "win_0000532": "KERNTERM",
+      "win_0000361": "KERNTERM",
+      "win_0000535": "KERNTERM",
+      "win_0000536": "KERNTERM",
+      "win_0000534": "KERNTERM",
+      "win_0001396": "KERNMNTF",
+      "win_0001499": "KERNMNTF",
+      "win_0001257": "KERNMNTF",
+      "win_0001255": "APPSEV",
+      "win_0001223": "APPSEV",
+      "win_0001415": "APPREAD",
+      "win_0000701": "APPSEV",
+      "win_0000466": "KERNREC",
+      "win_0000538": "KERNREC",
+      "win_0000465": "KERNREC",
+      "win_0000351": "KERNREC",
+      "win_0000507": "KERNREC",
+      "win_0000508": "KERNREC",
+      "win_0000537": "KERNREC",
+      "win_0000539": "KERNREC",
+      "win_0000698": "APPSEV",
+      "win_0001256": "KERNMNTF",
+      "win_0000683": "APPSEV",
+      "win_0000573": "KERNMC",
+      "win_0001410": "APPSEV",
+      "win_0000693": "APPSEV",
+      "win_0000347": "KERNTERM",
+      "win_0001378": "APPSEV",
+      "win_0001400": "APPSEV",
+      "win_0001385": "APPSEV",
+      "win_0001376": "APPSEV",
+      "win_0001333": "APPSEV",
+      "win_0001234": "APPSEV",
+      "win_0001214": "APPSEV",
+      "win_0001216": "APPSEV",
+      "win_0000661": "APPSEV",
+      "win_0000653": "APPSEV",
+      "win_0000662": "APPSEV",
+      "win_0000660": "APPSEV",
+      "win_0000687": "APPSEV",
+      "win_0001375": "APPSEV",
+      "win_0001360": "APPSEV",
+      "win_0001413": "APPSEV",
+      "win_0001377": "APPSEV",
+      "win_0001371": "APPSEV",
+      "win_0001416": "APPSEV",
+      "win_0001374": "APPSEV",
+      "win_0000299": "KERNMC",
+      "win_0000540": "KERNMC",
+      "win_0001251": "APPSEV",
+      "win_0000652": "APPSEV",
+      "win_0001490": "APPSEV",
+      "win_0001384": "APPSEV",
+      "win_0001359": "APPSEV",
+      "win_0001270": "APPSEV",
+      "win_0001418": "APPSEV",
+      "win_0000690": "KERNRTSP",
+      "win_0001417": "APPSEV",
+      "win_0001224": "APPSEV",
+      "win_0000718": "APPSEV",
+      "win_0001441": "APPSEV",
+      "win_0001492": "APPSEV",
+      "win_0000680": "APPSEV",
+      "win_0000688": "APPSEV",
+      "win_0000707": "APPSEV",
+      "win_0000672": "APPSEV",
+      "win_0001412": "APPRES",
+      "win_0001215": "APPSEV",
+      "win_0000572": "KERNMC",
+      "win_0000685": "APPSEV",
+      "win_0000654": "APPSEV",
+      "win_0000558": "APPSEV",
+      "win_0000620": "APPSEV",
+      "win_0000677": "APPSEV",
+      "win_0001399": "APPSEV",
+      "win_0001235": "APPSEV",
+      "win_0000585": "APPSEV",
+      "win_0000552": "APPREAD",
+      "win_0001494": "APPSEV",
+      "win_0000644": "KERNMC",
+      "win_0000673": "APPSEV",
+      "win_0000550": "APPSEV",
+      "win_0000699": "APPSEV",
+      "win_0000681": "APPSEV",
+      "win_0000544": "APPSEV",
+      "win_0000694": "APPSEV",
+      "win_0000678": "APPSEV",
+      "win_0000648": "APPSEV",
+      "win_0000646": "APPSEV",
+      "win_0000647": "APPSEV",
+      "win_0000549": "APPSEV",
+      "win_0000684": "APPSEV",
+      "win_0000557": "APPSEV",
+      "win_0001222": "KERNMNTF",
+      "win_0001407": "KERNMC",
+      "win_0000638": "APPRES",
+      "win_0000554": "APPSEV",
+      "win_0000692": "APPSEV",
+      "win_0000691": "APPREAD",
+      "win_0001253": "KERNMC",
+      "win_0001252": "KERNMC",
+      "win_0001411": "KERNDTLB",
+      "win_0000682": "APPSEV",
+      "win_0000551": "APPSEV",
+      "win_0000543": "KERNMC",
+      "win_0000679": "APPSEV",
+      "win_0001238": "KERNRTSP",
+      "win_0000696": "KERNDTLB",
+      "win_0000697": "KERNDTLB",
+      "win_0000617": "APPRES",
+      "win_0000619": "APPRES",
+      "win_0000618": "APPRES",
+      "win_0000545": "APPSEV",
+      "win_0001274": "KERNMC",
+      "win_0000614": "APPREAD",
+      "win_0001225": "APPSEV",
+      "win_0001254": "KERNRTSP",
+      "win_0001202": "APPSEV",
+      "win_0001272": "KERNRTSP",
+      "win_0001489": "KERNRTSP",
+      "win_0000613": "APPRES",
+      "win_0000555": "KERNMNTF",
+      "win_0001210": "APPSEV",
+      "win_0000615": "APPRES",
+      "win_0000616": "APPSEV",
+      "win_0000579": "KERNMNTF",
+      "win_0000547": "rare_pattern",
+      "win_0000705": "KERNMC",
+      "win_0001273": "KERNMC",
+      "win_0000645": "KERNRTSP",
+      "win_0000509": "KERNMC",
+      "win_0000541": "KERNREC",
+      "win_0000546": "KERNPOW",
+      "win_0000362": "KERNREC",
+      "win_0000611": "KERNMNTF"
+     }
+    }
+   },
+   "per_case": {
+    "win_0000592": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "APPSEV",
+     "retrieval": "APPSEV"
+    },
+    "win_0000350": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000349": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000376": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000348": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000533": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000531": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000378": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000377": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000530": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000506": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000532": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000361": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000535": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000536": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0000534": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0001396": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0001499": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0001257": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0001255": {
+     "truth": [
+      "APPSEV",
+      "KERNMNTF",
+      "KERNSOCK"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "APPSEV"
+    },
+    "win_0001223": {
+     "truth": [
+      "APPSEV",
+      "MASABNORM"
+     ],
+     "rules": "APPSEV",
+     "retrieval": "APPSEV"
+    },
+    "win_0001415": {
+     "truth": [
+      "APPSEV",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0000701": {
+     "truth": [
+      "APPSEV",
+      "MASABNORM"
+     ],
+     "rules": "MASABNORM",
+     "retrieval": "APPSEV"
+    },
+    "win_0000466": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000538": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000465": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000351": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000507": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000508": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000537": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000539": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000698": {
+     "truth": [
+      "APPSEV",
+      "MASABNORM"
+     ],
+     "rules": "MASABNORM",
+     "retrieval": "APPSEV"
+    },
+    "win_0001256": {
+     "truth": [
+      "KERNMNTF",
+      "MASABNORM"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0000683": {
+     "truth": [
+      "APPSEV",
+      "KERNMC"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000573": {
+     "truth": [
+      "KERNMC",
+      "KERNNOETH"
+     ],
+     "rules": "KERNNOETH",
+     "retrieval": "KERNMC"
+    },
+    "win_0001410": {
+     "truth": [
+      "APPSEV",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0000693": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000347": {
+     "truth": [
+      "KERNTERM"
+     ],
+     "rules": "KERNTERM",
+     "retrieval": "KERNTERM"
+    },
+    "win_0001378": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001400": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001385": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001376": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001333": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001234": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001214": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001216": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000661": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000653": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000662": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000660": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000687": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001375": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001360": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001413": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001377": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001371": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001416": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001374": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000299": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNMC"
+    },
+    "win_0000540": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNMC"
+    },
+    "win_0001251": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000652": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001490": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001384": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001359": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001270": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001418": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000690": {
+     "truth": [
+      "APPSEV",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0001417": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001224": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000718": {
+     "truth": [
+      "APPSEV",
+      "KERNSOCK",
+      "MASABNORM"
+     ],
+     "rules": "MASABNORM",
+     "retrieval": "APPSEV"
+    },
+    "win_0001441": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001492": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000680": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000688": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000707": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000672": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001412": {
+     "truth": [
+      "APPSEV",
+      "KERNMC",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0001215": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000572": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "KERNMC"
+    },
+    "win_0000685": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000654": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000558": {
+     "truth": [
+      "APPRES",
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000620": {
+     "truth": [
+      "APPRES",
+      "APPSEV",
+      "APPTO"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000677": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001399": {
+     "truth": [
+      "APPSEV",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0001235": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000585": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "APPSEV",
+     "retrieval": "APPSEV"
+    },
+    "win_0000552": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001494": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000644": {
+     "truth": [
+      "KERNMC",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNMC"
+    },
+    "win_0000673": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000550": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000699": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000681": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000544": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000694": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000678": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000648": {
+     "truth": [
+      "APPSEV",
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "APPSEV"
+    },
+    "win_0000646": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000647": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000549": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000684": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000557": {
+     "truth": [
+      "APPRES",
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001222": {
+     "truth": [
+      "KERNMNTF",
+      "KERNSOCK"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0001407": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "KERNMC"
+    },
+    "win_0000638": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000554": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000692": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000691": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001253": {
+     "truth": [
+      "KERNRTSP",
+      "KERNSOCK"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNSOCK"
+    },
+    "win_0001252": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0001411": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "KERNMC"
+    },
+    "win_0000682": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000551": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000543": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "KERNMC",
+     "retrieval": "KERNMC"
+    },
+    "win_0000679": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001238": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0000696": {
+     "truth": [
+      "KERNDTLB",
+      "KERNRTSP"
+     ],
+     "rules": "KERNDTLB",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0000697": {
+     "truth": [
+      "KERNDTLB",
+      "KERNRTSP"
+     ],
+     "rules": "KERNDTLB",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0000617": {
+     "truth": [
+      "APPTO"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000619": {
+     "truth": [
+      "APPTO"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000618": {
+     "truth": [
+      "APPRES"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000545": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001274": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "KERNMC",
+     "retrieval": "KERNMC"
+    },
+    "win_0000614": {
+     "truth": [
+      "APPRES",
+      "APPTO"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0001225": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001254": {
+     "truth": [
+      "KERNRTSP",
+      "KERNSERV",
+      "MMCS"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNPOW"
+    },
+    "win_0001202": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0001272": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNMC"
+    },
+    "win_0001489": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0000613": {
+     "truth": [
+      "APPTO"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000555": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0001210": {
+     "truth": [
+      "APPSEV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPSEV"
+    },
+    "win_0000615": {
+     "truth": [
+      "APPRES"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000616": {
+     "truth": [
+      "APPRES"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "APPRES"
+    },
+    "win_0000579": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    },
+    "win_0000547": {
+     "truth": [
+      "KERNSERV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "MONPOW"
+    },
+    "win_0000705": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "KERNMC",
+     "retrieval": "KERNMC"
+    },
+    "win_0001273": {
+     "truth": [
+      "KERNMC"
+     ],
+     "rules": "KERNMC",
+     "retrieval": "KERNMC"
+    },
+    "win_0000645": {
+     "truth": [
+      "KERNRTSP"
+     ],
+     "rules": "KERNRTSP",
+     "retrieval": "KERNRTSP"
+    },
+    "win_0000509": {
+     "truth": [
+      "APPTORUS"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "KERNPROG"
+    },
+    "win_0000541": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000546": {
+     "truth": [
+      "KERNSERV"
+     ],
+     "rules": "rare_pattern",
+     "retrieval": "KERNPOW"
+    },
+    "win_0000362": {
+     "truth": [
+      "KERNREC"
+     ],
+     "rules": "KERNREC",
+     "retrieval": "KERNREC"
+    },
+    "win_0000611": {
+     "truth": [
+      "KERNMNTF"
+     ],
+     "rules": "KERNMNTF",
+     "retrieval": "KERNMNTF"
+    }
+   },
+   "shortlist_contains_truth": 0.959
+  }
+ }
+}

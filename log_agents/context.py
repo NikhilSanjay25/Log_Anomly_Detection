@@ -33,6 +33,10 @@ class RunOptions:
     threshold: float = 0.5
     persist: bool = True            # write medallion layers + run memory to disk
     dataset: str = None             # force a dataset ("hdfs" | "bgl" | "openstack"); None = detect it from the input
+    agent_model: str = config.AGENT_MODEL   # language model that investigates; "rules" = rule-based RCA only
+    agent_max_cases: int = config.AGENT_MAX_CASES
+    agent_max_steps: int = config.AGENT_MAX_STEPS
+    agent_decision: str = config.AGENT_DECISION   # how the final cause is chosen (see InvestigatorAgent)
 
 
 class RunContext:

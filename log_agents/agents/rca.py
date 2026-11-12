@@ -13,6 +13,8 @@ profile's own causes for BGL and OpenStack).
 It also collects the same kind of evidence for a few representative *normal* sessions, so the Insight
 agent can explain why those sessions were not flagged.
 """
+import math
+import re
 from collections import Counter, defaultdict
 
 import pandas as pd
@@ -24,6 +26,7 @@ MAX_NORMAL_EXAMPLES = 3
 # An event only counts as root-cause evidence if at least this share of training sessions containing it were
 # anomalous (e.g. HDFS E4 'exception while serving' is 2.5% - it is routine in normal traffic).
 MIN_EVENT_ANOMALY_RATE = 0.5
+TOKEN_RE = re.compile(r"[a-z][a-z_\-]{2,}")
 
 
 class RootCauseAnalysisAgent(Agent):
@@ -46,15 +49,46 @@ class RootCauseAnalysisAgent(Agent):
         self.normal_p05 = self.stats.get("normal_length", {}).get("p05", 13)
         self.evidence_events = (profile.error_events | profile.warning_events
                                 | set().union(*(rc["events"] for rc in profile.root_causes.values())))
+        self._build_cause_index(profile)
         return pipe
+
+    # ── text retrieval of causes (used to pad the investigator's shortlist) ─
+    def _build_cause_index(self, profile):
+        """TF-IDF index over the knowledge base: each cause is described by its title, explanation and the message
+        templates of its signature events. Lets a window with message templates the rules never saw still be
+        matched to causes whose descriptions use the same words."""
+        docs = {}
+        for key, cause in profile.root_causes.items():
+            if key == "rare_pattern":
+                continue
+            text = cause["title"] + " " + cause["explanation"] + " " + " ".join(
+                profile.template_text.get(e, "") for e in cause["events"])
+            docs[key] = Counter(TOKEN_RE.findall(text.lower()))
+        df = Counter(w for d in docs.values() for w in d)
+        n = len(docs)
+        self._idf = {w: math.log((1 + n) / (1 + c)) + 1 for w, c in df.items()}
+        self._cause_vecs = {k: self._tfidf(d) for k, d in docs.items()}
+
+    def _tfidf(self, counts):
+        v = {w: (1 + math.log(c)) * self._idf[w] for w, c in counts.items() if w in self._idf}
+        norm = math.sqrt(sum(x * x for x in v.values())) or 1.0
+        return {w: x / norm for w, x in v.items()}
+
+    def text_ranking(self, events):
+        """Causes ranked by the similarity of their descriptions to the message templates of `events`."""
+        text = " ".join(self.profile.template_text.get(e, "") for e in events)
+        q = self._tfidf(Counter(TOKEN_RE.findall(text.lower())))
+        scores = {k: sum(x * v.get(w, 0.0) for w, x in q.items()) for k, v in self._cause_vecs.items()}
+        return sorted(((k, s) for k, s in scores.items() if s > 0), key=lambda kv: -kv[1])
 
     def run(self, ctx):
         sessions = ctx.data["detection"]["sessions"]
         pipe = self._prepare(ctx.profile)
 
         anomalies = sessions[sessions.is_anomaly == 1].sort_values("anomaly_proba", ascending=False)
-        per_session, nb_cache = [], {}
+        per_session, nb_cache, rows = [], {}, {}
         for _, s in anomalies.iterrows():
+            rows[s.block_id] = s
             hyps, evidence = self._hypotheses(s)
             if s.sequence not in nb_cache and len(nb_cache) < MAX_NEIGHBOUR_DETAILS:
                 nb_cache[s.sequence] = pipe.neighbour_details(s.nb_ids, s.nb_dist)
@@ -62,7 +96,7 @@ class RootCauseAnalysisAgent(Agent):
                 "block_id": s.block_id, "sequence": s.sequence, "n_events": int(s.n_events),
                 "anomaly_proba": float(s.anomaly_proba), "decision_source": s.decision_source,
                 "nb_anomaly_rate": None if pd.isna(s.nb_anomaly_rate) else float(s.nb_anomaly_rate),
-                "primary_cause": hyps[0]["cause"], "hypotheses": hyps, "evidence": evidence,
+                "primary_cause": hyps[0]["cause"], "decided_by": "rules", "hypotheses": hyps, "evidence": evidence,
                 "error_events": s.error_events, "nodes": s.nodes,
                 "duration_s": None if pd.isna(s.duration_s) else float(s.duration_s),
                 "start": None if pd.isna(s.start) else str(s.start),
@@ -70,6 +104,7 @@ class RootCauseAnalysisAgent(Agent):
             })
 
         correlations = self._correlate(sessions, per_session)
+        self._decide(ctx, per_session, correlations, rows)
         causes = self._aggregate(per_session)
         # The chat model is shown the retrieved neighbours of each group's example session, so make sure
         # every example has them even when the neighbour-detail cap above was reached.
@@ -89,6 +124,10 @@ class RootCauseAnalysisAgent(Agent):
         top = causes[0]
         return (f"{len(per_session)} anomalies → {len(causes)} root-cause group(s); "
                 f"top: {top['title']} ({top['count']} {ctx.profile.session_noun_plural})")
+
+    def _decide(self, ctx, per_session, correlations, rows):
+        """Hook: choose each anomaly's primary cause. The rule engine's top hypothesis is the default; the
+        InvestigatorAgent overrides this with a language-model investigation."""
 
     # ── per-session hypotheses ────────────────────────────────────────────
     def _hypotheses(self, s):
@@ -158,7 +197,9 @@ class RootCauseAnalysisAgent(Agent):
             similar = pipe.neighbour_details(s.nb_ids, s.nb_dist)
         return {"block_id": block_id, "label": "Anomaly" if s.is_anomaly else "Normal",
                 "anomaly_proba": float(s.anomaly_proba), "sequence": s.sequence,
-                "evidence": evidence, "hypotheses": hyps, "similar_logs": similar}
+                "evidence": evidence, "hypotheses": hyps, "similar_logs": similar,
+                "decided": known["primary_cause"] if known else None,
+                "decided_by": known["decided_by"] if known else None}
 
     # ── evidence for normal sessions (why they were NOT flagged) ─────────────
     def _normal_examples(self, sessions, pipe, threshold):
@@ -249,6 +290,11 @@ class RootCauseAnalysisAgent(Agent):
                                  key=lambda d: -d["blocks"])[:10]
         return out
 
+    @staticmethod
+    def _share(p):
+        """Rule-score share of the cause chosen for this session (the rule engine's own top cause by default)."""
+        return next((h["share"] for h in p["hypotheses"] if h["cause"] == p["primary_cause"]), 0.0)
+
     def _aggregate(self, per_session):
         kb_all = self.profile.root_causes
         sev = {"high": 0, "medium": 1, "low": 2}
@@ -261,7 +307,7 @@ class RootCauseAnalysisAgent(Agent):
             ev_counter = Counter(e for p in items for e in p["error_events"])
             causes.append({
                 "cause": key, "title": kb["title"], "severity": kb["severity"], "count": len(items),
-                "avg_share": sum(p["hypotheses"][0]["share"] for p in items) / len(items),
+                "avg_share": sum(self._share(p) for p in items) / len(items),
                 "example_blocks": [p["block_id"] for p in items[:5]],
                 "example_sequence": items[0]["sequence"],
                 "key_events": [f"{e} ({self.profile.describe(e)}) ×{n}" for e, n in ev_counter.most_common(5)],

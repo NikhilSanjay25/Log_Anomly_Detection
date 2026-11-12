@@ -20,6 +20,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="Agentic log anomaly detection (HDFS, BGL, OpenStack)")
     ap.add_argument("log_file")
     ap.add_argument("--dataset", choices=["hdfs", "bgl", "openstack"], help="force a dataset (default: detect it)")
+    ap.add_argument("--agent-model", default=None,
+                    help="language model that investigates the anomalies: Qwen/Qwen3-1.7B, Qwen/Qwen3-4B, "
+                         "Qwen/Qwen3-8B or 'rules' (default: LAD_AGENT_MODEL, Qwen/Qwen3-1.7B)")
     ap.add_argument("--threshold", type=float, default=0.5)
     ap.add_argument("--out", help="write the Markdown report here (.json for JSON)")
     ap.add_argument("--no-persist", action="store_true", help="do not write medallion layers / run memory")
@@ -29,6 +32,8 @@ def main(argv=None):
     path = Path(args.log_file)
     batch = UploadSource(path.name, path.read_bytes()).read()
     opts = RunOptions(threshold=args.threshold, persist=not args.no_persist, dataset=args.dataset)
+    if args.agent_model:
+        opts.agent_model = args.agent_model
 
     def progress(step):
         print(f"  [{step.status:>8}] {step.agent:<34} {step.duration_s:6.1f}s  {step.summary}", file=sys.stderr)
@@ -53,7 +58,7 @@ def chat_loop(ctx, coordinator):
     from .chat import RunChat
     sys.stdout.reconfigure(encoding="utf-8")
     chat = RunChat(ctx, coordinator.rca)
-    slm = coordinator.res.chat_slm()
+    slm = coordinator.res.llm(ctx.options.agent_model if ctx.options.agent_model != 'rules' else None)
     print("\nAsk follow-up questions about this analysis. Name a block (blk_...) for its details. "
           "Empty line or 'exit' quits.", file=sys.stderr)
     while True:

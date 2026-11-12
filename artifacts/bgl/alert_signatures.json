@@ -1,59 +1,4 @@
 {
- "APPREAD": {
-  "events": [
-   "E17"
-  ],
-  "lines": 5983,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E17",
-  "top_template": "ciod: failed to read message prefix on control stream (CioStream socket to <*>"
- },
- "KERNDTLB": {
-  "events": [
-   "E19"
-  ],
-  "lines": 152734,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E19",
-  "top_template": "data TLB error interrupt"
- },
- "KERNMC": {
-  "events": [
-   "E63",
-   "E65",
-   "E99",
-   "E137",
-   "E476",
-   "E478"
-  ],
-  "lines": 342,
-  "weight": 0.809,
-  "severity": "high",
-  "top_event": "E65",
-  "top_template": "machine check interrupt (bit=<*>): L3 major internal error"
- },
- "KERNRTSP": {
-  "events": [
-   "E55"
-  ],
-  "lines": 3983,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E55",
-  "top_template": "rts panic! - stopping execution"
- },
- "KERNSTOR": {
-  "events": [
-   "E143"
-  ],
-  "lines": 63491,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E143",
-  "top_template": "data storage interrupt"
- },
  "APPALLOC": {
   "events": [
    "E185"
@@ -63,71 +8,6 @@
   "severity": "high",
   "top_event": "E185",
   "top_template": "ciod: Error creating node map from file <*> Cannot allocate memory"
- },
- "APPCHILD": {
-  "events": [
-   "E172"
-  ],
-  "lines": 320,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E172",
-  "top_template": "ciod: Error creating node map from file <*> No child processes"
- },
- "KERNNOETH": {
-  "events": [
-   "E220"
-  ],
-  "lines": 14,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E220",
-  "top_template": "no ethernet link"
- },
- "KERNSOCK": {
-  "events": [
-   "E199",
-   "E394"
-  ],
-  "lines": 209,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E199",
-  "top_template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> socket closed"
- },
- "KERNTERM": {
-  "events": [
-   "E221",
-   "E234",
-   "E235",
-   "E236",
-   "E323"
-  ],
-  "lines": 23338,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E323",
-  "top_template": "rts: kernel terminated for reason <*>"
- },
- "LINKDISC": {
-  "events": [
-   "E201"
-  ],
-  "lines": 24,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E201",
-  "top_template": "MidplaneSwitchController::sendTrain() port disconnected: <*>-U19-E"
- },
- "MASNORM": {
-  "events": [
-   "E200"
-  ],
-  "lines": 10,
-  "weight": 0.96,
-  "severity": "high",
-  "top_event": "E200",
-  "top_template": "mmcs_server exited normally with exit code <*>"
  },
  "APPBUSY": {
   "events": [
@@ -139,15 +19,45 @@
   "top_event": "E241",
   "top_template": "ciod: Error creating node map from file /p/gb2/pakin1/sweep3d-5x5x400-10mk-3mmi-1024pes-sweep/sweep.map: Device or resource busy"
  },
- "APPTORUS": {
+ "APPCHILD": {
   "events": [
-   "E247"
+   "E172"
   ],
-  "lines": 10,
+  "lines": 288,
   "weight": 1.0,
   "severity": "high",
-  "top_event": "E247",
-  "top_template": "external input interrupt (unit=<*> bit=<*>): uncorrectable torus error"
+  "top_event": "E172",
+  "top_template": "ciod: Error creating node map from file <*> No child processes"
+ },
+ "APPREAD": {
+  "events": [
+   "E17"
+  ],
+  "lines": 5983,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E17",
+  "top_template": "ciod: failed to read message prefix on control stream (CioStream socket to <*>"
+ },
+ "APPRES": {
+  "events": [
+   "E298"
+  ],
+  "lines": 114,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E298",
+  "top_template": "ciod: Error reading message prefix after LOAD_MESSAGE on CioStream socket to <*>: Connection reset by peer"
+ },
+ "APPSEV": {
+  "events": [
+   "E263"
+  ],
+  "lines": 21573,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E263",
+  "top_template": "ciod: Error reading message prefix after <*> on CioStream socket to <*>: Link has been severed"
  },
  "APPUNAV": {
   "events": [
@@ -159,79 +69,38 @@
   "top_event": "E224",
   "top_template": "ciod: Error creating node map from file <*> Resource temporarily unavailable"
  },
- "KERNPOW": {
-  "events": [
-   "E226"
-  ],
-  "lines": 192,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E226",
-  "top_template": "Power deactivated: <*>"
- },
- "KERNPROG": {
-  "events": [
-   "E183"
-  ],
-  "lines": 5,
-  "weight": 0.5,
-  "severity": "low",
-  "top_event": "E183",
-  "top_template": "program interrupt"
- },
- "LINKPAP": {
-  "events": [
-   "E239"
-  ],
-  "lines": 14,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E239",
-  "top_template": "MidplaneSwitchController::parityAlignment() pap failed: <*> <*> <*>"
- },
- "APPSEV": {
-  "events": [
-   "E263",
-   "E445"
-  ],
-  "lines": 49651,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E445",
-  "top_template": "ciod: Error reading message prefix on CioStream socket to <*>, Link has been severed"
- },
  "KERNCON": {
   "events": [
    "E262"
   ],
-  "lines": 16,
-  "weight": 0.95,
+  "lines": 14,
+  "weight": 1.0,
   "severity": "high",
   "top_event": "E262",
   "top_template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> BGLERR_IDO_PKT_TIMEOUT connection lost to node/link/service card"
  },
- "MASABNORM": {
+ "KERNDTLB": {
   "events": [
-   "E252",
-   "E266",
-   "E320"
+   "E19"
   ],
-  "lines": 37,
+  "lines": 152723,
   "weight": 1.0,
   "severity": "high",
-  "top_event": "E320",
-  "top_template": "ciodb exited abnormally due to signal: Aborted"
+  "top_event": "E19",
+  "top_template": "data TLB error interrupt"
  },
- "APPRES": {
+ "KERNMC": {
   "events": [
-   "E298",
-   "E449"
+   "E63",
+   "E65",
+   "E99",
+   "E137"
   ],
-  "lines": 2370,
-  "weight": 1.0,
+  "lines": 255,
+  "weight": 0.777,
   "severity": "high",
-  "top_event": "E449",
-  "top_template": "ciod: Error reading message prefix on CioStream socket to <*>, Connection reset by peer"
+  "top_event": "E65",
+  "top_template": "machine check interrupt (bit=<*>): L3 major internal error"
  },
  "KERNMICRO": {
   "events": [
@@ -258,112 +127,167 @@
    "E287",
    "E334"
   ],
-  "lines": 31531,
+  "lines": 29091,
   "weight": 1.0,
   "severity": "high",
   "top_event": "E334",
   "top_template": "Lustre mount FAILED : <*> : point /p/gb1"
  },
- "LINKIAP": {
+ "KERNNOETH": {
   "events": [
-   "E302"
-  ],
-  "lines": 166,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E302",
-  "top_template": "MidplaneSwitchController::receiveTrain() iap failed: <*> <*> <*>"
- },
- "MONPOW": {
-  "events": [
-   "E344",
-   "E378"
+   "E220"
   ],
   "lines": 12,
-  "weight": 0.933,
+  "weight": 1.0,
   "severity": "high",
-  "top_event": "E378",
-  "top_template": "No power module U58 found found on link card"
+  "top_event": "E220",
+  "top_template": "no ethernet link"
  },
  "KERNPAN": {
   "events": [
    "E328"
   ],
-  "lines": 18,
+  "lines": 16,
   "weight": 1.0,
   "severity": "high",
   "top_event": "E328",
   "top_template": "kernel panic"
  },
- "KERNFLOAT": {
+ "KERNPOW": {
   "events": [
-   "E351"
+   "E226"
   ],
-  "lines": 3,
+  "lines": 192,
   "weight": 1.0,
   "severity": "high",
-  "top_event": "E351",
-  "top_template": "floating point unavailable interrupt"
+  "top_event": "E226",
+  "top_template": "Power deactivated: <*>"
+ },
+ "KERNPROG": {
+  "events": [
+   "E183"
+  ],
+  "lines": 5,
+  "weight": 0.5,
+  "severity": "low",
+  "top_event": "E183",
+  "top_template": "program interrupt"
  },
  "KERNREC": {
   "events": [
    "E373"
   ],
-  "lines": 6145,
+  "lines": 1024,
   "weight": 1.0,
   "severity": "high",
   "top_event": "E373",
   "top_template": "Error receiving packet on tree network, expecting type <*> instead of type <*> (softheader=<*> <*> <*> <*>) PSR0=<*> PSR1=<*> PRXF=<*> PIXF=<*>"
  },
- "KERNRTSA": {
+ "KERNRTSP": {
   "events": [
-   "E369",
-   "E505"
+   "E55"
+  ],
+  "lines": 3892,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E55",
+  "top_template": "rts panic! - stopping execution"
+ },
+ "KERNSOCK": {
+  "events": [
+   "E199"
+  ],
+  "lines": 122,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E199",
+  "top_template": "MailboxMonitor::serviceMailboxes() lib_ido_error: <*> socket closed"
+ },
+ "KERNSTOR": {
+  "events": [
+   "E143"
+  ],
+  "lines": 63488,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E143",
+  "top_template": "data storage interrupt"
+ },
+ "KERNTERM": {
+  "events": [
+   "E221",
+   "E234",
+   "E235",
+   "E236",
+   "E323"
+  ],
+  "lines": 18218,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E323",
+  "top_template": "rts: kernel terminated for reason <*>"
+ },
+ "LINKDISC": {
+  "events": [
+   "E201"
+  ],
+  "lines": 24,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E201",
+  "top_template": "MidplaneSwitchController::sendTrain() port disconnected: <*>-U19-E"
+ },
+ "LINKIAP": {
+  "events": [
+   "E302"
+  ],
+  "lines": 158,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E302",
+  "top_template": "MidplaneSwitchController::receiveTrain() iap failed: <*> <*> <*>"
+ },
+ "LINKPAP": {
+  "events": [
+   "E239"
+  ],
+  "lines": 14,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E239",
+  "top_template": "MidplaneSwitchController::parityAlignment() pap failed: <*> <*> <*>"
+ },
+ "MASABNORM": {
+  "events": [
+   "E252",
+   "E266",
+   "E320"
+  ],
+  "lines": 18,
+  "weight": 1.0,
+  "severity": "high",
+  "top_event": "E252",
+  "top_template": "mmcs_server exited abnormally due to signal: Aborted"
+ },
+ "MASNORM": {
+  "events": [
+   "E200"
+  ],
+  "lines": 10,
+  "weight": 0.96,
+  "severity": "high",
+  "top_event": "E200",
+  "top_template": "mmcs_server exited normally with exit code <*>"
+ },
+ "MONPOW": {
+  "events": [
+   "E267",
+   "E344"
   ],
   "lines": 3,
   "weight": 0.5,
   "severity": "high",
-  "top_event": "E369",
-  "top_template": "rts assertion failed: `personality->version == BGLPERSONALITY_VERSION' in `void start()' at start.cc:<*>"
- },
- "MMCS": {
-  "events": [
-   "E370"
-  ],
-  "lines": 3,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E370",
-  "top_template": "L3 major internal error"
- },
- "APPTO": {
-  "events": [
-   "E470"
-  ],
-  "lines": 1991,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E470",
-  "top_template": "ciod: Error reading message prefix on CioStream socket to <*>, Connection timed out"
- },
- "KERNSERV": {
-  "events": [
-   "E443"
-  ],
-  "lines": 94,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E443",
-  "top_template": "Power Good signal deactivated: <*>. A service action may be required."
- },
- "APPOUT": {
-  "events": [
-   "E502"
-  ],
-  "lines": 816,
-  "weight": 1.0,
-  "severity": "high",
-  "top_event": "E502",
-  "top_template": "ciod: LOGIN chdir(/p/gb1/stella/RAPTOR/<*>) failed: Input/output error"
+  "top_event": "E267",
+  "top_template": "monitor caught java.lang.UnsupportedOperationException: power module <*> not present and is stopping"
  }
 }
